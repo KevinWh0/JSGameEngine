@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./TextLib/lib/codemirror.css" />
+  <link rel="stylesheet" href="./TextLib/addon/hint/show-hint.css" />
+  <script src="./TextLib/lib/codemirror.js"></script>
+  <script src="./TextLib/addon/hint/show-hint.js"></script>
+  <script src="./TextLib/addon/hint/javascript-hint.js"></script>
+  <script src="./TextLib/mode/javascript/javascript.js"></script>
+  <script src="./TextLib/mode/markdown/markdown.js"></script>
+  <script src="./TextLib/mode/javascript/javascript.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jshint/2.9.5/jshint.min.js"></script>
+
+  <link rel="stylesheet" href="./TextLib/addon/lint/lint.css" />
+  <script src="./TextLib/mode/css/css.js"></script>
+  <script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
+  <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
+  <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
+  <script src="./TextLib/addon/lint/lint.js"></script>
+  <script src="./TextLib/addon/lint/javascript-lint.js"></script>
+  <script src="./TextLib/addon/lint/json-lint.js"></script>
+  <script src="./TextLib/addon/lint/css-lint.js"></script>
+
+  <link rel="stylesheet" href="./TextLib/theme/ayu-mirage.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      /*overflow: hidden;*/
+      /* Hide scrollbars */
+    }
+
+    body {
+      background-color: black;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      image-rendering: optimizeSpeed;
+      /* Older versions of FF          */
+      image-rendering: -moz-crisp-edges;
+      /* FF 6.0+                       */
+      image-rendering: -webkit-optimize-contrast;
+      /* Safari                        */
+      image-rendering: -o-crisp-edges;
+      /* OS X & Windows Opera (12.02+) */
+      image-rendering: pixelated;
+      /* Awesome future-browsers       */
+      -ms-interpolation-mode: nearest-neighbor;
+      /* IE                            */
+    }
+    .forumCodeWrapper {
+      position: absolute;
+      top: 60px;
+    }
+
+    .lint-error {
+      font-family: arial;
+      font-size: 70%;
+      background: rgb(24, 24, 24);
+      color: #a00;
+      padding: 2px 5px 3px;
+    }
+    .lint-error-icon {
+      color: white;
+      background-color: red;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 0 3px;
+      margin-right: 7px;
+    }
+
+    .CodeMirror-lint-tooltip {
+      background-color: rgb(24, 24, 24);
+      color: white;
+    }
+  </style>
+
+  <head>
+    <title id="Title">Loading</title>
+    <link
+      rel="shortcut icon"
+      id="Icon"
+      href="../assets/player/playerDown.png"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="index.js" type="module"></script>
+
+  <body>
+    <div id="canvasHolder"></div>
+    <var id="stopVar">false</var>
+    <div id="GameObjectsHolder"></div>
+    <article id="codeWrapper">
+      <form id="forumCodeWrapper">
+        <textarea id="code" name="code">
+          loading...
+        </textarea>
+      </form>
+      <script src="./textEditorSetup.js"></script>
+    </article>
+  </body>
+</html>
