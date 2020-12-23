@@ -7,7 +7,7 @@
 Roadmap:
 
 - [x] Code Editor
-- [ ] Exportng
+- [ ] Exporting
 - [ ] Properties Panel Working
 - [ ] Saves
 - [ ] Components for objects
