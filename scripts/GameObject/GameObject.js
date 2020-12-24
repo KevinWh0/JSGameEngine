@@ -10,14 +10,20 @@ export class GameObject {
 
   name;
   /* These are components that will only be active when the game is not exported */
+  type;
   editorComponents = [];
   constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
+    this.type = "Object";
   }
 
+  setType(type) {
+    this.type = type;
+    return this;
+  }
   update() {
     if (this.enabled) {
       this.components.forEach((component) => {

@@ -9,5 +9,10 @@ Roadmap:
 - [x] Code Editor
 - [ ] Exporting
 - [ ] Properties Panel Working
+  - [x] Naming of Objects
+  - [ ] Positioning UI
+  - [ ] Components UI
+  - [ ] Script adding
+  - [ ] Other special UI things
 - [ ] Saves
 - [ ] Components for objects

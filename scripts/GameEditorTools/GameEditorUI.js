@@ -31,6 +31,7 @@ import {
 } from "../toolbox.js";
 import { consoleHeight } from "../CodeCompiler.js";
 import {
+  TextBox,
   Toggle,
   UIStrechableTabLeft,
   UIStrechableTabRight,
@@ -64,9 +65,20 @@ export function runUI() {
       //Copy all the data accross
       //TODO look through all of the components in a lookup table using TypeOf to see what components are needed to be put down
       propertiesTab.addComponent(
+        new TextBox(
+          30,
+          5,
+          100,
+          50,
+          objects[selectedOBJ].name,
+          objects[selectedOBJ],
+          "setName"
+        )
+      );
+      propertiesTab.addComponent(
         new Toggle(
           30,
-          10,
+          60,
           50,
           50,
           objects[selectedOBJ].enabled,
@@ -103,7 +115,7 @@ export function showPropertiesBar(object) {
   if (selectedOBJ != null) {
     if (propertiesTab.components.length == 0) {
       propertiesTab.addComponent(
-        new Toggle(30, 10, 50, 50, true, objects[selectedOBJ], "setEnabled")
+        new Toggle(30, 60, 50, 50, true, objects[selectedOBJ], "setEnabled")
       );
     }
   }
