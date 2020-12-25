@@ -4,6 +4,7 @@ import {
   inArea,
   keyPressed,
   keyPushed,
+  keys,
   mouseDown,
   mousePressed,
   mouseX,
@@ -223,10 +224,12 @@ export class TextBox {
     if (this.selected) {
       if (keyPressed != -1 && keyPushed) {
         //console.log(keyPressed, keyPushed);
+        let key = keyPressed.toString();
+        if(keys[16]) key = key.toUpperCase();
         if (keyPressed.toString() == "Backspace") {
           this.text = this.text.substr(0, this.text.length - 1);
-        } else if (keyPressed.toString() != "Alt")
-          this.text = this.text + keyPressed;
+        } else if (keyPressed.toString() != "Alt" && key != "SHIFT")
+          this.text = this.text + key;
 
         eval(`this.classInstance.${this.setterFunction}("${this.text}")`);
       }

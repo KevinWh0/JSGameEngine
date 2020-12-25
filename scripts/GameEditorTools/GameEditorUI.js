@@ -63,6 +63,7 @@ export function runUI() {
   if (selectedOBJ != null) {
     if (lastframeUnselected) {
       //Copy all the data accross
+      
       //TODO look through all of the components in a lookup table using TypeOf to see what components are needed to be put down
       propertiesTab.addComponent(
         new TextBox(
@@ -116,6 +117,17 @@ export function showPropertiesBar(object) {
     if (propertiesTab.components.length == 0) {
       propertiesTab.addComponent(
         new Toggle(30, 60, 50, 50, true, objects[selectedOBJ], "setEnabled")
+      );
+      propertiesTab.addComponent(
+        new TextBox(
+          30,
+          5,
+          100,
+          50,
+          objects[selectedOBJ].name,
+          objects[selectedOBJ],
+          "setName"
+        )
       );
     }
   }
