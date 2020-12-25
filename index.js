@@ -19,6 +19,7 @@ import {
   running,
 } from "./scripts/CodeCompiler.js";
 import { runUI } from "./scripts/GameEditorTools/GameEditorUI.js";
+import { clearGameCanvas } from "./scripts/GameLibs/gameCanvasRendering.js";
 
 import {
   game,
@@ -81,6 +82,7 @@ export function updateGameArea() {
   lastRender = Date.now();
   fps = Math.round(1 / delta);
   game.clear();
+  clearGameCanvas();
   game.frameNo += 1;
   background(secondaryUIColor);
   fill(textUIColor);

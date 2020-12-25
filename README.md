@@ -10,9 +10,10 @@ Roadmap:
 - [ ] Exporting
 - [ ] Properties Panel Working
   - [x] Naming of Objects
-  - [ ] Positioning UI
+  - [x] Positioning UI
   - [ ] Components UI
   - [ ] Script adding
   - [ ] Other special UI things
+- [ ] Image Support
 - [ ] Saves
 - [ ] Components for objects

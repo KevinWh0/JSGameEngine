@@ -8,7 +8,9 @@ let window = {
   },
 };
 var ctx = window.canvas.getContext("2d");
-
+export function clearGameCanvas() {
+  ctx.clearRect(0, 0, window.canvas.width, window.canvas.height);
+}
 /* Rendering */
 
 export function fillGameCanvas(col) {

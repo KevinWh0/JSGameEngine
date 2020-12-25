@@ -44,10 +44,10 @@ export function selectObject() {
       inArea(
         mouseX,
         mouseY,
-        obj.x + getOffset().x,
-        obj.y + getOffset().y,
-        obj.w,
-        obj.h
+        parseInt(obj.x) + getOffset().x,
+        parseInt(obj.y) + getOffset().y,
+        parseInt(obj.w),
+        parseInt(obj.h)
       ) &&
       obj.enabled
     ) {
@@ -77,7 +77,12 @@ export function selectObject() {
     const selOBJ = objects[selectedOBJ];
     //Render a rectangle over the object to show its selected
     fillGameCanvas("rgba(255,0,0,0.4)");
-    rectGameCanvas(selOBJ.x, selOBJ.y, selOBJ.w, selOBJ.h);
+    rectGameCanvas(
+      parseInt(selOBJ.x),
+      parseInt(selOBJ.y),
+      parseInt(selOBJ.w),
+      parseInt(selOBJ.h)
+    );
 
     showPropertiesBar(selOBJ);
   }

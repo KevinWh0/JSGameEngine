@@ -225,7 +225,7 @@ export class TextBox {
       if (keyPressed != -1 && keyPushed) {
         //console.log(keyPressed, keyPushed);
         let key = keyPressed.toString();
-        if(keys[16]) key = key.toUpperCase();
+        if (keys[16]) key = key.toUpperCase();
         if (keyPressed.toString() == "Backspace") {
           this.text = this.text.substr(0, this.text.length - 1);
         } else if (keyPressed.toString() != "Alt" && key != "SHIFT")
@@ -237,6 +237,79 @@ export class TextBox {
       if (this.text == "") {
         this.text = "Object";
         eval(`this.classInstance.${this.setterFunction}("${this.text}")`);
+      }
+    }
+  }
+}
+
+export class NumberBox {
+  x;
+  y;
+  w;
+  h;
+  selected = false;
+  number = 0;
+  color = {
+    background: "white",
+    false: secondaryUIColor,
+  };
+  //This is the function that will be called to set a var
+  setterFunction;
+  //setterBase;
+  //This is the passed in instance of the class.
+  classInstance;
+  constructor(x, y, w, h, startingNumber, classInstance, setterFunction) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.setterFunction = setterFunction;
+    this.number = startingNumber;
+    this.classInstance = classInstance;
+  }
+  //The yOffset will be used for scrolling
+  run(tab, yOffset) {
+    //console.log(this.enabled);
+    fill(this.color["background"]);
+    rect(this.x + tab.x, this.y + tab.y + yOffset, this.w, this.h);
+    fill("black");
+    text(this.number, this.x + tab.x, this.y + tab.y + yOffset + 40);
+    if (
+      inArea(
+        mouseX,
+        mouseY,
+        this.x + tab.x,
+        this.y + tab.y + yOffset,
+        this.w,
+        this.h
+      )
+    ) {
+      if (mousePressed) this.selected = true;
+      //this.setterFunction(this.enabled);
+    } else {
+      if (mousePressed) this.selected = false;
+    }
+    if (this.selected) {
+      if (keyPressed != -1 && keyPushed) {
+        //console.log(keyPressed, keyPushed);
+        let key = keyPressed.toString();
+        if (keyPressed.toString() == "Backspace") {
+          this.number = this.number
+            .toString()
+            .substr(0, this.number.toString().length - 1);
+        } else this.number = this.number.toString() + key;
+
+        if (this.number != NaN)
+          eval(
+            `this.classInstance.${this.setterFunction}("${parseFloat(
+              this.number
+            )}")`
+          );
+      }
+    } else {
+      if (this.number.toString().toLowerCase() == "nan") {
+        this.number = 0;
+        eval(`this.classInstance.${this.setterFunction}("${this.number}")`);
       }
     }
   }

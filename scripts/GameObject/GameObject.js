@@ -54,4 +54,17 @@ export class GameObject {
     this.name = name;
     return this;
   }
+  setX(x) {
+    this.x = x;
+  }
+  setY(y) {
+    this.y = y;
+  }
+
+  setWidth(w) {
+    this.w = w;
+  }
+  setHeight(h) {
+    this.h = h;
+  }
 }

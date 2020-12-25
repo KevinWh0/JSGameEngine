@@ -31,6 +31,7 @@ import {
 } from "../toolbox.js";
 import { consoleHeight } from "../CodeCompiler.js";
 import {
+  NumberBox,
   TextBox,
   Toggle,
   UIStrechableTabLeft,
@@ -63,7 +64,7 @@ export function runUI() {
   if (selectedOBJ != null) {
     if (lastframeUnselected) {
       //Copy all the data accross
-      
+
       //TODO look through all of the components in a lookup table using TypeOf to see what components are needed to be put down
       propertiesTab.addComponent(
         new TextBox(
@@ -85,6 +86,28 @@ export function runUI() {
           objects[selectedOBJ].enabled,
           objects[selectedOBJ],
           "setEnabled"
+        )
+      );
+      propertiesTab.addComponent(
+        new NumberBox(
+          30,
+          120,
+          50,
+          50,
+          objects[selectedOBJ].x,
+          objects[selectedOBJ],
+          "setX"
+        )
+      );
+      propertiesTab.addComponent(
+        new NumberBox(
+          30 + 60,
+          120,
+          50,
+          50,
+          objects[selectedOBJ].y,
+          objects[selectedOBJ],
+          "setY"
         )
       );
     }
@@ -127,6 +150,51 @@ export function showPropertiesBar(object) {
           objects[selectedOBJ].name,
           objects[selectedOBJ],
           "setName"
+        )
+      );
+      propertiesTab.addComponent(
+        new NumberBox(
+          30,
+          120,
+          50,
+          50,
+          objects[selectedOBJ].x,
+          objects[selectedOBJ],
+          "setX"
+        )
+      );
+      propertiesTab.addComponent(
+        new NumberBox(
+          30 + 60,
+          120,
+          50,
+          50,
+          objects[selectedOBJ].y,
+          objects[selectedOBJ],
+          "setY"
+        )
+      );
+
+      propertiesTab.addComponent(
+        new NumberBox(
+          90 + 60,
+          120,
+          50,
+          50,
+          objects[selectedOBJ].w,
+          objects[selectedOBJ],
+          "setWidth"
+        )
+      );
+      propertiesTab.addComponent(
+        new NumberBox(
+          150 + 60,
+          120,
+          50,
+          50,
+          objects[selectedOBJ].h,
+          objects[selectedOBJ],
+          "setHeight"
         )
       );
     }
