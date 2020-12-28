@@ -132,4 +132,4 @@ stateCode.set("gameViewer", function (tick) {
 });
 
 export let jsIcon = new Image();
-jsIcon.src = "../EngineAssets/js_purpleGradientOutline.svg";
+jsIcon.src = "./EngineAssets/js_purpleGradientOutline.svg";

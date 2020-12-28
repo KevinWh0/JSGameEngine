@@ -151,6 +151,8 @@ consoleMenu.addButton("Assets", function () {
   consoleArea = "AssetManager";
 });
 
+let imageTypes = ["image/png", "image/jpeg", "image/svg+xml"];
+
 export function drawConsole() {
   //Console Main Background
   fill(primaryUIColor);
@@ -168,14 +170,14 @@ export function drawConsole() {
         mousePressed &&
         inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
       ) {
+        pinDrag = false;
         (async (func) => {
           UploadFile((files) => {
             for (let i = 0; i < files.length; i++) {
-              if (files[i].type == "image/png")
+              console.log(files[i].type);
+              if (imageTypes.includes(files[i].type))
                 readImage(files[i], (dataURL) => {
                   assets.set(files[i].name, new ImageObject(dataURL));
-
-                  console.log(dataURL.substr(0, 50));
                 });
               else alert("We dont support this file yet");
             }
