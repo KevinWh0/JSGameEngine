@@ -29,7 +29,6 @@ import { GameObject } from "./GameObject.js";
 export let objects = [];
 addObject(new GameObject(10, 10, 0, 0).setName("Camera").setType("Camera"));
 
-export let assets = new Map();
 export let selectedOBJ = null;
 export function setSelectedObj(o) {
   selectedOBJ = o;

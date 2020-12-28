@@ -15,7 +15,7 @@ export async function readImage(file, callback) {
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = function () {
-    console.log(reader.result);
+    //console.log(reader.result);
     callback(reader.result);
   };
 

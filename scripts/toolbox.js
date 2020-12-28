@@ -649,12 +649,35 @@ export class ButtonBar {
   }
 }
 
+export function calculateRatio(num_1, num_2) {
+  for (let num = num_2; num > 1; num--) {
+    if (num_1 % num == 0 && num_2 % num == 0) {
+      num_1 = num_1 / num;
+      num_2 = num_2 / num;
+    }
+  }
+  var ratio = [num_1, num_2];
+  return ratio;
+}
+
+export function calculateDecimalRatio(num_1, num_2) {
+  while (num_1 > 1 || num_2 > 1) {
+    num_1 = (num_1 / 8) * 7;
+    num_2 = (num_2 / 8) * 7;
+  }
+  var ratio = [num_1, num_2];
+  return ratio;
+}
+
 export function UploadFile(callback) {
   let fileUploader = document.createElement("input");
   fileUploader.type = "file";
+  fileUploader.multiple = true;
   fileUploader.click();
   fileUploader.addEventListener("change", (async) => {
     callback(fileUploader.files);
+    //fileUploader.removeEventListener("change", null);
+    fileUploader.remove();
   });
 }
 

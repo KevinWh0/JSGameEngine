@@ -1,5 +1,6 @@
 //import { assets } from "./GameObject/ObjectHandler.js";
-//import {} from "./GameObject/ObjectHandler.js";
+import { assets } from "./GameAssets/AssetHandler.js";
+
 import {
   handleUI,
   primaryUIColor,
@@ -15,6 +16,7 @@ import { getDataUrl, readImage } from "./GameObject/FileTypes/FileUploader.js";
 import {
   addNSecondsDelay,
   ButtonBar,
+  centerText,
   fill,
   getTextWidth,
   height,
@@ -25,12 +27,17 @@ import {
   mouseY,
   readTextFile,
   rect,
+  renderImage,
   replaceAll,
+  setFontSize,
   text,
   textWraped,
   UploadFile,
   width,
+  calculateRatio,
+  calculateDecimalRatio,
 } from "./toolbox.js";
+import { ImageObject } from "./GameObject/FileTypes/Image.js";
 
 export let running = false;
 export function setRunning(r) {
@@ -163,20 +170,56 @@ export function drawConsole() {
       ) {
         (async (func) => {
           UploadFile((files) => {
-            if (files[0].type == "image/png")
-              readImage(files[0], (dataURL) => {
-                assets.set(files[0].name, dataURL);
+            for (let i = 0; i < files.length; i++) {
+              if (files[i].type == "image/png")
+                readImage(files[i], (dataURL) => {
+                  assets.set(files[i].name, new ImageObject(dataURL));
 
-                //console.log(dataURL);
-              });
-            else alert("We dont support this file yet");
+                  console.log(dataURL.substr(0, 50));
+                });
+              else alert("We dont support this file yet");
+            }
           });
         })();
       }
-      console.log(assets);
-      //for (let i = 0; i < assets.size; i++) {
-      //renderImage(assets.values[i], i * 110, consoleHeight + 80, 100, 100);
-      //}
+      //console.log(assets.size);
+      let Assets = Array.from(assets.values());
+      let AssetNames = Array.from(assets.keys());
+      setFontSize(10, "Ubuntu");
+      let imageX = 0;
+      let imageY = 0;
+      for (let i = 0; i < Assets.length; i++) {
+        /*renderImage(
+          Assets[i].getImage(),
+          i * 60 + 20,
+          consoleHeight + 80,
+          50,
+          50
+        );*/
+        let img = Assets[i].getImage();
+        let ratio = calculateDecimalRatio(img.width, img.height);
+        //console.log(ratio);
+        let resizedW = ratio[0] * 100;
+        let resizedH = ratio[1] * 100;
+        renderImage(
+          img,
+          imageX * 110 + 20,
+          consoleHeight + 80 + imageY * 140,
+          resizedW,
+          resizedH
+        );
+        text(
+          AssetNames[i].substr(0, 20),
+          centerText(AssetNames[i].substr(0, 20), imageX * 110 + 20, 100),
+          consoleHeight + 80 + 110 + imageY * 140
+        );
+        imageX++;
+        if ((imageX + 1) * 110 + 20 > width) {
+          imageX = 0;
+          imageY++;
+        }
+      }
+      setFontSize(20, "Ubuntu");
       break;
     case "Console":
       try {
