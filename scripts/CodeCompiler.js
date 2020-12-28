@@ -175,7 +175,11 @@ export function drawConsole() {
           UploadFile((files) => {
             for (let i = 0; i < files.length; i++) {
               console.log(files[i].type);
-              if (imageTypes.includes(files[i].type))
+              if (
+                /*imageTypes.includes(files[i].type)*/ files[i].type.startsWith(
+                  "image/"
+                )
+              )
                 readImage(files[i], (dataURL) => {
                   assets.set(files[i].name, new ImageObject(dataURL));
                 });

@@ -1,4 +1,9 @@
-import { handleUI, primaryUIColor, secondaryUIColor } from "./AssetManager.js";
+import {
+  handleUI,
+  primaryUIColor,
+  secondaryUIColor,
+  textUIColor,
+} from "./AssetManager.js";
 import {
   fill,
   inArea,
@@ -182,7 +187,7 @@ export class TextBox {
   selected = false;
   text = "";
   color = {
-    background: "white",
+    background: handleUI,
     false: secondaryUIColor,
   };
   //This is the function that will be called to set a var
@@ -204,7 +209,7 @@ export class TextBox {
     //console.log(this.enabled);
     fill(this.color["background"]);
     rect(this.x + tab.x, this.y + tab.y + yOffset, this.w, this.h);
-    fill("black");
+    fill(textUIColor);
     text(this.text, this.x + tab.x, this.y + tab.y + yOffset + 40);
     if (
       inArea(
@@ -250,7 +255,7 @@ export class NumberBox {
   selected = false;
   number = 0;
   color = {
-    background: "white",
+    background: handleUI,
     false: secondaryUIColor,
   };
   //This is the function that will be called to set a var
@@ -272,7 +277,7 @@ export class NumberBox {
     //console.log(this.enabled);
     fill(this.color["background"]);
     rect(this.x + tab.x, this.y + tab.y + yOffset, this.w, this.h);
-    fill("black");
+    fill(textUIColor);
     text(this.number, this.x + tab.x, this.y + tab.y + yOffset + 40);
     if (
       inArea(
@@ -312,5 +317,44 @@ export class NumberBox {
         eval(`this.classInstance.${this.setterFunction}("${this.number}")`);
       }
     }
+  }
+}
+
+export class TextArea {
+  x;
+  y;
+  w;
+  h;
+  selected = false;
+  number = 0;
+  color = {
+    background: "white",
+    false: secondaryUIColor,
+  };
+  text;
+  constructor(text, x, y, w, h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.text = text;
+  }
+  //The yOffset will be used for scrolling
+  run(tab, yOffset) {
+    //console.log(this.enabled);
+    fill(this.color["background"]);
+    text(this.text, this.x + tab.x, this.y + tab.y + yOffset, this.w, this.h);
+  }
+}
+
+export class CustomFunction {
+  func;
+  constructor(func) {
+    this.func = func;
+  }
+  //The yOffset will be used for scrolling
+  run(tab, yOffset) {
+    //console.log(this.enabled);
+    this.func(tab, yOffset);
   }
 }

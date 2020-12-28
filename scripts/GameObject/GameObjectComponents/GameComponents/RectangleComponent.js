@@ -4,6 +4,8 @@ import {
 } from "../../../GameLibs/gameCanvasRendering.js";
 
 export class RectangleObjectComponent {
+  type = "visual";
+  componentName = "Rectangle Component";
   data = {
     color: "purple",
   };

@@ -34,8 +34,10 @@ import {
   NumberBox,
   TextBox,
   Toggle,
+  TextArea,
   UIStrechableTabLeft,
   UIStrechableTabRight,
+  CustomFunction,
 } from "../UIStrechableTab.js";
 
 export let explorerTab = new UIStrechableTabLeft(
@@ -119,6 +121,18 @@ function addBaseComponents() {
       objects[selectedOBJ],
       "setHeight"
     )
+  );
+  propertiesTab.addComponent(new TextArea("Components:", 30, 220, 50, 50));
+  propertiesTab.addComponent(
+    new CustomFunction((tab, yOffset) => {
+      for (let i = 0; i < objects[selectedOBJ].components.length; i++) {
+        text(
+          objects[selectedOBJ].components[i].componentName,
+          30 + tab.x,
+          250 + tab.y + yOffset + i * 20
+        );
+      }
+    })
   );
 }
 export let propertiesTab;

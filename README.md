@@ -15,7 +15,7 @@ Roadmap:
   - [ ] Script adding
   - [ ] Other special UI things
 - [ ] File Support
-  - [ ] Image Support with viewer (WIP)
+  - [x] Image Support with viewer (WIP)
   - [ ] Text doc Support with editor
   - [ ] General other file support
 - [ ] Saves
