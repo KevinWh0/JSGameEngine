@@ -417,30 +417,27 @@ export function restoreScreenSettings() {
 
 export function button(txt, x, y, w, h, textOffset, func) {
   var textWidth = getTextWidth(txt);
-  if (
-    inArea(
-      mouseX,
-      mouseY,
-      centerText(txt, x, 0) - textWidth * 0.25,
-      y - 35,
-      textWidth * 1.5,
-      h
-    )
-  ) {
+  if (inArea(mouseX, mouseY, x, y, w, h)) {
     if (mousePressed) {
       //buttonPress.play();
       func();
     }
     fill("yellow");
   } else fill("white");
-  rectOutline(
-    centerText(txt, x, 0) - textWidth * 0.25,
-    y - 35,
-    textWidth * 1.5,
-    h,
-    3
-  );
-  text(txt, centerText(txt, x, 0), y + textOffset);
+  rectOutline(x, y, w, h, 3);
+  text(txt, centerText(txt, x, w), y + textOffset);
+}
+export function lineButton(txt, x, y, w, h, textOffset, func) {
+  var textWidth = getTextWidth(txt);
+  if (inArea(mouseX, mouseY, x, y, w, h)) {
+    if (mousePressed) {
+      //buttonPress.play();
+      func();
+    }
+    fill("yellow");
+  } else fill("white");
+  rect(x, y, w, 4);
+  text(txt, centerText(txt, x, w), y + textOffset);
 }
 
 export function toggleButton(txt1, txt2, x, y, w, h, textOffset, bool, func) {
@@ -605,28 +602,41 @@ export class ButtonBar {
   h;
   names = [];
   onClick = [];
-  constructor(x, y, w, h) {
+  type = "";
+  constructor(x, y, w, h, type) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
+    this.type = type;
     //this.names = names; //A array of strings
     //this.onClick = onClick;
   }
 
   render() {
-    let x = 120;
+    let x = this.x;
     for (let i = 0; i < this.names.length; i++) {
-      button(
-        this.names[i],
-        x,
-        this.y + this.h / 2 + 15,
-        100,
-        55,
-        0,
-        this.onClick[i]
-      );
-      x += getTextWidth(this.names[i]) * 1.5;
+      if (this.type == "line") {
+        lineButton(
+          this.names[i],
+          x,
+          this.y,
+          getTextWidth(this.names[i]) + 20,
+          this.h,
+          25,
+          this.onClick[i]
+        );
+      } else
+        button(
+          this.names[i],
+          x,
+          this.y,
+          getTextWidth(this.names[i]) + 20,
+          this.h,
+          25,
+          this.onClick[i]
+        );
+      x += getTextWidth(this.names[i]) + 25;
     }
   }
 
@@ -634,6 +644,18 @@ export class ButtonBar {
     this.names.push(name);
     this.onClick.push(onClick);
   }
+  setY(y) {
+    this.y = y;
+  }
+}
+
+export function UploadFile(callback) {
+  let fileUploader = document.createElement("input");
+  fileUploader.type = "file";
+  fileUploader.click();
+  fileUploader.addEventListener("change", (async) => {
+    callback(fileUploader.files);
+  });
 }
 
 //Generic download world function

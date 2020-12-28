@@ -1,3 +1,5 @@
+//import { assets } from "./GameObject/ObjectHandler.js";
+//import {} from "./GameObject/ObjectHandler.js";
 import {
   handleUI,
   primaryUIColor,
@@ -9,13 +11,16 @@ import {
   testerGameWindow,
   setTextboxHeight,
 } from "./AssetManager.js";
+import { getDataUrl, readImage } from "./GameObject/FileTypes/FileUploader.js";
 import {
   addNSecondsDelay,
+  ButtonBar,
   fill,
   getTextWidth,
   height,
   inArea,
   mouseDown,
+  mousePressed,
   mouseX,
   mouseY,
   readTextFile,
@@ -23,6 +28,7 @@ import {
   replaceAll,
   text,
   textWraped,
+  UploadFile,
   width,
 } from "./toolbox.js";
 
@@ -128,12 +134,77 @@ let lastFrameY = -1;
 let pinDrag = false;
 setTextboxHeight(consoleHeight - 68);
 
+let consoleArea = "Console";
+
+let consoleMenu = new ButtonBar(10, 15, width, 40, "line");
+consoleMenu.addButton("Console", function () {
+  consoleArea = "Console";
+});
+consoleMenu.addButton("Assets", function () {
+  consoleArea = "AssetManager";
+});
+
 export function drawConsole() {
+  //Console Main Background
   fill(primaryUIColor);
   rect(0, consoleHeight, width, height - consoleHeight);
+  //Console Handle
   fill(handleUI);
   rect(0, consoleHeight, width, 40);
-  //testerGameWindow.canvas.width = width;
+  consoleMenu.setY(consoleHeight);
+  consoleMenu.render();
+
+  switch (consoleArea) {
+    case "AssetManager":
+      rect(width - 40, consoleHeight + 5, 30, 30);
+      if (
+        mousePressed &&
+        inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
+      ) {
+        (async (func) => {
+          UploadFile((files) => {
+            if (files[0].type == "image/png")
+              readImage(files[0], (dataURL) => {
+                assets.set(files[0].name, dataURL);
+
+                //console.log(dataURL);
+              });
+            else alert("We dont support this file yet");
+          });
+        })();
+      }
+      console.log(assets);
+      //for (let i = 0; i < assets.size; i++) {
+      //renderImage(assets.values[i], i * 110, consoleHeight + 80, 100, 100);
+      //}
+      break;
+    case "Console":
+      try {
+        let verticleOffset = 25;
+        //Actually put the log messages
+        for (let i = 0; i < debugConsole.length; i++) {
+          fill(debugConsole[i].col);
+          textWraped(
+            debugConsole[i].text,
+            40,
+            consoleHeight +
+              60 +
+              verticleOffset * -i +
+              verticleOffset * debugConsole.length,
+            width,
+            20
+          );
+        }
+      } catch (err) {
+        debugConsole = [];
+        addToConsole(`Error Console Crash: ${err}`, "red");
+      }
+      break;
+
+    default:
+      break;
+  }
+
   if (mouseDown) {
     if (inArea(mouseX, mouseY, 0, consoleHeight, width, 40) || pinDrag) {
       pinDrag = true;
@@ -148,24 +219,5 @@ export function drawConsole() {
   }
   lastFrameY = mouseY;
 
-  try {
-    let verticleOffset = 25;
-    //Actually put the log messages
-    for (let i = 0; i < debugConsole.length; i++) {
-      fill(debugConsole[i].col);
-      textWraped(
-        debugConsole[i].text,
-        40,
-        consoleHeight +
-          60 +
-          verticleOffset * -i +
-          verticleOffset * debugConsole.length,
-        width,
-        20
-      );
-    }
-  } catch (err) {
-    debugConsole = [];
-    addToConsole(`Error Console Crash: ${err}`, "red");
-  }
+  //testerGameWindow.canvas.width = width;
 }

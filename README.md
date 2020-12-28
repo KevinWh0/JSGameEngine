@@ -14,6 +14,13 @@ Roadmap:
   - [ ] Components UI
   - [ ] Script adding
   - [ ] Other special UI things
-- [ ] Image Support
+- [ ] File Support
+  - [ ] Image Support with viewer (WIP)
+  - [ ] Text doc Support with editor
+  - [ ] General other file support
 - [ ] Saves
 - [ ] Components for objects
+
+Known Bugs:
+
+- [ ] Setting width or height to a negative makes it so you cant select the object anymore

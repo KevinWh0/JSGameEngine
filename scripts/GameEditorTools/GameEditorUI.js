@@ -52,6 +52,75 @@ let resetPropertiesTab = new UIStrechableTabRight(
   consoleHeight - 65
 );
 
+function addBaseComponents() {
+  propertiesTab.addComponent(
+    new TextBox(
+      30,
+      5,
+      100,
+      50,
+      objects[selectedOBJ].name,
+      objects[selectedOBJ],
+      "setName"
+    )
+  );
+  propertiesTab.addComponent(
+    new Toggle(
+      30,
+      60,
+      50,
+      50,
+      objects[selectedOBJ].enabled,
+      objects[selectedOBJ],
+      "setEnabled"
+    )
+  );
+  propertiesTab.addComponent(
+    new NumberBox(
+      30,
+      120,
+      50,
+      50,
+      objects[selectedOBJ].x,
+      objects[selectedOBJ],
+      "setX"
+    )
+  );
+  propertiesTab.addComponent(
+    new NumberBox(
+      30 + 60,
+      120,
+      50,
+      50,
+      objects[selectedOBJ].y,
+      objects[selectedOBJ],
+      "setY"
+    )
+  );
+
+  propertiesTab.addComponent(
+    new NumberBox(
+      90 + 60,
+      120,
+      50,
+      50,
+      objects[selectedOBJ].w,
+      objects[selectedOBJ],
+      "setWidth"
+    )
+  );
+  propertiesTab.addComponent(
+    new NumberBox(
+      150 + 60,
+      120,
+      50,
+      50,
+      objects[selectedOBJ].h,
+      objects[selectedOBJ],
+      "setHeight"
+    )
+  );
+}
 export let propertiesTab;
 resetPropertiesWindow();
 let lastframeUnselected;
@@ -66,50 +135,7 @@ export function runUI() {
       //Copy all the data accross
 
       //TODO look through all of the components in a lookup table using TypeOf to see what components are needed to be put down
-      propertiesTab.addComponent(
-        new TextBox(
-          30,
-          5,
-          100,
-          50,
-          objects[selectedOBJ].name,
-          objects[selectedOBJ],
-          "setName"
-        )
-      );
-      propertiesTab.addComponent(
-        new Toggle(
-          30,
-          60,
-          50,
-          50,
-          objects[selectedOBJ].enabled,
-          objects[selectedOBJ],
-          "setEnabled"
-        )
-      );
-      propertiesTab.addComponent(
-        new NumberBox(
-          30,
-          120,
-          50,
-          50,
-          objects[selectedOBJ].x,
-          objects[selectedOBJ],
-          "setX"
-        )
-      );
-      propertiesTab.addComponent(
-        new NumberBox(
-          30 + 60,
-          120,
-          50,
-          50,
-          objects[selectedOBJ].y,
-          objects[selectedOBJ],
-          "setY"
-        )
-      );
+      addBaseComponents();
     }
     lastframeUnselected = false;
   }
@@ -138,65 +164,7 @@ export function showPropertiesBar(object) {
   //Temparary way of adding button
   if (selectedOBJ != null) {
     if (propertiesTab.components.length == 0) {
-      propertiesTab.addComponent(
-        new Toggle(30, 60, 50, 50, true, objects[selectedOBJ], "setEnabled")
-      );
-      propertiesTab.addComponent(
-        new TextBox(
-          30,
-          5,
-          100,
-          50,
-          objects[selectedOBJ].name,
-          objects[selectedOBJ],
-          "setName"
-        )
-      );
-      propertiesTab.addComponent(
-        new NumberBox(
-          30,
-          120,
-          50,
-          50,
-          objects[selectedOBJ].x,
-          objects[selectedOBJ],
-          "setX"
-        )
-      );
-      propertiesTab.addComponent(
-        new NumberBox(
-          30 + 60,
-          120,
-          50,
-          50,
-          objects[selectedOBJ].y,
-          objects[selectedOBJ],
-          "setY"
-        )
-      );
-
-      propertiesTab.addComponent(
-        new NumberBox(
-          90 + 60,
-          120,
-          50,
-          50,
-          objects[selectedOBJ].w,
-          objects[selectedOBJ],
-          "setWidth"
-        )
-      );
-      propertiesTab.addComponent(
-        new NumberBox(
-          150 + 60,
-          120,
-          50,
-          50,
-          objects[selectedOBJ].h,
-          objects[selectedOBJ],
-          "setHeight"
-        )
-      );
+      addBaseComponents();
     }
   }
 

@@ -54,7 +54,7 @@ export let fps;
 setTitle("Game Engine!");
 //setIcon("./icon.png");
 
-let buttonsBar = new ButtonBar(0, 0, width, 50);
+let buttonsBar = new ButtonBar(10, 15, width, 40);
 buttonsBar.addButton("Game Viewer", function () {
   setState(states.gameViewer);
   document.getElementById("codeWrapper").style.display = "none";
@@ -108,7 +108,9 @@ export function updateGameArea() {
 
   //if (mousePressed) addToConsole("Hello This is the console!", "white");
   //setFontSize(20, "Source Code Pro");
-  setFontSize(30, "Bebas Neue");
+  //setFontSize(30, "Bebas Neue");
+  setFontSize(20, "Ubuntu");
+
   try {
     stateCode.get(state)(game.frameNo);
   } catch (err) {
