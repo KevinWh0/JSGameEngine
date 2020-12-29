@@ -21,6 +21,15 @@ export function rectGameCanvas(x, y, w, h) {
   ctx.fillRect(x, y, w, h);
 }
 
+export function renderImageGameCanvas(image, x, y, w, h) {
+  ctx.mozImageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+  ctx.msImageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = false;
+
+  ctx.drawImage(image, x, y, w, h);
+}
+
 function background(col) {
   ctx.fillStyle = col;
   //globalBounds = { x: 0, y: 60, w: width, h: consoleHeight - 60 };

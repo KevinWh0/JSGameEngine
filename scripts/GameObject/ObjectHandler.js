@@ -25,6 +25,8 @@ import {
   textWraped,
 } from "../toolbox.js";
 import { GameObject } from "./GameObject.js";
+import { RectangleObjectComponent } from "./GameObjectComponents/GameComponents/RectangleComponent.js";
+import { TexturedObjectComponent } from "./GameObjectComponents/GameComponents/TextureComponent.js";
 
 export let objects = [];
 addObject(new GameObject(10, 10, 0, 0).setName("Camera").setType("Camera"));
@@ -113,3 +115,9 @@ export function renderObjects() {
 export function addObject(obj) {
   objects.push(obj);
 }
+//All the components in a map
+export let componentsMap = new Map();
+let obj = new RectangleObjectComponent("blue");
+componentsMap.set(obj.componentName, obj);
+obj = new TexturedObjectComponent();
+componentsMap.set(obj.componentName, obj);

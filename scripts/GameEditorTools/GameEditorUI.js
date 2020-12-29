@@ -17,6 +17,7 @@ import { GameObject } from "../GameObject/GameObject.js";
 import { RectangleObjectComponent } from "../GameObject/GameObjectComponents/GameComponents/RectangleComponent.js";
 
 import {
+  button,
   fill,
   height,
   inArea,
@@ -39,6 +40,7 @@ import {
   UIStrechableTabRight,
   CustomFunction,
 } from "../UIStrechableTab.js";
+import { TexturedObjectComponent } from "../GameObject/GameObjectComponents/GameComponents/TextureComponent.js";
 
 export let explorerTab = new UIStrechableTabLeft(
   0,
@@ -132,6 +134,18 @@ function addBaseComponents() {
           250 + tab.y + yOffset + i * 20
         );
       }
+      button(
+        "Add Component",
+        30 + tab.x,
+        250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20,
+        200,
+        50,
+        30,
+        () => {
+          //alert("a");
+        }
+      );
+      //rect(30 + tab.x, 250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20, 100,50);
     })
   );
 }
@@ -231,6 +245,7 @@ function createNewObjectButton() {
     addObject(
       new GameObject(10, 10, 200, 200)
         .addComponent(new RectangleObjectComponent("blue"))
+        //.addComponent(new TexturedObjectComponent())
         .setName("Object")
     );
     resetPropertiesWindow();
