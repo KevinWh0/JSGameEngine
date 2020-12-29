@@ -575,7 +575,7 @@ export async function readTextFile(url) {
   return response.text();
 }
 // Function to download data to a file
-function download(data, filename, type) {
+export function download(data, filename, type) {
   var file = new Blob([data], { type: type });
   if (window.navigator.msSaveOrOpenBlob)
     // IE10+
