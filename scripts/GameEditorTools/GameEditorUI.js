@@ -7,6 +7,7 @@ import {
 } from "../AssetManager.js";
 import {
   addObject,
+  componentsMap,
   objects,
   renderObjects,
   selectedOBJ,
@@ -142,7 +143,8 @@ function addBaseComponents() {
         50,
         30,
         () => {
-          //alert("a");
+          if(!objects[selectedOBJ].components.includes(componentsMap.get("Textured Component")))
+          objects[selectedOBJ].addComponent(componentsMap.get("Textured Component"));
         }
       );
       //rect(30 + tab.x, 250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20, 100,50);

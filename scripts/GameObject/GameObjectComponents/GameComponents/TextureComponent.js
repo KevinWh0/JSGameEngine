@@ -4,7 +4,7 @@ import {
   rectGameCanvas,
   renderImageGameCanvas,
 } from "../../../GameLibs/gameCanvasRendering.js";
-import { jsIcon } from "../../../AssetManager.js";
+import { noTextureSelected } from "../../../AssetManager.js";
 export class TexturedObjectComponent {
   type = "visual";
   componentName = "Textured Component";
@@ -24,5 +24,14 @@ export class TexturedObjectComponent {
         parentObject.w,
         parentObject.h
       );
+      else{
+        renderImageGameCanvas(
+          noTextureSelected,
+          parentObject.x,
+          parentObject.y,
+          parentObject.w,
+          parentObject.h
+        );
+      }
   }
 }

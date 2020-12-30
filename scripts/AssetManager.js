@@ -133,3 +133,6 @@ stateCode.set("gameViewer", function (tick) {
 
 export let jsIcon = new Image();
 jsIcon.src = "./EngineAssets/js_purpleGradientOutline.svg";
+
+export let noTextureSelected = new Image();
+noTextureSelected.src = "./EngineAssets/NoTexture.svg";
