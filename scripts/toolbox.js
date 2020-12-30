@@ -156,6 +156,10 @@ export function setFontSize(size, font) {
   game.context.font = size + "px " + font;
 }
 
+export function getFontSize() {
+  return parseInt(game.context.font.split("px ")[0]);
+}
+
 export function getTextWidth(txt) {
   return game.context.measureText(txt).width;
 }

@@ -30,6 +30,7 @@ import {
   text,
   textWraped,
   width,
+  getFontSize,
 } from "../toolbox.js";
 import { consoleHeight } from "../CodeCompiler.js";
 import {
@@ -57,6 +58,8 @@ let resetPropertiesTab = new UIStrechableTabRight(
   consoleHeight - 65
 );
 
+
+let selectedComponent = null;
 function addBaseComponents() {
   propertiesTab.addComponent(
     new TextBox(
@@ -128,12 +131,24 @@ function addBaseComponents() {
   propertiesTab.addComponent(new TextArea("Components:", 30, 220, 50, 50));
   propertiesTab.addComponent(
     new CustomFunction((tab, yOffset) => {
+      if(selectedComponent != null){
+        fill(secondaryUIColor)
+        rect(20 + tab.x,250 + tab.y + yOffset + (selectedComponent - 1) * 20, width, getFontSize() + 5);
+      }
       for (let i = 0; i < objects[selectedOBJ].components.length; i++) {
+
+        fill(textUIColor);
+
         text(
           objects[selectedOBJ].components[i].componentName,
           30 + tab.x,
           250 + tab.y + yOffset + i * 20
         );
+
+        //console.log(getFontSize());
+        if(mousePressed && inArea(mouseX,mouseY, 30 + tab.x,250 + tab.y + yOffset + (i - 1) * 20, width, getFontSize())){
+          selectedComponent = i;
+        }
       }
       button(
         "Add Component",
