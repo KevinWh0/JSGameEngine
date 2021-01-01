@@ -225,7 +225,8 @@ function addBaseComponents() {
         componentEditorPopup.runAsPanel(
           componentsUIDictionary.get(
             objects[selectedOBJ].components[selectedComponent].componentName
-          ).Update
+          ).Update,
+          objects
         );
       } catch (error) {}
       //rect(30 + tab.x, 250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20, 100,50);

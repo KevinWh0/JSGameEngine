@@ -854,8 +854,8 @@ export class PopupPanel {
     }
   }
 
-  runAsPanel(func) {
-    func(this);
+  runAsPanel(func, extraPeram) {
+    func(this, extraPeram);
   }
 
   toggleShow() {

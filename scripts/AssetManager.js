@@ -75,13 +75,13 @@ componentsUIDictionary.set("Textured Component", {
       })
     );
   },
-  Update: (parent) => {
+  Update: (parent, objects) => {
     console.log(objects[selectedOBJ].components[selectedComponent]);
     //This is used for the actual setting of the values
-    if (parent.components[0].currentSelection == "No Image")
-      objects[selectedOBJ].components[selectedComponent] = null;
-    else {
-      objects[selectedOBJ].components[selectedComponent] =
+    if (parent.components[0].currentSelection == "No Image") {
+      objects[selectedOBJ].components[selectedComponent].data.image = null;
+    } else {
+      objects[selectedOBJ].components[selectedComponent].data.image =
         parent.components[0].currentSelection;
     }
   },
