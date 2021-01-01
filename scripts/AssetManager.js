@@ -62,7 +62,7 @@ componentsUIDictionary.set("Rectangle Component", {
 });
 */
 componentsUIDictionary.set("Textured Component", {
-  OnSelect: (parent) => {
+  OnSelect: (parent, objects) => {
     //The parent is the popup pannel
     parent.removeAllComponents();
 
@@ -74,9 +74,14 @@ componentsUIDictionary.set("Textured Component", {
         });
       })
     );
+    if (
+      objects[selectedOBJ].components[selectedComponent].data.image != undefined
+    )
+      parent.components[0].currentSelection =
+        objects[selectedOBJ].components[selectedComponent].data.image;
   },
   Update: (parent, objects) => {
-    console.log(objects[selectedOBJ].components[selectedComponent]);
+    //console.log(objects[selectedOBJ].components[selectedComponent]);
     //This is used for the actual setting of the values
     if (parent.components[0].currentSelection == "No Image") {
       objects[selectedOBJ].components[selectedComponent].data.image = null;

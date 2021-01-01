@@ -189,7 +189,8 @@ function addBaseComponents() {
               componentEditorPopup.runAsPanel(
                 componentsUIDictionary.get(
                   objects[selectedOBJ].components[i].componentName
-                ).OnSelect
+                ).OnSelect,
+                objects
               );
             } catch (error) {}
             componentEditorPopup.setPos(tab.x + 25, tab.y + tab.h - 200);
