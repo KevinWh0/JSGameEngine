@@ -1,5 +1,11 @@
 import { updateGameArea, fps } from "../index.js";
-import { specialChars } from "./AssetManager.js";
+import {
+  handleUI,
+  primaryUIColor,
+  secondaryUIColor,
+  specialChars,
+  textUIColor,
+} from "./AssetManager.js";
 
 export let width = window.innerWidth;
 export let height = window.innerHeight;
@@ -92,13 +98,20 @@ export let game = {
       keyHeldText = "";
     });
     try {
-      $(window).resize(function () {
-        //resize just happened, pixels changed
+      window.addEventListener("resize", function (e) {
         width = window.innerWidth;
         height = window.innerHeight;
         document.getElementById("canvas").width = width;
         document.getElementById("canvas").height = height;
       });
+
+      /*$(window).resize(function () {
+        //resize just happened, pixels changed
+        width = window.innerWidth;
+        height = window.innerHeight;
+        document.getElementById("canvas").width = width;
+        document.getElementById("canvas").height = height;
+      });*/
     } catch (error) {
       alert(
         "JQuery does not want to load, the game may behave unexpectedly without it"
@@ -794,6 +807,183 @@ export function copyToClipboard(text) {
       console.error("Async: Could not copy text: ", err);
     }
   );
+}
+
+export class PopupPanel {
+  showing = false;
+  components = [];
+
+  constructor(x, y, w, h) {
+    this.w = w;
+    this.h = h;
+    this.x = x;
+    this.y = y;
+  }
+
+  run() {
+    if (this.showing) {
+      fill(secondaryUIColor);
+      rect(this.x, this.y, this.w, this.h);
+      fill(handleUI);
+      rect(this.x, this.y, this.w, 30);
+      let textX = this.x + this.w - getFontSize();
+      let textY = this.y + getFontSize();
+
+      if (
+        inArea(
+          mouseX,
+          mouseY,
+          textX,
+          textY - getFontSize(),
+          getFontSize(),
+          getFontSize()
+        )
+      ) {
+        if (mousePressed) this.showing = false;
+
+        fill("crimson");
+      } else {
+        fill("red");
+      }
+
+      text("X", textX, textY);
+
+      this.components.forEach((c) => {
+        c.run(this, 0);
+      });
+    }
+  }
+
+  runAsPanel(func) {
+    func(this);
+  }
+
+  toggleShow() {
+    this.showing = !this.showing;
+  }
+
+  setShowing(s = true) {
+    this.showing = s;
+  }
+  setSize(w, h) {
+    this.w = w;
+    this.h = h;
+  }
+  setPos(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+  addComponent(c) {
+    this.components.push(c);
+    return this;
+  }
+  removeAllComponents() {
+    this.components = [];
+  }
+}
+
+export class Dropdown {
+  x;
+  y;
+  w;
+  h;
+  expanded = false;
+  onExpand = () => {};
+  items = [];
+  currentSelection = "No Image";
+  pressedLastFrame = false; //For mousePress
+  constructor(x, y, w, h) {
+    this.w = w;
+    this.h = h;
+    this.x = x;
+    this.y = y;
+  }
+
+  run(parentContainer, yOffset) {
+    fill(primaryUIColor);
+    rect(
+      this.x + parentContainer.x,
+      this.y + parentContainer.y,
+      this.w,
+      this.h
+    );
+    fill(textUIColor);
+    text(
+      this.currentSelection,
+      this.x + parentContainer.x,
+      this.y + parentContainer.y + getFontSize(),
+      this.w,
+      this.h
+    );
+
+    if (
+      mousePressed &&
+      inArea(
+        mouseX,
+        mouseY,
+        this.x + parentContainer.x,
+        this.y + parentContainer.y,
+        this.w,
+        this.h
+      )
+    ) {
+      this.expanded = true;
+      this.onExpand(this);
+      this.pressedLastFrame = mousePressed;
+    }
+    if (this.expanded) {
+      for (let i = 0; i < this.items.length; i++) {
+        fill(primaryUIColor);
+
+        rect(
+          this.x + parentContainer.x,
+          this.y + parentContainer.y - (i + 1) * this.h,
+          this.w,
+          this.h
+        );
+        fill(textUIColor);
+        text(
+          this.items[i],
+          this.x + parentContainer.x,
+          this.y + parentContainer.y + getFontSize() - (i + 1) * this.h,
+          this.w,
+          this.h
+        );
+        if (
+          mousePressed &&
+          !this.pressedLastFrame &&
+          inArea(
+            mouseX,
+            mouseY,
+            this.x + parentContainer.x,
+            this.y + parentContainer.y - (i + 1) * this.h,
+            this.w,
+            this.h
+          )
+        ) {
+          this.expanded = false;
+          this.currentSelection = this.items[i];
+        }
+      }
+    }
+    this.pressedLastFrame = mousePressed;
+  }
+
+  addItem(name) {
+    this.items.push(name);
+    return this;
+  }
+  clearItems() {
+    this.items = [];
+  }
+  setItems(arr) {
+    this.items = arr;
+    return this;
+  }
+  setOnExpand(func) {
+    this.onExpand = func;
+    return this;
+  }
 }
 
 export function generateUUID() {

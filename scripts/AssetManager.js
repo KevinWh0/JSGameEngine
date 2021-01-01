@@ -1,4 +1,6 @@
 import { compileCode, consoleHeight, setCode } from "./CodeCompiler.js";
+import { assets, selectedComponent } from "./GameAssets/AssetHandler.js";
+import { selectedOBJ } from "./GameObject/selectedOBJHandler.js";
 import {
   background,
   fill,
@@ -18,6 +20,7 @@ import {
   text,
   height,
   readTextFile,
+  Dropdown,
 } from "./toolbox.js";
 
 /*state Manager*/
@@ -38,15 +41,51 @@ export const handleUI = "rgb(51, 51, 51)";
 export const textUIColor = "white";
 export const greyTextUIColor = "rgb(150,150,150)";
 
-export let syntaxHighlighting = {
-  if: "blue",
-  let: "purple",
-};
-
 export let specialChars = {
   return: "⏎",
   tab: "↹",
 };
+export let componentsUIDictionary = new Map();
+
+/*
+componentsUIDictionary.set("Rectangle Component", {
+  OnSelect: (parent) => {
+    //The parent is the popup pannel
+    parent.removeAllComponents();
+    //TODO add color selector here
+  },
+  Update: (parent) => {
+    //This is used for the actual setting of the values
+    objects[selectedOBJ].components[selectedComponent].data.color =
+      parent.components[0].currentCol;
+  },
+});
+*/
+componentsUIDictionary.set("Textured Component", {
+  OnSelect: (parent) => {
+    //The parent is the popup pannel
+    parent.removeAllComponents();
+
+    parent.addComponent(
+      new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
+        parent1.clearItems();
+        Array.from(assets.keys()).forEach((a) => {
+          if (assets.get(a).type == "Image") parent1.addItem(a);
+        });
+      })
+    );
+  },
+  Update: (parent) => {
+    console.log(objects[selectedOBJ].components[selectedComponent]);
+    //This is used for the actual setting of the values
+    if (parent.components[0].currentSelection == "No Image")
+      objects[selectedOBJ].components[selectedComponent] = null;
+    else {
+      objects[selectedOBJ].components[selectedComponent] =
+        parent.components[0].currentSelection;
+    }
+  },
+});
 
 /* Script Data */
 //When a script is made use the name as the key and the code as the item.

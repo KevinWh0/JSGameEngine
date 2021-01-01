@@ -151,8 +151,6 @@ consoleMenu.addButton("Assets", function () {
   consoleArea = "AssetManager";
 });
 
-let imageTypes = ["image/png", "image/jpeg", "image/svg+xml"];
-
 export function drawConsole() {
   //Console Main Background
   fill(primaryUIColor);
@@ -256,6 +254,8 @@ export function drawConsole() {
 
   if (mouseDown) {
     if (inArea(mouseX, mouseY, 0, consoleHeight, width, 40) || pinDrag) {
+      document.getElementById("GameViewer").height =
+        height - (60 + (height - consoleHeight));
       pinDrag = true;
       if (consoleHeight - (lastFrameY - mouseY) > 100)
         consoleHeight = consoleHeight - (lastFrameY - mouseY);

@@ -1,4 +1,5 @@
 import {
+  componentsUIDictionary,
   greyTextUIColor,
   handleUI,
   primaryUIColor,
@@ -8,12 +9,14 @@ import {
 import {
   addObject,
   componentsMap,
-  objects,
   renderObjects,
-  selectedOBJ,
   selectObject,
-  setSelectedObj,
+  objects,
 } from "../GameObject/ObjectHandler.js";
+import {
+  selectedOBJ,
+  setSelectedObj,
+} from "../GameObject/selectedOBJHandler.js";
 import { GameObject } from "../GameObject/GameObject.js";
 import { RectangleObjectComponent } from "../GameObject/GameObjectComponents/GameComponents/RectangleComponent.js";
 
@@ -31,6 +34,8 @@ import {
   textWraped,
   width,
   getFontSize,
+  PopupPanel,
+  Dropdown,
 } from "../toolbox.js";
 import { consoleHeight } from "../CodeCompiler.js";
 import {
@@ -43,6 +48,11 @@ import {
   CustomFunction,
 } from "../UIStrechableTab.js";
 import { TexturedObjectComponent } from "../GameObject/GameObjectComponents/GameComponents/TextureComponent.js";
+import {
+  assets,
+  selectedComponent,
+  setSelectedComponent,
+} from "../GameAssets/AssetHandler.js";
 
 export let explorerTab = new UIStrechableTabLeft(
   0,
@@ -58,8 +68,20 @@ let resetPropertiesTab = new UIStrechableTabRight(
   consoleHeight - 65
 );
 
+let componentEditorPopup = new PopupPanel(
+  10,
+  10,
+  10,
+  10
+); /*.addComponent(
+  new Dropdown(10, 50, 100, 40).setOnExpand((parent) => {
+    parent.clearItems();
+    Array.from(assets.keys()).forEach((a) => {
+      if (assets.get(a).type == "Image") parent.addItem(a);
+    });
+  })
+)*/
 
-let selectedComponent = null;
 function addBaseComponents() {
   propertiesTab.addComponent(
     new TextBox(
@@ -131,12 +153,16 @@ function addBaseComponents() {
   propertiesTab.addComponent(new TextArea("Components:", 30, 220, 50, 50));
   propertiesTab.addComponent(
     new CustomFunction((tab, yOffset) => {
-      if(selectedComponent != null){
-        fill(secondaryUIColor)
-        rect(20 + tab.x,250 + tab.y + yOffset + (selectedComponent - 1) * 20, width, getFontSize() + 5);
+      if (selectedComponent != null) {
+        fill(secondaryUIColor);
+        rect(
+          20 + tab.x,
+          250 + tab.y + yOffset + (selectedComponent - 1) * 20,
+          width,
+          getFontSize() + 5
+        );
       }
       for (let i = 0; i < objects[selectedOBJ].components.length; i++) {
-
         fill(textUIColor);
 
         text(
@@ -146,22 +172,62 @@ function addBaseComponents() {
         );
 
         //console.log(getFontSize());
-        if(mousePressed && inArea(mouseX,mouseY, 30 + tab.x,250 + tab.y + yOffset + (i - 1) * 20, width, getFontSize())){
-          selectedComponent = i;
-        }
+        if (!componentEditorPopup.showing)
+          if (
+            mousePressed &&
+            inArea(
+              mouseX,
+              mouseY,
+              30 + tab.x,
+              250 + tab.y + yOffset + (i - 1) * 20,
+              width,
+              getFontSize()
+            )
+          ) {
+            //setup the popup panel with required components
+            try {
+              componentEditorPopup.runAsPanel(
+                componentsUIDictionary.get(
+                  objects[selectedOBJ].components[i].componentName
+                ).OnSelect
+              );
+            } catch (error) {}
+            componentEditorPopup.setPos(tab.x + 25, tab.y + tab.h - 200);
+            componentEditorPopup.setSize(tab.w - 30, 200);
+            componentEditorPopup.setShowing();
+            setSelectedComponent(i);
+          }
       }
-      button(
-        "Add Component",
-        30 + tab.x,
-        250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20,
-        200,
-        50,
-        30,
-        () => {
-          if(!objects[selectedOBJ].components.includes(componentsMap.get("Textured Component")))
-          objects[selectedOBJ].addComponent(componentsMap.get("Textured Component"));
-        }
-      );
+      if (!componentEditorPopup.showing)
+        button(
+          "Add Component",
+          30 + tab.x,
+          250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20,
+          200,
+          50,
+          30,
+          () => {
+            if (
+              !objects[selectedOBJ].components.includes(
+                componentsMap.get("Textured Component")
+              )
+            )
+              objects[selectedOBJ].addComponent(
+                componentsMap.get("Textured Component")
+              );
+          }
+        );
+      if (selectedComponent != null) {
+        componentEditorPopup.run();
+      }
+      //setup the popup panel with required components
+      try {
+        componentEditorPopup.runAsPanel(
+          componentsUIDictionary.get(
+            objects[selectedOBJ].components[selectedComponent].componentName
+          ).Update
+        );
+      } catch (error) {}
       //rect(30 + tab.x, 250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20, 100,50);
     })
   );

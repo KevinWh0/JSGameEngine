@@ -18,7 +18,7 @@ import {
   text,
   width,
 } from "./toolbox.js";
-import { selectedOBJ } from "./GameObject/ObjectHandler.js";
+import { selectedOBJ } from "./GameObject/selectedOBJHandler.js";
 
 export class UIStrechableTabRight {
   x;

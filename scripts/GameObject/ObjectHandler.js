@@ -27,14 +27,11 @@ import {
 import { GameObject } from "./GameObject.js";
 import { RectangleObjectComponent } from "./GameObjectComponents/GameComponents/RectangleComponent.js";
 import { TexturedObjectComponent } from "./GameObjectComponents/GameComponents/TextureComponent.js";
-
+import { selectedOBJ, setSelectedObj } from "./selectedOBJHandler.js";
 export let objects = [];
+
 addObject(new GameObject(10, 10, 0, 0).setName("Camera").setType("Camera"));
 
-export let selectedOBJ = null;
-export function setSelectedObj(o) {
-  selectedOBJ = o;
-}
 export function selectObject() {
   getOffset();
   let pressedInRectThisFrame = false;
@@ -54,7 +51,7 @@ export function selectObject() {
       obj.enabled
     ) {
       pressedInRectThisFrame = true;
-      selectedOBJ = i;
+      setSelectedObj(i);
       resetPropertiesWindow();
     }
   }
@@ -73,7 +70,7 @@ export function selectObject() {
         parseInt(document.getElementById("GameViewer").height)
       )
     )
-      selectedOBJ = null;
+      setSelectedObj(null);
   }
   if (selectedOBJ != null) {
     const selOBJ = objects[selectedOBJ];
