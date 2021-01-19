@@ -11,7 +11,7 @@ export class RectangleObjectComponent {
   };
 
   constructor(color) {
-    this.data.color = color;
+    this.data.color = color /*Math.random() > 0.5 ? "red" : "purple"*/;
   }
 
   run(parentObject) {

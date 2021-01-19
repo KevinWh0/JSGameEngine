@@ -36,6 +36,7 @@ import {
   getFontSize,
   PopupPanel,
   Dropdown,
+  returnCopy,
 } from "../toolbox.js";
 import { consoleHeight } from "../CodeCompiler.js";
 import {
@@ -68,7 +69,7 @@ let resetPropertiesTab = new UIStrechableTabRight(
   consoleHeight - 65
 );
 
-let componentEditorPopup = new PopupPanel(
+export let componentEditorPopup = new PopupPanel(
   10,
   10,
   10,
@@ -170,8 +171,6 @@ function addBaseComponents() {
           30 + tab.x,
           250 + tab.y + yOffset + i * 20
         );
-
-        //console.log(getFontSize());
         if (!componentEditorPopup.showing)
           if (
             mousePressed &&
@@ -185,6 +184,8 @@ function addBaseComponents() {
             )
           ) {
             //setup the popup panel with required components
+            //Runs once when first clicked.
+            componentEditorPopup.components = [];
             try {
               componentEditorPopup.runAsPanel(
                 componentsUIDictionary.get(
@@ -199,6 +200,7 @@ function addBaseComponents() {
             setSelectedComponent(i);
           }
       }
+      //console.log(componentEditorPopup.components);
       if (!componentEditorPopup.showing)
         button(
           "Add Component",
@@ -208,14 +210,23 @@ function addBaseComponents() {
           50,
           30,
           () => {
+            /*
+                addObject(
+      new GameObject(10, 10, 200, 200)
+        .addComponent(new RectangleObjectComponent("blue"))
+        //.addComponent(new TexturedObjectComponent())
+        .setName("Object")
+    );
+     */
+            /*
             if (
               !objects[selectedOBJ].components.includes(
                 componentsMap.get("Textured Component")
               )
-            )
-              objects[selectedOBJ].addComponent(
-                componentsMap.get("Textured Component")
-              );
+            )*/
+            objects[selectedOBJ].addComponent(
+              returnCopy(componentsMap.get("Textured Component"))
+            );
           }
         );
       if (selectedComponent != null) {
@@ -286,6 +297,11 @@ export function showPropertiesBar(object) {
 }
 
 export function resetPropertiesWindow() {
+  //Hide that popup that shows for selected things
+  setSelectedComponent(null);
+  componentEditorPopup.removeAllComponents();
+  componentEditorPopup.setShowing(false);
+  //Reset the properties tab
   propertiesTab = $.extend(
     true,
     Object.create(Object.getPrototypeOf(resetPropertiesTab)),

@@ -86,6 +86,7 @@ componentsUIDictionary.set("Textured Component", {
     if (parent.components[0].currentSelection == "No Image") {
       objects[selectedOBJ].components[selectedComponent].data.image = null;
     } else {
+      //console.log(objects[selectedOBJ]);
       objects[selectedOBJ].components[selectedComponent].data.image =
         parent.components[0].currentSelection;
     }
