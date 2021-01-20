@@ -23,4 +23,8 @@ export class RectangleObjectComponent {
       parentObject.h
     );
   }
+
+  setCol(col) {
+    this.data.color = col;
+  }
 }

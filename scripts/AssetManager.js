@@ -22,6 +22,7 @@ import {
   readTextFile,
   Dropdown,
 } from "./toolbox.js";
+import { TextBox } from "./UIStrechableTab.js";
 
 /*state Manager*/
 export const states = {
@@ -90,6 +91,37 @@ componentsUIDictionary.set("Textured Component", {
       objects[selectedOBJ].components[selectedComponent].data.image =
         parent.components[0].currentSelection;
     }
+  },
+});
+
+componentsUIDictionary.set("Rectangle Component", {
+  OnSelect: (parent, objects) => {
+    //The parent is the popup pannel
+    parent.removeAllComponents();
+    try {
+      parent.addComponent(
+        new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
+          parent1.clearItems();
+          parent1.addItem("red");
+
+          parent1.addItem("orange");
+
+          parent1.addItem("yellow");
+        })
+        //.setText(
+        //objects[selectedOBJ].components[selectedComponent].data.color
+        //)
+      );
+      //console.log(objects[selectedOBJ].components[selectedComponent].data);
+      //parent.components[0].currentSelection =
+      //objects[selectedOBJ].components[selectedComponent].data.color;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  Update: (parent, objects) => {
+    objects[selectedOBJ].components[selectedComponent].data.color =
+      parent.components[0].currentSelection;
   },
 });
 
@@ -181,3 +213,13 @@ jsIcon.src = "./EngineAssets/js_purpleGradientOutline.svg";
 
 export let noTextureSelected = new Image();
 noTextureSelected.src = "./EngineAssets/NoTexture.svg";
+
+export let uploadIcon = new Image();
+uploadIcon.src = "./EngineAssets/Upload.svg";
+
+export let fileIcon = new Image();
+fileIcon.src =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAVklEQVQ4T2NkoBAwoun/T8A8dPUMyAL/" +
+  "/" +
+  "/" +
+  "/Hr5+REawcxRAMA6CKMBwCMxzdEJJcADMV2RCiXQDTDHIJXgOIiZRRFzDgD0Rc6WCExALIm4RyIzw1wxgAHlRIEZs+XvUAAAAASUVORK5CYII=";

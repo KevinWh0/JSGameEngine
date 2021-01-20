@@ -11,8 +11,14 @@ import {
   textUIColor,
   testerGameWindow,
   setTextboxHeight,
+  fileIcon,
+  uploadIcon,
 } from "./AssetManager.js";
-import { getDataUrl, readImage } from "./GameObject/FileTypes/FileUploader.js";
+import {
+  getDataUrl,
+  readImage,
+  readFile,
+} from "./GameObject/FileTypes/FileUploader.js";
 import {
   addNSecondsDelay,
   ButtonBar,
@@ -38,6 +44,7 @@ import {
   calculateDecimalRatio,
 } from "./toolbox.js";
 import { ImageObject } from "./GameObject/FileTypes/Image.js";
+import { FileObject } from "./GameObject/FileTypes/File.js";
 
 export let running = false;
 export function setRunning(r) {
@@ -163,7 +170,9 @@ export function drawConsole() {
 
   switch (consoleArea) {
     case "AssetManager":
-      rect(width - 40, consoleHeight + 5, 30, 30);
+      //fill("purple");
+      //rect(width - 40, consoleHeight + 5, 30, 30);
+      renderImage(uploadIcon, width - 40, consoleHeight + 5, 30, 30);
       if (
         mousePressed &&
         inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
@@ -181,7 +190,13 @@ export function drawConsole() {
                 readImage(files[i], (dataURL) => {
                   assets.set(files[i].name, new ImageObject(dataURL));
                 });
-              else alert("We dont support this file yet");
+              else {
+                readFile(files[i], (data) => {
+                  assets.set(files[i].name, new FileObject(data));
+                });
+                //assets.set(files[i].name, new FileObject(files.data));
+                //alert("We dont support this file yet");
+              }
             }
           });
         })();
@@ -200,7 +215,7 @@ export function drawConsole() {
           50,
           50
         );*/
-        let img = Assets[i].getImage();
+        let img = Assets[i].type == "Image" ? Assets[i].getImage() : fileIcon; //console.log(img);
         let ratio = calculateDecimalRatio(img.width, img.height);
         //console.log(ratio);
         let resizedW = ratio[0] * 100;
@@ -212,6 +227,43 @@ export function drawConsole() {
           resizedW,
           resizedH
         );
+
+        if (
+          mousePressed &&
+          inArea(
+            mouseX,
+            mouseY,
+            imageX * 110 + 20,
+            consoleHeight + 80 + imageY * 140,
+            resizedW,
+            resizedH
+          )
+        ) {
+          //if the mouse was clicked in a asset open a popup to show it.
+          let newWin = window.open(
+            "about:blank",
+            "Preview",
+            "width=400,height=400"
+          );
+          switch (Assets[i].type) {
+            case "Image":
+              newWin.document.write(`<image src="${Assets[i].data.src}">`);
+
+              break;
+            default:
+              newWin.document.write(
+                `<body type="text/plain">
+                <pre style="word-wrap: break-word; white-space: pre-wrap;">${replaceAll(
+                  replaceAll(Assets[i].data, "<", "&lt;"),
+                  ">",
+                  "&gt;"
+                )}</pre>
+                </body>`
+              );
+
+              break;
+          }
+        }
         text(
           AssetNames[i].substr(0, 20),
           centerText(AssetNames[i].substr(0, 20), imageX * 110 + 20, 100),

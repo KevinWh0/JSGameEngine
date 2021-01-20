@@ -26,6 +26,7 @@ import {
 } from "../toolbox.js";
 import { GameObject } from "./GameObject.js";
 import { RectangleObjectComponent } from "./GameObjectComponents/GameComponents/RectangleComponent.js";
+import { ScriptComponent } from "./GameObjectComponents/GameComponents/ScriptComponent.js";
 import { TexturedObjectComponent } from "./GameObjectComponents/GameComponents/TextureComponent.js";
 import { selectedOBJ, setSelectedObj } from "./selectedOBJHandler.js";
 export let objects = [];
@@ -117,4 +118,6 @@ export let componentsMap = new Map();
 let obj = new RectangleObjectComponent("blue");
 componentsMap.set(obj.componentName, obj);
 obj = new TexturedObjectComponent();
+componentsMap.set(obj.componentName, obj);
+obj = new ScriptComponent();
 componentsMap.set(obj.componentName, obj);

@@ -69,12 +69,11 @@ let resetPropertiesTab = new UIStrechableTabRight(
   consoleHeight - 65
 );
 
-export let componentEditorPopup = new PopupPanel(
-  10,
-  10,
-  10,
-  10
-); /*.addComponent(
+export let componentEditorPopup = new PopupPanel(10, 10, 10, 10);
+
+export let addComponentPopup = new PopupPanel(10, 10, 10, 10);
+
+/*.addComponent(
   new Dropdown(10, 50, 100, 40).setOnExpand((parent) => {
     parent.clearItems();
     Array.from(assets.keys()).forEach((a) => {
@@ -88,7 +87,7 @@ function addBaseComponents() {
     new TextBox(
       30,
       5,
-      100,
+      200,
       50,
       objects[selectedOBJ].name,
       objects[selectedOBJ],
@@ -96,10 +95,19 @@ function addBaseComponents() {
     )
   );
   propertiesTab.addComponent(
-    new Toggle(
+    /*new Toggle(
       30,
       60,
       50,
+      50,
+      objects[selectedOBJ].enabled,
+      objects[selectedOBJ],
+      "setEnabled"
+    )*/
+    new Toggle(
+      235,
+      5,
+      20,
       50,
       objects[selectedOBJ].enabled,
       objects[selectedOBJ],
@@ -201,7 +209,7 @@ function addBaseComponents() {
           }
       }
       //console.log(componentEditorPopup.components);
-      if (!componentEditorPopup.showing)
+      if (!componentEditorPopup.showing && !addComponentPopup.showing)
         button(
           "Add Component",
           30 + tab.x,
@@ -210,6 +218,18 @@ function addBaseComponents() {
           50,
           30,
           () => {
+            addComponentPopup.removeAllComponents();
+            addComponentPopup.setShowing(true);
+            addComponentPopup.setPos(tab.x + 25, tab.y + tab.h - 200);
+            componentEditorPopup.setSize(tab.w - 30, 200);
+
+            let dropdown = new Dropdown(10, 150, 100, 40);
+            for (let i = 0; i < Array.from(componentsMap.keys()).length; i++) {
+              dropdown.addItem(Array.from(componentsMap.keys())[i]);
+            }
+            dropdown.setText("Select Component");
+            addComponentPopup.addComponent(dropdown);
+
             /*
                 addObject(
       new GameObject(10, 10, 200, 200)
@@ -224,11 +244,27 @@ function addBaseComponents() {
                 componentsMap.get("Textured Component")
               )
             )*/
-            objects[selectedOBJ].addComponent(
-              returnCopy(componentsMap.get("Textured Component"))
-            );
+            //objects[selectedOBJ].addComponent(
+            //returnCopy(componentsMap.get("Textured Component"))
+            //);
           }
         );
+      if (addComponentPopup.showing) {
+        if (
+          addComponentPopup.components[0].currentSelection != "Select Component"
+        ) {
+          objects[selectedOBJ].addComponent(
+            returnCopy(
+              componentsMap.get(
+                addComponentPopup.components[0].currentSelection
+              )
+            )
+          );
+          addComponentPopup.removeAllComponents();
+          addComponentPopup.setShowing(false);
+        }
+        addComponentPopup.run();
+      }
       if (selectedComponent != null) {
         componentEditorPopup.run();
       }

@@ -8,6 +8,7 @@ Roadmap:
 
 - [x] Code Editor
 - [ ] Exporting
+- [ ] Deleting objects and components
 - [ ] Properties Panel Working
   - [x] Naming of Objects
   - [x] Positioning UI
@@ -24,3 +25,4 @@ Roadmap:
 Known Bugs:
 
 - [ ] Setting width or height to a negative makes it so you cant select the object anymore
+- [ ] If the objects go offscreen you can select them even when under the panels

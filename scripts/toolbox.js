@@ -454,6 +454,7 @@ export function lineButton(txt, x, y, w, h, textOffset, func) {
     fill("yellow");
   } else fill("white");
   rect(x, y, w, 4);
+  //roundedRect(x, y, w, 4, 4);
   text(txt, centerText(txt, x, w), y + textOffset);
 }
 
@@ -898,7 +899,10 @@ export class Dropdown {
     this.x = x;
     this.y = y;
   }
-
+  setText(s) {
+    this.currentSelection = s;
+    return this;
+  }
   run(parentContainer, yOffset) {
     fill(primaryUIColor);
     rect(

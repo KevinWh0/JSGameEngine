@@ -54,7 +54,7 @@ export let fps;
 setTitle("Game Engine!");
 //setIcon("./icon.png");
 
-let buttonsBar = new ButtonBar(10, 15, width, 40);
+let buttonsBar = new ButtonBar(10, 15, width, 40, "line");
 buttonsBar.addButton("Game Viewer", function () {
   setState(states.gameViewer);
   document.getElementById("codeWrapper").style.display = "none";

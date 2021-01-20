@@ -21,3 +21,14 @@ export async function readImage(file, callback) {
 
   //return reader.readAsDataURL(file);
 }
+
+export async function readFile(file, callback) {
+  const reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = function () {
+    //console.log(reader.result);
+    callback(reader.result);
+  };
+
+  //return reader.readAsDataURL(file);
+}
