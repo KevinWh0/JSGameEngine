@@ -36,7 +36,6 @@ let gameCanvas = {
     return this.canvas.height;
   },
   start: function () {
-    console.log(this.canvas);
     this.canvas.width = width;
     this.canvas.height = height;
     this.canvas.id = "canvas";
@@ -134,6 +133,10 @@ function inArea(X, Y, x, y, w, h) {
   } else {
     return false;
   }
+}
+
+function getImage(img) {
+  return assets.get(img).data;
 }
 
 //returns the offset from the actual Corner of the screen
@@ -241,6 +244,7 @@ class GameObject {
   y;
   enabled = true;
   components = [];
+  data = new Map();
 
   name;
   /* These are components that will only be active when the game is not exported */
@@ -266,6 +270,14 @@ class GameObject {
         component.run(this);
       });
     }
+  }
+
+  getFirstComponent(type) {
+    let c;
+    this.components.forEach((component) => {
+      if (component.componentName == type) c = component;
+    });
+    return c;
   }
 
   addComponent(component) {
@@ -327,13 +339,19 @@ class ScriptComponent {
   };
 
   constructor(script) {
-    if (script != undefined) data.script = script;
+    let data = assets.get(script).data;
+    if (script != undefined) this.data.script = data;
   }
 
-  run(parentObject) {}
+  run(parentObject) {
+    if (this.data.script != undefined) {
+      //!TODO remove eval
+      eval(`${this.data.script} update(parentObject);`);
+    }
+  }
 
   setScript(s) {
-    data.script = s;
+    this.data.script = s;
   }
 }
 
@@ -359,11 +377,25 @@ class TexturedObjectComponent {
         parentObject.h
       );
   }
+  setImg(imgName) {
+    this.data.image = imgName;
+  }
 }
 
 let objects = [];
+function getObject(name) {
+  let obj;
+  objects.forEach((e) => {
+    if (name == e.name) {
+      obj = e;
+    }
+  });
+  return obj;
+}
 
 function runGameArea() {
+  clearGameCanvas();
+
   //console.log(mousePressed);
   for (let i = 0; i < objects.length; i++) {
     objects[i].update();

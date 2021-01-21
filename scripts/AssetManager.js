@@ -153,7 +153,7 @@ componentsUIDictionary.set("Script Component", {
     }
   },
   Update: (parent, objects) => {
-    objects[selectedOBJ].components[selectedComponent].data.color =
+    objects[selectedOBJ].components[selectedComponent].data.script =
       parent.components[0].currentSelection;
   },
 });

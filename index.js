@@ -50,6 +50,7 @@ import {
   replaceAll,
   readTextFile,
   download,
+  lineButton,
 } from "./scripts/toolbox.js";
 
 game.start();
@@ -102,7 +103,7 @@ buttonsBar.addButton("Export", function () {
     download(code, "index.html", "html");
   });
 });
-
+let saveStar = "";
 export function updateGameArea() {
   var delta = (Date.now() - lastRender) / 1000;
   lastRender = Date.now();
@@ -117,17 +118,29 @@ export function updateGameArea() {
 
   fill(textUIColor);
   if (state == states.scripting) {
+    if (game.frameNo % 50 == 0) {
+      if (assets.get(scriptOpen).data != getCode()) saveStar = "*";
+      else saveStar = "";
+    }
     text(
       `Now Editing:`,
       width - getTextWidth(`Now Editing: ${scriptOpen}`) - 20,
       26
     );
     text(
-      `${scriptOpen}`,
-      width - getTextWidth(`Now Editing: ${scriptOpen}`) - 20,
+      `${scriptOpen + saveStar}`,
+      width - getTextWidth(`Now Editing: ${scriptOpen + saveStar}`) - 20,
       56
     );
     renderImage(jsIcon, width - getTextWidth(`Now Editing:`) - 10, 30, 30, 30);
+    //setFontSize(12, "Ubuntu");
+    lineButton("Save", width - 80, 0, 70, 50, 25, () => {
+      //alert(getCode());
+      let script = assets.get(scriptOpen);
+      script.setScript(getCode());
+      assets.set(scriptOpen, script);
+      saveStar = "";
+    });
   } else if (state == states.gameViewer) {
     runUI();
   }

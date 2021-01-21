@@ -13,12 +13,13 @@ export class ScriptComponent {
   };
 
   constructor(script) {
-    if (script != undefined) data.script = script;
+    if (script != undefined) this.data.script = script;
   }
   run(parentObject) {}
 
   setScript(s) {
-    data.script = s;
+    this.data.script = s;
+    return this;
   }
 
   getData() {

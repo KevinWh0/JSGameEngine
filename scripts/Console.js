@@ -193,10 +193,13 @@ export function drawConsole() {
       ) {
         //newScriptPopup.setPos(width - 75, consoleHeight + 5);
         //newScriptPopup.setSize(100,100);
+        let name = prompt("Name your script");
+
         //newScriptPopup.addComponent(new TextBox(10,10,80,20,"Name", ));
-        getDefaultStartFileCode((r) => {
-          assets.set("Script1.js", new ScriptObject(r));
-        });
+        if (name != null)
+          getDefaultStartFileCode((r) => {
+            assets.set(`${name}.js`, new ScriptObject(r));
+          });
       } else if (
         mousePressed &&
         inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
