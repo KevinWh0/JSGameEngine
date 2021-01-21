@@ -38,7 +38,7 @@ import {
   Dropdown,
   returnCopy,
 } from "../toolbox.js";
-import { consoleHeight } from "../CodeCompiler.js";
+import { consoleHeight } from "../Console.js";
 import {
   NumberBox,
   TextBox,

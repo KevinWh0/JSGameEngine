@@ -564,6 +564,10 @@ export function RemoveItemByName(array, name) {
   }
 }
 
+export function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
 export function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
 }

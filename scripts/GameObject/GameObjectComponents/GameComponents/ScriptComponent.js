@@ -12,7 +12,16 @@ export class ScriptComponent {
     script: null,
   };
 
-  constructor() {}
-
+  constructor(script) {
+    if (script != undefined) data.script = script;
+  }
   run(parentObject) {}
+
+  setScript(s) {
+    data.script = s;
+  }
+
+  getData() {
+    return this.data.script;
+  }
 }

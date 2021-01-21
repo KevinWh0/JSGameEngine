@@ -1,4 +1,4 @@
-import { compileCode, consoleHeight, setCode } from "./CodeCompiler.js";
+import { consoleHeight, setCode } from "./Console.js";
 import { assets, selectedComponent } from "./GameAssets/AssetHandler.js";
 import { selectedOBJ } from "./GameObject/selectedOBJHandler.js";
 import {
@@ -29,8 +29,9 @@ export const states = {
   scripting: "scripting",
   gameViewer: "gameViewer",
 };
+document.getElementById("codeWrapper").style.display = "none";
 
-export let state = states.scripting;
+export let state = states.gameViewer;
 export function setState(s) {
   state = s;
 }
@@ -103,10 +104,42 @@ componentsUIDictionary.set("Rectangle Component", {
         new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
           parent1.clearItems();
           parent1.addItem("red");
-
           parent1.addItem("orange");
-
           parent1.addItem("yellow");
+          parent1.addItem("green");
+          parent1.addItem("blue");
+          parent1.addItem("purple");
+          parent1.addItem("black");
+          parent1.addItem("white");
+        })
+        //.setText(
+        //objects[selectedOBJ].components[selectedComponent].data.color
+        //)
+      );
+      //console.log(objects[selectedOBJ].components[selectedComponent].data);
+      //parent.components[0].currentSelection =
+      //objects[selectedOBJ].components[selectedComponent].data.color;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  Update: (parent, objects) => {
+    objects[selectedOBJ].components[selectedComponent].data.color =
+      parent.components[0].currentSelection;
+  },
+});
+
+componentsUIDictionary.set("Script Component", {
+  OnSelect: (parent, objects) => {
+    //The parent is the popup pannel
+    parent.removeAllComponents();
+    try {
+      parent.addComponent(
+        new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
+          parent1.clearItems();
+          Array.from(assets.keys()).forEach((a) => {
+            if (assets.get(a).type == "Script") parent1.addItem(a);
+          });
         })
         //.setText(
         //objects[selectedOBJ].components[selectedComponent].data.color
@@ -128,8 +161,10 @@ componentsUIDictionary.set("Rectangle Component", {
 /* Script Data */
 //When a script is made use the name as the key and the code as the item.
 let scripts = new Map();
-export let scriptOpen = "Main";
-
+export let scriptOpen = null;
+export function setScriptOpen(Name) {
+  scriptOpen = Name;
+}
 let selection = { start: 0, end: 1 };
 
 export let fileData;
@@ -171,7 +206,14 @@ export function setTextboxY(h) {
   document.getElementById("forumCodeWrapper").style.top = h + "px";
   document.getElementsByClassName("CodeMirror")[0].style.top = h + "px";
 }
-
+export function getDefaultStartFileCode(callback) {
+  (async () => {
+    var data = await readTextFile(startFilePath);
+    fileData = data;
+    scripts.set(scriptOpen, data);
+    callback(fileData);
+  })();
+}
 stateCode.set("scripting", function (tick) {
   //background(primaryUIColor);
 
@@ -223,3 +265,10 @@ fileIcon.src =
   "/" +
   "/" +
   "/Hr5+REawcxRAMA6CKMBwCMxzdEJJcADMV2RCiXQDTDHIJXgOIiZRRFzDgD0Rc6WCExALIm4RyIzw1wxgAHlRIEZs+XvUAAAAASUVORK5CYII=";
+
+export let audioIcon = new Image();
+audioIcon.src = "./EngineAssets/AudioIcon.png";
+export let scriptIcon = new Image();
+scriptIcon.src = "./EngineAssets/scriptIcon.png";
+export let plusIcon = new Image();
+plusIcon.src = "./EngineAssets/PlusIcon.png";

@@ -13,13 +13,14 @@ import {
 } from "./scripts/AssetManager.js";
 import {
   addToConsole,
-  compileCode,
   drawConsole,
   getCode,
   running,
-} from "./scripts/CodeCompiler.js";
+} from "./scripts/Console.js";
+import { assets } from "./scripts/GameAssets/AssetHandler.js";
 import { runUI } from "./scripts/GameEditorTools/GameEditorUI.js";
 import { clearGameCanvas } from "./scripts/GameLibs/gameCanvasRendering.js";
+import { objects } from "./scripts/GameObject/ObjectHandler.js";
 
 import {
   game,
@@ -45,6 +46,8 @@ import {
   setTitle,
   ButtonBar,
   getTextWidth,
+  replaceAll,
+  readTextFile,
 } from "./scripts/toolbox.js";
 
 game.start();
@@ -61,10 +64,14 @@ buttonsBar.addButton("Game Viewer", function () {
 });
 
 buttonsBar.addButton("Scripting", function () {
-  setState(states.scripting);
-  document.getElementById("codeWrapper").style.display = "inline";
+  if (scriptOpen != null) {
+    setState(states.scripting);
+    document.getElementById("codeWrapper").style.display = "inline";
+  }
 });
+let playtestWindow;
 buttonsBar.addButton("Run", function () {
+  /*
   if (running) {
     document.getElementById("stopVar").innerHTML = "true";
     buttonsBar.names[2] = "Run";
@@ -74,7 +81,85 @@ buttonsBar.addButton("Run", function () {
     buttonsBar.names[2] = "Stop";
     setState(states.gameViewer);
     document.getElementById("codeWrapper").style.display = "none";
-  }
+  }*/
+  //if (playtestWindow != undefined) return;
+  playtestWindow = window.open(
+    "about:blank",
+    "Game Preview",
+    "width=600,height=600"
+  );
+
+  playtestWindow.focus();
+  (async () => {
+    let exportedAssets = "";
+    let exportedObjects = "";
+    let Assets = Array.from(assets.values());
+    let AssetNames = Array.from(assets.keys());
+    for (let i = 0; i < Assets.length; i++) {
+      if (Assets[i].type == "Image" || Assets[i].type == "Audio") {
+        exportedAssets =
+          exportedAssets +
+          `  assets.set("${AssetNames[i]}", new ${
+            Assets[i].constructor.name
+          }(${JSON.stringify(Assets[i].data.src)}));  `;
+      } else {
+        exportedAssets =
+          exportedAssets +
+          `  assets.set("${AssetNames[i]}", new ${
+            Assets[i].constructor.name
+          }(${JSON.stringify(Assets[i].data)}));  `;
+      }
+    }
+    //exportedObjects
+    for (let i = 0; i < objects.length; i++) {
+      let objBuilder = `new GameObject(${objects[i].x}, ${objects[i].y}, ${objects[i].w}, ${objects[i].h}, "${objects[i].name}", ${objects[i].enabled})`;
+      //These lines crash it
+      let components = objects[i].components;
+      try {
+        components.forEach((component) => {
+          objBuilder =
+            objBuilder +
+            `.addComponent(new ${
+              component.constructor.name
+            }("${component.getData()}"))`;
+        });
+        /*
+        for (let j = 0; j < components.length; j++) {
+          //console.log(components.length + " " + j);
+
+          let comp = components.components[j];
+          console.log(comp, j, components.length);
+          objBuilder =
+            objBuilder +
+            `.addComponent(new ${comp.constructor.name}(${comp.getData()}))`;
+        }*/
+      } catch (err) {
+        console.error(err);
+      }
+
+      exportedObjects = exportedObjects + `objects.push(${objBuilder});`;
+    }
+
+    var data = await readTextFile("scripts/GameLibs/gameToolbox.js");
+    data = replaceAll(data, "export", "");
+    data = replaceAll(data, `//!!!`, "");
+
+    await playtestWindow.document.write(`
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    </style>
+    <div id="canvasHolder"></div>
+    <script>    
+
+      ${data}
+      ${exportedAssets}
+      ${exportedObjects}
+    </script>
+  `);
+  })();
 });
 
 export function updateGameArea() {
@@ -93,12 +178,12 @@ export function updateGameArea() {
   if (state == states.scripting) {
     text(
       `Now Editing:`,
-      width - getTextWidth(`Now Editing: ${scriptOpen}.js`) - 20,
+      width - getTextWidth(`Now Editing: ${scriptOpen}`) - 20,
       26
     );
     text(
-      `${scriptOpen}.js`,
-      width - getTextWidth(`Now Editing: ${scriptOpen}.js`) - 20,
+      `${scriptOpen}`,
+      width - getTextWidth(`Now Editing: ${scriptOpen}`) - 20,
       56
     );
     renderImage(jsIcon, width - getTextWidth(`Now Editing:`) - 10, 30, 30, 30);

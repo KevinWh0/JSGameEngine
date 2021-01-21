@@ -27,4 +27,8 @@ export class RectangleObjectComponent {
   setCol(col) {
     this.data.color = col;
   }
+
+  getData() {
+    return this.data.color;
+  }
 }

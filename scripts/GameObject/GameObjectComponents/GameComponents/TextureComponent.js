@@ -24,14 +24,18 @@ export class TexturedObjectComponent {
         parentObject.w,
         parentObject.h
       );
-      else{
-        renderImageGameCanvas(
-          noTextureSelected,
-          parentObject.x,
-          parentObject.y,
-          parentObject.w,
-          parentObject.h
-        );
-      }
+    else {
+      renderImageGameCanvas(
+        noTextureSelected,
+        parentObject.x,
+        parentObject.y,
+        parentObject.w,
+        parentObject.h
+      );
+    }
+  }
+
+  getData() {
+    return this.data.image;
   }
 }

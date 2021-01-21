@@ -1,7 +1,7 @@
-function onStart() {
+function onStart(parent) {
 
 }
 
-function update() {
+function update(parent) {
 
 }

@@ -13,6 +13,12 @@ import {
   setTextboxHeight,
   fileIcon,
   uploadIcon,
+  audioIcon,
+  scriptIcon,
+  plusIcon,
+  setState,
+  getDefaultStartFileCode,
+  setScriptOpen,
 } from "./AssetManager.js";
 import {
   getDataUrl,
@@ -42,9 +48,14 @@ import {
   width,
   calculateRatio,
   calculateDecimalRatio,
+  PopupPanel,
+  getKeyByValue,
 } from "./toolbox.js";
 import { ImageObject } from "./GameObject/FileTypes/Image.js";
 import { FileObject } from "./GameObject/FileTypes/File.js";
+import { AudioObject } from "./GameObject/FileTypes/Audio.js";
+import { TextBox } from "./UIStrechableTab.js";
+import { ScriptObject } from "./GameObject/FileTypes/ScriptObject.js";
 
 export let running = false;
 export function setRunning(r) {
@@ -77,7 +88,7 @@ export function setCode(d) {
     .CodeMirror.getDoc()
     .setValue(d);
 }
-
+/*
 export function compileCode(code) {
   console.log("Compiling...");
   let c = code;
@@ -88,6 +99,7 @@ export function compileCode(code) {
     (async () => {
       var data = await readTextFile("scripts/GameLibs/gameToolbox.js");
       data = replaceAll(data, "export", "");
+
       try {
         eval(`${data}
         console.print = function (arg, col) {
@@ -130,7 +142,7 @@ export function compileCode(code) {
       }
     })();
   }
-}
+}*/
 
 let debugConsole = [];
 
@@ -157,7 +169,7 @@ consoleMenu.addButton("Console", function () {
 consoleMenu.addButton("Assets", function () {
   consoleArea = "AssetManager";
 });
-
+let newScriptPopup = new PopupPanel(0, 0, 0, 0);
 export function drawConsole() {
   //Console Main Background
   fill(primaryUIColor);
@@ -173,7 +185,19 @@ export function drawConsole() {
       //fill("purple");
       //rect(width - 40, consoleHeight + 5, 30, 30);
       renderImage(uploadIcon, width - 40, consoleHeight + 5, 30, 30);
+
+      renderImage(plusIcon, width - 75, consoleHeight + 5, 30, 30);
       if (
+        mousePressed &&
+        inArea(mouseX, mouseY, width - 75, consoleHeight + 5, 30, 30)
+      ) {
+        //newScriptPopup.setPos(width - 75, consoleHeight + 5);
+        //newScriptPopup.setSize(100,100);
+        //newScriptPopup.addComponent(new TextBox(10,10,80,20,"Name", ));
+        getDefaultStartFileCode((r) => {
+          assets.set("Script1.js", new ScriptObject(r));
+        });
+      } else if (
         mousePressed &&
         inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
       ) {
@@ -190,12 +214,14 @@ export function drawConsole() {
                 readImage(files[i], (dataURL) => {
                   assets.set(files[i].name, new ImageObject(dataURL));
                 });
-              else {
+              else if (files[i].type.startsWith("audio/")) {
+                readImage(files[i], (dataURL) => {
+                  assets.set(files[i].name, new AudioObject(dataURL));
+                });
+              } else {
                 readFile(files[i], (data) => {
                   assets.set(files[i].name, new FileObject(data));
                 });
-                //assets.set(files[i].name, new FileObject(files.data));
-                //alert("We dont support this file yet");
               }
             }
           });
@@ -215,7 +241,9 @@ export function drawConsole() {
           50,
           50
         );*/
-        let img = Assets[i].type == "Image" ? Assets[i].getImage() : fileIcon; //console.log(img);
+        let img = Assets[i].type == "Image" ? Assets[i].getImage() : fileIcon;
+        if (Assets[i].type == "Audio") img = audioIcon;
+        else if (Assets[i].type == "Script") img = scriptIcon;
         let ratio = calculateDecimalRatio(img.width, img.height);
         //console.log(ratio);
         let resizedW = ratio[0] * 100;
@@ -240,15 +268,30 @@ export function drawConsole() {
           )
         ) {
           //if the mouse was clicked in a asset open a popup to show it.
-          let newWin = window.open(
-            "about:blank",
-            "Preview",
-            "width=400,height=400"
-          );
+          let newWin;
+          if (Assets[i].type != "Script")
+            newWin = window.open(
+              "about:blank",
+              "Preview",
+              "width=400,height=400"
+            );
           switch (Assets[i].type) {
             case "Image":
               newWin.document.write(`<image src="${Assets[i].data.src}">`);
 
+              break;
+            case "Audio":
+              newWin.document.write(`<audio controls>
+                 <source  src="${Assets[i].data.src}">
+                </audio>
+                `);
+
+              break;
+            case "Script":
+              setState(states.scripting);
+              document.getElementById("codeWrapper").style.display = "inline";
+              setCode(Assets[i].data);
+              setScriptOpen(AssetNames[i]);
               break;
             default:
               newWin.document.write(
