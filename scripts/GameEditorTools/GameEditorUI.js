@@ -381,7 +381,7 @@ function createNewObjectButton() {
   if (mousePressed && inArea(mouseX, mouseY, width - 60, 10, 50, 50)) {
     addObject(
       new GameObject(10, 10, 200, 200)
-        .addComponent(new RectangleObjectComponent("blue"))
+        //.addComponent(new RectangleObjectComponent("blue"))
         //.addComponent(new TexturedObjectComponent())
         .setName("Object")
     );

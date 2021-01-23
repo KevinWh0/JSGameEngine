@@ -30,7 +30,9 @@ import { ScriptComponent } from "./GameObjectComponents/GameComponents/ScriptCom
 import { TexturedObjectComponent } from "./GameObjectComponents/GameComponents/TextureComponent.js";
 import { selectedOBJ, setSelectedObj } from "./selectedOBJHandler.js";
 export let objects = [];
-
+export function setObjects(objArr) {
+  objects = objArr;
+}
 addObject(new GameObject(10, 10, 0, 0).setName("Camera").setType("Camera"));
 
 export function selectObject() {

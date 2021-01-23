@@ -18,10 +18,11 @@ import {
   getCode,
   running,
 } from "./scripts/Console.js";
-import { assets } from "./scripts/GameAssets/AssetHandler.js";
+import { assets, setAssets } from "./scripts/GameAssets/AssetHandler.js";
 import { runUI } from "./scripts/GameEditorTools/GameEditorUI.js";
 import { clearGameCanvas } from "./scripts/GameLibs/gameCanvasRendering.js";
-import { objects } from "./scripts/GameObject/ObjectHandler.js";
+import { objects, setObjects } from "./scripts/GameObject/ObjectHandler.js";
+import { saveProject } from "./scripts/SaveSystem.js";
 
 import {
   game,
@@ -52,6 +53,7 @@ import {
   download,
   lineButton,
 } from "./scripts/toolbox.js";
+import localforage from "./localstorageLib/localforage.js";
 
 game.start();
 var lastRender = Date.now();
@@ -103,6 +105,80 @@ buttonsBar.addButton("Export", function () {
     download(code, "index.html", "html");
   });
 });
+let project_name;
+buttonsBar.addButton("Save Project", function () {
+  //compileGame((code) => {
+  //download(code, "index.html", "html");
+  //});
+  saveProject((saveFile) => {
+    //download(saveFile, "index.txt", "txt");
+  });
+  /*
+  let projectName =
+    project_name || prompt("What would you like to save the project as?");
+  if (!!projectName) {
+    project_name = projectName;
+    localforage
+      .setItem(project_name + " - Objects", objects)
+      .then(function (value) {
+        // Do other things once the value has been saved.
+        //console.log(value);
+        console.log("Save Success!");
+      })
+      .catch(function (err) {
+        alert(`Error Saving.    ${err}`);
+        // This code runs if there were any errors
+        //console.log(err);
+      });
+
+    localforage
+      .setItem(project_name + " - Assets", assets)
+      .then(function (value) {
+        // Do other things once the value has been saved.
+        //console.log(value);
+        console.log("Save Success!");
+      })
+      .catch(function (err) {
+        alert(`Error Saving.    ${err}`);
+        // This code runs if there were any errors
+        //console.log(err);
+      });
+  }*/
+});
+
+buttonsBar.addButton("Load Project", function () {
+  let projectName =
+    project_name || prompt("What project would you like to load?");
+  if (!!projectName) {
+    project_name = projectName;
+    localforage
+      .getItem(project_name + " - Objects")
+      .then(function (value) {
+        // This code runs once the value has been loaded
+        // from the offline store.
+        console.log(value);
+        setObjects(value);
+      })
+      .catch(function (err) {
+        // This code runs if there were any errors
+        alert(`Error Loading.   ${err}`);
+        console.log(err);
+      });
+    localforage
+      .getItem(project_name + " - Assets")
+      .then(function (value) {
+        // This code runs once the value has been loaded
+        // from the offline store.
+        setAssets(value);
+      })
+      .catch(function (err) {
+        // This code runs if there were any errors
+        alert(`Error Loading.   ${err}`);
+        console.log(err);
+      });
+  }
+});
+
 let saveStar = "";
 export function updateGameArea() {
   var delta = (Date.now() - lastRender) / 1000;
