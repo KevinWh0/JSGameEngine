@@ -16,4 +16,9 @@ export class AudioObject extends FileObject {
   play() {
     this.data.play();
   }
+
+  //This function is used when loading the serialised JSON
+  setData(d) {
+    this.data = new Audio(d);
+  }
 }

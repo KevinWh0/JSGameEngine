@@ -12,4 +12,9 @@ export class ScriptObject extends FileObject {
   getScript() {
     return this.data;
   }
+
+  //This function is used when loading the serialised JSON
+  setData(d) {
+    this.data = d;
+  }
 }

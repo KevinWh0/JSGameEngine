@@ -1,5 +1,12 @@
 import { assets } from "./GameAssets/AssetHandler.js";
-import { objects } from "./GameObject/ObjectHandler.js";
+import { GameObject } from "./GameObject/GameObject.js";
+import {
+  componentsMap,
+  fileMap,
+  objects,
+  setObjects,
+} from "./GameObject/ObjectHandler.js";
+import { jsonFromClass, readTextFile, returnCopy } from "./toolbox.js";
 
 export function saveProject(callback) {
   let json = {
@@ -50,4 +57,41 @@ export function saveProject(callback) {
   }
 
   callback(JSON.stringify(json, "\n"));
+}
+
+export function loadProject() {
+  (async () => {
+    let data = JSON.parse(await readTextFile("../test.json"));
+    let _assets = data.Assets;
+    let _objects = data.Objects;
+    //console.log(_assets);
+    _assets.forEach((element) => {
+      let asset = returnCopy(fileMap.get(element.type));
+      jsonFromClass(asset, element);
+      asset.setData(element.data);
+      assets.set(element.Name, asset);
+    });
+
+    setObjects([]);
+
+    _objects.forEach((element) => {
+      let obj = new GameObject(element.x, element.y, element.w, element.h);
+      jsonFromClass(obj, element);
+
+      obj.components = [];
+      element.components.forEach((i) => {
+        let component = returnCopy(componentsMap.get(i.componentName));
+        jsonFromClass(component, i);
+        obj.addComponent(component);
+      });
+      element.editorComponents.forEach((i) => {
+        let component = returnCopy(componentsMap.get(i.componentName));
+        jsonFromClass(component, i);
+        obj.addEditorComponent(component);
+      });
+      //returnCopy(componentsMap.get(element.type))
+      objects.push(obj);
+      console.log(obj);
+    });
+  })();
 }

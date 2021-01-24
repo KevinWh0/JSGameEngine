@@ -12,4 +12,10 @@ export class ImageObject extends FileObject {
   getImage() {
     return this.data;
   }
+
+  //This function is used when loading the serialised JSON
+  setData(d) {
+    this.data = new Image();
+    this.data.src = d;
+  }
 }

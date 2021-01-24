@@ -22,7 +22,7 @@ import { assets, setAssets } from "./scripts/GameAssets/AssetHandler.js";
 import { runUI } from "./scripts/GameEditorTools/GameEditorUI.js";
 import { clearGameCanvas } from "./scripts/GameLibs/gameCanvasRendering.js";
 import { objects, setObjects } from "./scripts/GameObject/ObjectHandler.js";
-import { saveProject } from "./scripts/SaveSystem.js";
+import { loadProject, saveProject } from "./scripts/SaveSystem.js";
 
 import {
   game,
@@ -53,7 +53,6 @@ import {
   download,
   lineButton,
 } from "./scripts/toolbox.js";
-import localforage from "./localstorageLib/localforage.js";
 
 game.start();
 var lastRender = Date.now();
@@ -147,6 +146,8 @@ buttonsBar.addButton("Save Project", function () {
 });
 
 buttonsBar.addButton("Load Project", function () {
+  loadProject();
+  /*
   let projectName =
     project_name || prompt("What project would you like to load?");
   if (!!projectName) {
@@ -176,7 +177,7 @@ buttonsBar.addButton("Load Project", function () {
         alert(`Error Loading.   ${err}`);
         console.log(err);
       });
-  }
+  }*/
 });
 
 let saveStar = "";

@@ -24,6 +24,10 @@ import {
   rect,
   textWraped,
 } from "../toolbox.js";
+import { AudioObject } from "./FileTypes/Audio.js";
+import { FileObject } from "./FileTypes/File.js";
+import { ImageObject } from "./FileTypes/Image.js";
+import { ScriptObject } from "./FileTypes/ScriptObject.js";
 import { GameObject } from "./GameObject.js";
 import { RectangleObjectComponent } from "./GameObjectComponents/GameComponents/RectangleComponent.js";
 import { ScriptComponent } from "./GameObjectComponents/GameComponents/ScriptComponent.js";
@@ -123,3 +127,13 @@ obj = new TexturedObjectComponent();
 componentsMap.set(obj.componentName, obj);
 obj = new ScriptComponent();
 componentsMap.set(obj.componentName, obj);
+
+export let fileMap = new Map();
+obj = new FileObject(null);
+fileMap.set(obj.type, obj);
+obj = new AudioObject(null);
+fileMap.set(obj.type, obj);
+obj = new ImageObject(null);
+fileMap.set(obj.type, obj);
+obj = new ScriptObject(null);
+fileMap.set(obj.type, obj);

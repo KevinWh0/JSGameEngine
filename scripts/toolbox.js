@@ -513,6 +513,10 @@ export function returnCopy(obj) {
   return $.extend(true, Object.create(Object.getPrototypeOf(obj)), obj);
 }
 
+export function jsonFromClass(obj, json) {
+  return Object.assign(obj, json);
+}
+
 export function isPlaying(audio) {
   return !audio.paused;
 }
