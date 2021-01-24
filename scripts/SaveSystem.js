@@ -10,10 +10,12 @@ import { jsonFromClass, readTextFile, returnCopy } from "./toolbox.js";
 
 export function saveProject(callback) {
   let json = {
-    Objects: JSON.stringify(objects),
+    Objects: [],
     Assets: [],
   };
-
+  objects.forEach((i) => {
+    json.Objects.push(JSON.stringify(i));
+  });
   /*objects.forEach((i) => {
     let components = [];
 
@@ -73,7 +75,7 @@ export function loadProject() {
     });
 
     setObjects([]);
-
+    console.log(_objects);
     _objects.forEach((element) => {
       let obj = new GameObject(element.x, element.y, element.w, element.h);
       jsonFromClass(obj, element);

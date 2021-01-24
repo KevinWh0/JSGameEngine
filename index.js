@@ -110,7 +110,7 @@ buttonsBar.addButton("Save Project", function () {
   //download(code, "index.html", "html");
   //});
   saveProject((saveFile) => {
-    //download(saveFile, "index.txt", "txt");
+    download(saveFile, "index.json", "txt");
   });
   /*
   let projectName =

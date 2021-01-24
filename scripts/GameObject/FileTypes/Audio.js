@@ -2,6 +2,7 @@ import { FileObject } from "./File.js";
 export class AudioObject extends FileObject {
   constructor(dataURL) {
     super();
+    if(!!dataURL)
     this.data = new Audio(dataURL);
     //this.data.src = dataURL;
     this.type = "Audio";
