@@ -110,7 +110,10 @@ buttonsBar.addButton("Save Project", function () {
   //download(code, "index.html", "html");
   //});
   saveProject((saveFile) => {
-    download(saveFile, "index.json", "txt");
+    //download(saveFile, "index.json", "txt");
+    let name = prompt("What would you like to save this as?");
+
+    localStorage.setItem(name, saveFile);
   });
   /*
   let projectName =
@@ -146,7 +149,21 @@ buttonsBar.addButton("Save Project", function () {
 });
 
 buttonsBar.addButton("Load Project", function () {
-  loadProject();
+  (async () => {
+    let name = prompt("What project would you like to load?");
+    let project = localStorage.getItem(name);
+    if (!!project) loadProject(project);
+    else {
+      let choices = "";
+      for (let i = 0; i < localStorage.length; i++) {
+        choices = choices + ` ${localStorage.key(i)},`;
+      }
+      choices = choices.substr(0, choices.length - 1);
+      alert(
+        `Error loading ${name}, please check the spelling.   Projects(${localStorage.length}) : ${choices}.`
+      );
+    }
+  })();
   /*
   let projectName =
     project_name || prompt("What project would you like to load?");

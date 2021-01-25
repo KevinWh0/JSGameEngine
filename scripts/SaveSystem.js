@@ -14,7 +14,7 @@ export function saveProject(callback) {
     Assets: [],
   };
   objects.forEach((i) => {
-    json.Objects.push(JSON.stringify(i));
+    json.Objects.push(i);
   });
   /*objects.forEach((i) => {
     let components = [];
@@ -61,9 +61,10 @@ export function saveProject(callback) {
   callback(JSON.stringify(json, "\n"));
 }
 
-export function loadProject() {
+export function loadProject(dat) {
   (async () => {
-    let data = JSON.parse(await readTextFile("../test.json"));
+    let data = JSON.parse(dat);
+    //let data = JSON.parse(await readTextFile("../test.json"));
     let _assets = data.Assets;
     let _objects = data.Objects;
     //console.log(_assets);
