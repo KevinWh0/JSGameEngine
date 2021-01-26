@@ -114,6 +114,7 @@ buttonsBar.addButton("Save Project", function () {
     let name = prompt("What would you like to save this as?");
 
     localStorage.setItem(name, saveFile);
+    alert(`Success Saving ${name}`);
   });
   /*
   let projectName =

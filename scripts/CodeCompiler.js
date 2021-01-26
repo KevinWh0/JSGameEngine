@@ -25,7 +25,7 @@ export function compileGame(callback) {
     }
     //exportedObjects
     for (let i = 0; i < objects.length; i++) {
-      let objBuilder = `new GameObject(${objects[i].x}, ${objects[i].y}, ${objects[i].w}, ${objects[i].h}, "${objects[i].name}", ${objects[i].enabled})`;
+      let objBuilder = `new GameObject(${objects[i].x}, ${objects[i].y}, ${objects[i].w}, ${objects[i].h}, "${objects[i].name}", "${objects[i].type}", ${objects[i].enabled})`;
       //These lines crash it
       let components = objects[i].components;
       try {
@@ -70,6 +70,7 @@ export function compileGame(callback) {
           ${data}
           ${exportedAssets}
           ${exportedObjects}
+          init();
         </script>
       `);
   })();

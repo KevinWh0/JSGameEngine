@@ -37,7 +37,7 @@ export let objects = [];
 export function setObjects(objArr) {
   objects = objArr;
 }
-addObject(new GameObject(10, 10, 0, 0).setName("Camera").setType("Camera"));
+addObject(new GameObject(0, 0, 0, 0).setName("Camera").setType("Camera"));
 
 export function selectObject() {
   getOffset();

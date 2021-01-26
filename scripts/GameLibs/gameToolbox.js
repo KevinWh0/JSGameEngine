@@ -236,12 +236,15 @@ class ScriptObject extends FileObject {
 //Objects
 
 let inEditor = false;
+let camera;
 
 class GameObject {
   x;
   y;
   w;
   y;
+  visualX;
+  visualY;
   enabled = true;
   components = [];
   data = new Map();
@@ -250,14 +253,15 @@ class GameObject {
   /* These are components that will only be active when the game is not exported */
   type;
 
-  constructor(x, y, w, h, name, enabled) {
+  constructor(x, y, w, h, name, type, enabled) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.name = name;
+    this.type = type;
     this.enabled = enabled;
-    this.type = "Object";
+    //this.type = "Object";
   }
 
   setType(type) {
@@ -266,6 +270,8 @@ class GameObject {
   }
   update() {
     if (this.enabled) {
+      this.visualX = this.x - camera.x;
+      this.visualY = this.y - camera.y;
       this.components.forEach((component) => {
         component.run(this);
       });
@@ -323,7 +329,12 @@ class RectangleObjectComponent {
 
   run(parentObject) {
     fill(this.data.color);
-    rect(parentObject.x, parentObject.y, parentObject.w, parentObject.h);
+    rect(
+      parentObject.visualX,
+      parentObject.visualY,
+      parentObject.w,
+      parentObject.h
+    );
   }
 
   setCol(col) {
@@ -367,12 +378,11 @@ class TexturedObjectComponent {
   }
 
   run(parentObject) {
-    //console.log(assets.get(this.data.image));
-    if (this.data.image != null)
+    if (!!this.data.image && !!assets.get(this.data.image))
       renderImageGameCanvas(
         assets.get(this.data.image).getImage(),
-        parentObject.x,
-        parentObject.y,
+        parentObject.visualX,
+        parentObject.visualY,
         parentObject.w,
         parentObject.h
       );
@@ -400,5 +410,17 @@ function runGameArea() {
   for (let i = 0; i < objects.length; i++) {
     objects[i].update();
   }
+  camera.setWidth(window.innerWidth);
+  camera.setHeight(window.innerHeight);
   resetMousePressed();
+}
+
+//INIT CAMERA
+function init() {
+  objects.forEach((e) => {
+    console.log(e);
+    if (e.type == "Camera") {
+      camera = e;
+    }
+  });
 }

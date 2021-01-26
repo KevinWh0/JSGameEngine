@@ -5,6 +5,8 @@ export class GameObject {
   y;
   w;
   y;
+  visualX;
+  visualY;
   enabled = true;
   components = [];
 
