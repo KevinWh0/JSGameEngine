@@ -175,29 +175,79 @@ function loadImg(url) {
   return img;
 }
 
-let gamepads = navigator.getGamepads();
+class GamePad {
+  gamepad;
+  controllerButtonMap = new Map();
+  controllerJoysticks = new Map();
+  setGamePads(gp) {
+    this.gamepad = gp;
+  }
+
+  getButton(id) {
+    return !this.controllerButtonMap.get(id)
+      ? 0
+      : this.controllerButtonMap.get(id);
+  }
+
+  getJoystickPosition(id) {
+    return {
+      x: !this.controllerJoysticks.get(id * 2)
+        ? 0
+        : this.controllerJoysticks.get(id * 2),
+      y: !this.controllerJoysticks.get(id * 2 + 1)
+        ? 0
+        : this.controllerJoysticks.get(id * 2 + 1),
+    };
+  }
+}
+
+let driftGuard = 0.2;
+function setDriftGuardBounds(d) {
+  driftGuard = d;
+}
+
+let _gamepads = navigator.getGamepads();
 let controllerButtonMap = new Map();
 let controllerJoysticks = new Map();
 
+let gamepads = [];
+
 function updateGameController() {
-  gamepads = navigator.getGamepads();
+  _gamepads = navigator.getGamepads();
+
+  /*for(let i = 0; i < _gamepads.length; i++){
+    gamepads = [];
+    gamepads.push(new GamePad());
+  }*/
+
+  if (_gamepads.length != gamepads.length) {
+    if (_gamepads.length < gamepads.length) gamepads.shift();
+    else gamepads.push(new GamePad());
+  }
+
   // For each controller, show all the button and axis information
-  for (let i = 0; i < gamepads.length; i++) {
-    let gp = gamepads[i];
+  for (let i = 0; i < _gamepads.length; i++) {
+    let gp = _gamepads[i];
     if (!gp || !gp.connected) {
       continue;
     }
     for (let j = 0; j < gp.buttons.length; j++) {
-      controllerButtonMap.set(j, gp.buttons[j].value);
+      gamepads[i].controllerButtonMap.set(j, gp.buttons[j].value);
     }
 
     let axesBoxCount = ((gp.axes.length + 1) / 2) | 0; // Round up (e.g. 3 axes is 2 boxes)
     for (let j = 0; j < axesBoxCount; j++) {
       let xAxis = gp.axes[j * 2];
-      controllerJoysticks.set(j * 2, Math.abs(xAxis) > 0.2 ? xAxis : 0);
+      gamepads[i].controllerJoysticks.set(
+        j * 2,
+        Math.abs(xAxis) > driftGuard ? xAxis : 0
+      );
       if (!(j == axesBoxCount - 1 && gp.axes.length % 2 == 1)) {
         let yAxis = gp.axes[j * 2 + 1];
-        controllerJoysticks.set(j * 2 + 1, Math.abs(yAxis) > 0.2 ? yAxis : 0);
+        gamepads[i].controllerJoysticks.set(
+          j * 2 + 1,
+          Math.abs(yAxis) > driftGuard ? yAxis : 0
+        );
       }
     }
   }
