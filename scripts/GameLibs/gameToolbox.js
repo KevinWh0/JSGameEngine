@@ -175,6 +175,34 @@ function loadImg(url) {
   return img;
 }
 
+let gamepads = navigator.getGamepads();
+let controllerButtonMap = new Map();
+let controllerJoysticks = new Map();
+
+function updateGameController() {
+  gamepads = navigator.getGamepads();
+  // For each controller, show all the button and axis information
+  for (let i = 0; i < gamepads.length; i++) {
+    let gp = gamepads[i];
+    if (!gp || !gp.connected) {
+      continue;
+    }
+    for (let j = 0; j < gp.buttons.length; j++) {
+      controllerButtonMap.set(j, gp.buttons[j].value);
+    }
+
+    let axesBoxCount = ((gp.axes.length + 1) / 2) | 0; // Round up (e.g. 3 axes is 2 boxes)
+    for (let j = 0; j < axesBoxCount; j++) {
+      let xAxis = gp.axes[j * 2];
+      controllerJoysticks.set(j * 2, Math.abs(xAxis) > 0.2 ? xAxis : 0);
+      if (!(j == axesBoxCount - 1 && gp.axes.length % 2 == 1)) {
+        let yAxis = gp.axes[j * 2 + 1];
+        controllerJoysticks.set(j * 2 + 1, Math.abs(yAxis) > 0.2 ? yAxis : 0);
+      }
+    }
+  }
+}
+
 //All the classes and components and stuff
 
 let assets = new Map();
@@ -413,6 +441,7 @@ function runGameArea() {
   camera.setWidth(window.innerWidth);
   camera.setHeight(window.innerHeight);
   resetMousePressed();
+  updateGameController();
 }
 
 //INIT CAMERA
