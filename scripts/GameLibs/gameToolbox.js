@@ -211,6 +211,7 @@ let controllerButtonMap = new Map();
 let controllerJoysticks = new Map();
 
 let gamepads = [];
+let totalGamepads;
 
 function updateGameController() {
   _gamepads = navigator.getGamepads();
@@ -219,14 +220,18 @@ function updateGameController() {
     gamepads = [];
     gamepads.push(new GamePad());
   }*/
+  totalGamepads = 0;
+  for (let i = 0; i < _gamepads.length; i++) {
+    if (_gamepads[i] != null) totalGamepads++;
+  }
 
-  if (_gamepads.length != gamepads.length) {
-    if (_gamepads.length < gamepads.length) gamepads.shift();
+  if (totalGamepads != gamepads.length) {
+    if (totalGamepads < gamepads.length) gamepads.pop();
     else gamepads.push(new GamePad());
   }
 
   // For each controller, show all the button and axis information
-  for (let i = 0; i < _gamepads.length; i++) {
+  for (let i = 0; i < totalGamepads; i++) {
     let gp = _gamepads[i];
     if (!gp || !gp.connected) {
       continue;
