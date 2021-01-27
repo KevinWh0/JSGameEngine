@@ -70,6 +70,9 @@ export function compileGame(callback) {
           ${data}
           ${exportedAssets}
           ${exportedObjects}
+          /*
+            Game made with https://kevinwh0.github.io/JSGameEngine/
+          */
           init();
         </script>
       `);

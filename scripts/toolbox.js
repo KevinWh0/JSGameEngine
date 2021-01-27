@@ -548,6 +548,17 @@ export function inArea(X, Y, x, y, w, h) {
   }
 }
 
+export function inAreaBox(X, Y, W, H, x, y, w, h) {
+  if (
+    inArea(X, Y, x, y, w, h) ||
+    inArea(X + W, Y, x, y, w, h) ||
+    inArea(X + W, Y + H, x, y, w, h) ||
+    inArea(X, Y + h, x, y, w, h)
+  )
+    return true;
+  return false;
+}
+
 export function dist(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }

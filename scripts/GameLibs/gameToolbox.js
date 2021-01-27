@@ -135,6 +135,17 @@ function inArea(X, Y, x, y, w, h) {
   }
 }
 
+function inAreaBox(X, Y, W, H, x, y, w, h) {
+  if (
+    inArea(X, Y, x, y, w, h) ||
+    inArea(X + W, Y, x, y, w, h) ||
+    inArea(X + W, Y + H, x, y, w, h) ||
+    inArea(X, Y + h, x, y, w, h)
+  )
+    return true;
+  return false;
+}
+
 function getImage(img) {
   return assets.get(img).data;
 }
@@ -142,6 +153,35 @@ function getImage(img) {
 //returns the offset from the actual Corner of the screen
 export function getOffset() {
   return { x: gameCanvas.canvas.offsetLeft, y: gameCanvas.canvas.offsetTop };
+}
+
+function copyObject(obj) {
+  let o = Object.create(obj);
+  o.components = [];
+  for (let i = 0; i < obj.components.length; i++) {
+    o.components.push(Object.create(obj.components[i]));
+  }
+  return o;
+}
+
+Array.prototype.remove = function () {
+  var what,
+    a = arguments,
+    L = a.length,
+    ax;
+  while (L && this.length) {
+    what = a[--L];
+    while ((ax = this.indexOf(what)) !== -1) {
+      this.splice(ax, 1);
+    }
+  }
+  return this;
+};
+
+function removeObject(object) {
+  objects.remove(object);
+  //var index = objects.indexOf(object);
+  //return removeItem(objects, index);
 }
 
 /* Rendering */
@@ -513,16 +553,37 @@ class TexturedObjectComponent {
 }
 
 let objects = [];
+
+let mapUsedObjects = new Map();
 function getObject(name) {
+  if (mapUsedObjects.get(name)) {
+    return mapUsedObjects.get(name);
+  }
   let obj;
   objects.forEach((e) => {
     if (name == e.name) {
       obj = e;
+      mapUsedObjects.set(name, obj);
     }
   });
   return obj;
 }
 
+function getOverlappingObject(obj) {
+  let arr = [];
+  objects.forEach((o) => {
+    if (o.type == "Object" && o != obj && o.enabled)
+      if (
+        inAreaBox(obj.x, obj.y, obj.w, obj.h, o.x, o.y, o.w, o.h) ||
+        inAreaBox(o.x, o.y, o.w, o.h, obj.x, obj.y, obj.w, obj.h)
+      ) {
+        arr.push(o);
+      }
+  });
+  return arr;
+}
+
+let frame = 0;
 function runGameArea() {
   clearGameCanvas();
 
@@ -534,6 +595,7 @@ function runGameArea() {
   camera.setHeight(window.innerHeight);
   resetMousePressed();
   updateGameController();
+  frame++;
 }
 
 //INIT CAMERA

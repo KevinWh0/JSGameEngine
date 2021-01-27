@@ -1,4 +1,4 @@
-import { assets } from "./GameAssets/AssetHandler.js";
+import { assets, setAssets } from "./GameAssets/AssetHandler.js";
 import { GameObject } from "./GameObject/GameObject.js";
 import {
   componentsMap,
@@ -68,6 +68,7 @@ export function loadProject(dat) {
     let _assets = data.Assets;
     let _objects = data.Objects;
     //console.log(_assets);
+    setAssets(new Map());
     _assets.forEach((element) => {
       let asset = returnCopy(fileMap.get(element.type));
       jsonFromClass(asset, element);

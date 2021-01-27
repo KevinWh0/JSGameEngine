@@ -112,7 +112,7 @@ buttonsBar.addButton("Save Project", function () {
   saveProject((saveFile) => {
     //download(saveFile, "index.json", "txt");
     let name = prompt("What would you like to save this as?");
-
+    project_name = name;
     localStorage.setItem(name, saveFile);
     alert(`Success Saving ${name}`);
   });
@@ -152,6 +152,7 @@ buttonsBar.addButton("Save Project", function () {
 buttonsBar.addButton("Load Project", function () {
   (async () => {
     let name = prompt("What project would you like to load?");
+    project_name = name;
     let project = localStorage.getItem(name);
     if (!!project) loadProject(project);
     else {
@@ -235,6 +236,9 @@ export function updateGameArea() {
       script.setScript(getCode());
       assets.set(scriptOpen, script);
       saveStar = "";
+      saveProject((saveFile) => {
+        localStorage.setItem(project_name, saveFile);
+      });
     });
   } else if (state == states.gameViewer) {
     runUI();
