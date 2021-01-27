@@ -185,9 +185,14 @@ class GamePad {
   }
 
   getButton(id) {
-    return !this.controllerButtonMap.get(id)
-      ? 0
-      : this.controllerButtonMap.get(id);
+    try {
+      return !this.controllerButtonMap.get(id)
+        ? 0
+        : this.controllerButtonMap.get(id);
+    } catch (error) {
+      console.error(error);
+      return 0;
+    }
   }
 
   getID() {
@@ -213,14 +218,21 @@ class GamePad {
   }
 
   getJoystickPosition(id) {
-    return {
-      x: !this.controllerJoysticks.get(id * 2)
-        ? 0
-        : this.controllerJoysticks.get(id * 2),
-      y: !this.controllerJoysticks.get(id * 2 + 1)
-        ? 0
-        : this.controllerJoysticks.get(id * 2 + 1),
-    };
+    try {
+      return {
+        x: !this.controllerJoysticks.get(id * 2)
+          ? 0
+          : this.controllerJoysticks.get(id * 2),
+        y: !this.controllerJoysticks.get(id * 2 + 1)
+          ? 0
+          : this.controllerJoysticks.get(id * 2 + 1),
+      };
+    } catch (error) {
+      return {
+        x: 0,
+        y: 0,
+      };
+    }
   }
 }
 
