@@ -177,9 +177,10 @@ function loadImg(url) {
 
 class GamePad {
   gamepad;
+  id;
   controllerButtonMap = new Map();
   controllerJoysticks = new Map();
-  setGamePads(gp) {
+  setGamePad(gp) {
     this.gamepad = gp;
   }
 
@@ -187,6 +188,28 @@ class GamePad {
     return !this.controllerButtonMap.get(id)
       ? 0
       : this.controllerButtonMap.get(id);
+  }
+
+  getID() {
+    return this.id;
+  }
+
+  vibrate(intesity, duration) {
+    //Intensity 0 - 1
+    //Duration in ms
+    try {
+      this.gamepad.vibrationActuator.playEffect(
+        this.gamepad.vibrationActuator.type,
+        {
+          startDelay: 0,
+          duration: duration,
+          weakMagnitude: intesity,
+          strongMagnitude: intesity,
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   getJoystickPosition(id) {
@@ -233,6 +256,8 @@ function updateGameController() {
   // For each controller, show all the button and axis information
   for (let i = 0; i < totalGamepads; i++) {
     let gp = _gamepads[i];
+    gamepads[i].setGamePad(gp);
+    gamepads[i].id = gp.id;
     if (!gp || !gp.connected) {
       continue;
     }
