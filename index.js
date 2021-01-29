@@ -8,7 +8,6 @@ import {
   scriptOpen,
   textUIColor,
   secondaryUIColor,
-  testerGameWindow,
   jsIcon,
 } from "./scripts/AssetManager.js";
 import { compileGame } from "./scripts/CodeCompiler.js";
@@ -52,6 +51,7 @@ import {
   readTextFile,
   download,
   lineButton,
+  saveKey,
 } from "./scripts/toolbox.js";
 
 game.start();
@@ -62,7 +62,7 @@ setTitle("Game Engine!");
 //setIcon("./icon.png");
 
 let buttonsBar = new ButtonBar(10, 15, width, 40, "line");
-buttonsBar.addButton("Game Viewer", function () {
+buttonsBar.addButton("Game Editor", function () {
   setState(states.gameViewer);
   document.getElementById("codeWrapper").style.display = "none";
 });
@@ -75,18 +75,6 @@ buttonsBar.addButton("Scripting", function () {
 });
 let playtestWindow;
 buttonsBar.addButton("Run", function () {
-  /*
-  if (running) {
-    document.getElementById("stopVar").innerHTML = "true";
-    buttonsBar.names[2] = "Run";
-  } else {
-    document.getElementById("stopVar").innerHTML = "false";
-    compileCode(getCode());
-    buttonsBar.names[2] = "Stop";
-    setState(states.gameViewer);
-    document.getElementById("codeWrapper").style.display = "none";
-  }*/
-  //if (playtestWindow != undefined) return;
   playtestWindow = window.open(
     "about:blank",
     "Game Preview",
@@ -166,37 +154,6 @@ buttonsBar.addButton("Load Project", function () {
       );
     }
   })();
-  /*
-  let projectName =
-    project_name || prompt("What project would you like to load?");
-  if (!!projectName) {
-    project_name = projectName;
-    localforage
-      .getItem(project_name + " - Objects")
-      .then(function (value) {
-        // This code runs once the value has been loaded
-        // from the offline store.
-        console.log(value);
-        setObjects(value);
-      })
-      .catch(function (err) {
-        // This code runs if there were any errors
-        alert(`Error Loading.   ${err}`);
-        console.log(err);
-      });
-    localforage
-      .getItem(project_name + " - Assets")
-      .then(function (value) {
-        // This code runs once the value has been loaded
-        // from the offline store.
-        setAssets(value);
-      })
-      .catch(function (err) {
-        // This code runs if there were any errors
-        alert(`Error Loading.   ${err}`);
-        console.log(err);
-      });
-  }*/
 });
 
 let saveStar = "";
@@ -220,33 +177,55 @@ export function updateGameArea() {
     }
     text(
       `Now Editing:`,
-      width - getTextWidth(`Now Editing: ${scriptOpen}`) - 20,
+      width - getTextWidth(`Now Editing: ${scriptOpen}`) - 50,
       26
     );
     text(
       `${scriptOpen + saveStar}`,
-      width - getTextWidth(`Now Editing: ${scriptOpen + saveStar}`) - 20,
+      width - getTextWidth(`Now Editing: ${scriptOpen + saveStar}`) - 50,
       56
     );
-    renderImage(jsIcon, width - getTextWidth(`Now Editing:`) - 10, 30, 30, 30);
+    renderImage(jsIcon, width - getTextWidth(`Now Editing:`) - 50, 30, 30, 30);
     //setFontSize(12, "Ubuntu");
+
     lineButton("Save", width - 80, 0, 70, 50, 25, () => {
-      //alert(getCode());
-      let script = assets.get(scriptOpen);
-      script.setScript(getCode());
-      assets.set(scriptOpen, script);
-      saveStar = "";
-      saveProject((saveFile) => {
-        localStorage.setItem(project_name, saveFile);
-      });
+      if (!project_name)
+        project_name = prompt("What would you like to save this as?");
+      //Check that the user has not hit cancel
+      if (!!project_name) {
+        let script = assets.get(scriptOpen);
+        script.setScript(getCode());
+        assets.set(scriptOpen, script);
+        saveStar = "";
+        saveProject((saveFile) => {
+          localStorage.setItem(project_name, saveFile);
+        });
+      }
     });
   } else if (state == states.gameViewer) {
     runUI();
   }
 
-  //if (mousePressed) addToConsole("Hello This is the console!", "white");
-  //setFontSize(20, "Source Code Pro");
-  //setFontSize(30, "Bebas Neue");
+  //Cmd S Will save it
+  if (saveKey) {
+    if (!project_name)
+      project_name = prompt("What would you like to save this as?");
+    //Check that the user has not hit cancel
+    if (!!project_name) {
+      let script = assets.get(scriptOpen);
+      //If no script is open, dont bother to save it
+      if (!!script) {
+        script.setScript(getCode());
+        assets.set(scriptOpen, script);
+        saveStar = "";
+      }
+      //Save the whole project
+      saveProject((saveFile) => {
+        localStorage.setItem(project_name, saveFile);
+      });
+    }
+  }
+
   setFontSize(20, "Ubuntu");
 
   try {

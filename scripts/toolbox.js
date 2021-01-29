@@ -13,12 +13,15 @@ export let height = window.innerHeight;
 export let mousePressed = false;
 export let mouseDown = false;
 export let keyDown = false;
+export let saveKey = false;
+
 export function resetMousePressed() {
   mousePressed = false;
   keyReleased = false;
   keyPushed = false;
   releasedKey = "";
   keyHeldText = "";
+  saveKey = false;
 }
 export let mouseX, mouseY;
 //WASD
@@ -86,6 +89,8 @@ export let game = {
         textholdTimers.set(currentKeyPressed, 1);
         keyHeldText = currentKeyPressed;
       }
+      e.preventDefault();
+
       //console.log(event.keyCode);
     });
     window.addEventListener("keyup", function (e) {
@@ -96,6 +101,13 @@ export let game = {
       releasedKey = e.key;
       textholdTimers.set(e.key, undefined);
       keyHeldText = "";
+      //Handle control S
+      if (
+        e.keyCode == 83 &&
+        (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)
+      ) {
+        saveKey = true;
+      }
     });
     try {
       window.addEventListener("resize", function (e) {
