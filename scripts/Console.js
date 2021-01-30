@@ -50,6 +50,8 @@ import {
   calculateDecimalRatio,
   PopupPanel,
   getKeyByValue,
+  resetMousePressed,
+  setMouseDown,
 } from "./toolbox.js";
 import { ImageObject } from "./GameObject/FileTypes/Image.js";
 import { FileObject } from "./GameObject/FileTypes/File.js";
@@ -204,6 +206,7 @@ export function drawConsole() {
         mousePressed &&
         inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
       ) {
+        setMouseDown(false);
         pinDrag = false;
         (async (func) => {
           UploadFile((files) => {

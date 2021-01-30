@@ -15,6 +15,10 @@ export let mouseDown = false;
 export let keyDown = false;
 export let saveKey = false;
 
+export function setMouseDown(m) {
+  mouseDown = m;
+}
+
 export function resetMousePressed() {
   mousePressed = false;
   keyReleased = false;
