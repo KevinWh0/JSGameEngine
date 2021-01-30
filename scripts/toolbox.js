@@ -13,6 +13,7 @@ export let height = window.innerHeight;
 export let mousePressed = false;
 export let mouseDown = false;
 export let keyDown = false;
+export let scrollSpeed;
 export let saveKey = false;
 
 export function setMouseDown(m) {
@@ -25,6 +26,7 @@ export function resetMousePressed() {
   keyPushed = false;
   releasedKey = "";
   keyHeldText = "";
+  scrollSpeed = 0;
   saveKey = false;
 }
 export let mouseX, mouseY;
@@ -43,7 +45,7 @@ export let releasedKey;
 /* This is more for if you are creating a text box in your game */
 export let keyHeldText;
 let textholdTimers = new Map();
-
+let currentContext;
 export let game = {
   canvas: document.createElement("canvas"),
   start: function () {
@@ -51,6 +53,7 @@ export let game = {
     this.canvas.height = height;
     this.canvas.id = "canvas";
     this.context = this.canvas.getContext("2d");
+    currentContext = this.context;
     document.getElementById("canvasHolder").appendChild(this.canvas);
     //document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     this.frameNo = 0;
@@ -113,26 +116,15 @@ export let game = {
         saveKey = true;
       }
     });
-    try {
-      window.addEventListener("resize", function (e) {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        document.getElementById("canvas").width = width;
-        document.getElementById("canvas").height = height;
-      });
-
-      /*$(window).resize(function () {
-        //resize just happened, pixels changed
-        width = window.innerWidth;
-        height = window.innerHeight;
-        document.getElementById("canvas").width = width;
-        document.getElementById("canvas").height = height;
-      });*/
-    } catch (error) {
-      alert(
-        "JQuery does not want to load, the game may behave unexpectedly without it"
-      );
-    }
+    window.addEventListener("resize", function (e) {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      document.getElementById("canvas").width = width;
+      document.getElementById("canvas").height = height;
+    });
+    window.addEventListener("wheel", function (e) {
+      scrollSpeed = e.deltaY / 10;
+    });
     this.interval = setInterval(updateGameArea, Math.round(1000 / 60));
   },
   clear: function () {
@@ -140,17 +132,25 @@ export let game = {
   },
 };
 
+export function setContext(context) {
+  currentContext = context;
+}
+
+export function getContext() {
+  return currentContext;
+}
+
 export function fill(col) {
-  game.context.fillStyle = col;
+  currentContext.fillStyle = col;
 }
 
 export function rect(x, y, w, h) {
-  game.context.fillRect(x, y, w, h);
+  currentContext.fillRect(x, y, w, h);
 }
 
 export function background(col) {
-  game.context.fillStyle = col;
-  game.context.fillRect(0, 0, width, height);
+  currentContext.fillStyle = col;
+  currentContext.fillRect(0, 0, width, height);
 }
 
 export function rectOutline(x, y, w, h, lnWidth) {
@@ -162,7 +162,7 @@ export function rectOutline(x, y, w, h, lnWidth) {
 }
 
 export function roundedRect(x, y, width, height, radius) {
-  let ctx = game.context;
+  let ctx = currentContext;
   if (typeof radius === "undefined") {
     radius = 5;
   }
@@ -182,27 +182,31 @@ export function roundedRect(x, y, width, height, radius) {
 }
 
 export function setFontSize(size, font) {
-  game.context.font = size + "px " + font;
+  currentContext.font = size + "px " + font;
 }
 
 export function getFontSize() {
-  return parseInt(game.context.font.split("px ")[0]);
+  return parseInt(currentContext.font.split("px ")[0]);
 }
 
 export function getTextWidth(txt) {
-  return game.context.measureText(txt).width;
+  return currentContext.measureText(txt).width;
 }
 
 export function centerText(txt, x, w) {
   return x + w / 2 - getTextWidth(txt) / 2;
 }
 
+export function findTextFitSize(text, w) {
+  return getFontSize() / (getTextWidth(text) / w);
+}
+
 export function text(text, x, y) {
-  game.context.fillText(text, x, y);
+  currentContext.fillText(text, x, y);
 }
 /*
 export function textWraped(text, x, y, fitWidth, lineHeight) {
-  var context = game.context;
+  var context = currentContext;
   fitWidth = fitWidth || 0;
 
   if (fitWidth <= 0) {
@@ -232,7 +236,7 @@ export function textWraped(text, x, y, fitWidth, lineHeight) {
 */
 //same as textWrapped but it will return the onscreen position of the end of the text
 export function textWraped(text, x, y, fitWidth, lineHeight) {
-  var context = game.context;
+  var context = currentContext;
   fitWidth = fitWidth || 0;
 
   if (fitWidth <= 0) {
@@ -333,13 +337,13 @@ export function Speak(name, text, x, y, fitWidth, lineHeight) {
 }
 
 export function outlinedText(text, x, y, thickness) {
-  game.context.shadowColor = "black";
-  game.context.shadowBlur = 1.4;
-  game.context.lineWidth = thickness;
-  game.context.strokeText(text, x, y);
-  game.context.shadowBlur = 0;
-  game.context.fillStyle = "white";
-  game.context.fillText(text, x, y);
+  currentContext.shadowColor = "black";
+  currentContext.shadowBlur = 1.4;
+  currentContext.lineWidth = thickness;
+  currentContext.strokeText(text, x, y);
+  currentContext.shadowBlur = 0;
+  currentContext.fillStyle = "white";
+  currentContext.fillText(text, x, y);
 }
 
 export function romanize(num) {
@@ -383,10 +387,6 @@ export function romanize(num) {
   return Array(+digits.join("") + 1).join("M") + roman;
 }
 
-export function getContext() {
-  return game.context;
-}
-
 export function renderImage(image, x, y, w, h) {
   var upscaledCanvas = document.getElementById("canvas").getContext("2d");
   upscaledCanvas.mozImageSmoothingEnabled = false;
@@ -394,7 +394,7 @@ export function renderImage(image, x, y, w, h) {
   upscaledCanvas.msImageSmoothingEnabled = false;
   upscaledCanvas.imageSmoothingEnabled = false;
 
-  game.context.drawImage(image, x, y, w, h);
+  currentContext.drawImage(image, x, y, w, h);
 }
 
 export function cropImage(img, x, y, w, h, cropX, cropY, cropW, cropH) {
