@@ -106,37 +106,6 @@ buttonsBar.addButton("Save Project", function () {
     localStorage.setItem(name, saveFile);
     alert(`Success Saving ${name}`);
   });
-  /*
-  let projectName =
-    project_name || prompt("What would you like to save the project as?");
-  if (!!projectName) {
-    project_name = projectName;
-    localforage
-      .setItem(project_name + " - Objects", objects)
-      .then(function (value) {
-        // Do other things once the value has been saved.
-        //console.log(value);
-        console.log("Save Success!");
-      })
-      .catch(function (err) {
-        alert(`Error Saving.    ${err}`);
-        // This code runs if there were any errors
-        //console.log(err);
-      });
-
-    localforage
-      .setItem(project_name + " - Assets", assets)
-      .then(function (value) {
-        // Do other things once the value has been saved.
-        //console.log(value);
-        console.log("Save Success!");
-      })
-      .catch(function (err) {
-        alert(`Error Saving.    ${err}`);
-        // This code runs if there were any errors
-        //console.log(err);
-      });
-  }*/
 });
 
 buttonsBar.addButton("Load Project", function () {

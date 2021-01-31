@@ -80,7 +80,10 @@ export let game = {
       var keyCode = e.keyCode || e.which;
       let currentKeyPressed = e.key;
 
-      if (keyCode == 9) {
+      if (
+        keyCode == 9 ||
+        (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)
+      ) {
         e.preventDefault();
         currentKeyPressed = "Tab";
       }
@@ -96,7 +99,6 @@ export let game = {
         textholdTimers.set(currentKeyPressed, 1);
         keyHeldText = currentKeyPressed;
       }
-      e.preventDefault();
 
       //console.log(event.keyCode);
     });

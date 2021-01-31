@@ -28,6 +28,8 @@ export let UILayer = {
 
 let UI = [];
 
+export function runUILayer() {}
+
 export function addToUILayer(u) {
   UI.push(u);
 }

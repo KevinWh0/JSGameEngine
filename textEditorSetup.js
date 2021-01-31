@@ -56,6 +56,7 @@ window.onload = function () {
 //while (true) {
 //}
 
+/*
 if (typeof Promise !== "undefined") {
   var comp = [
     ["here", "hither"],
@@ -98,4 +99,4 @@ if (typeof Promise !== "undefined") {
     mode: "text/x-markdown",
     hintOptions: { hint: synonyms },
   });
-}
+}*/
