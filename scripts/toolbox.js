@@ -85,7 +85,7 @@ export let game = {
         (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)
       ) {
         e.preventDefault();
-        currentKeyPressed = "Tab";
+        if (keyCode == 9) currentKeyPressed = "Tab";
       }
 
       if (!!textholdTimers.get(currentKeyPressed))
@@ -123,6 +123,9 @@ export let game = {
       height = window.innerHeight;
       document.getElementById("canvas").width = width;
       document.getElementById("canvas").height = height;
+
+      document.getElementById("UI_Layer").width = width;
+      document.getElementById("UI_Layer").height = height;
     });
     window.addEventListener("wheel", function (e) {
       scrollSpeed = e.deltaY / 10;
@@ -674,9 +677,9 @@ export class ButtonBar {
       if (this.type == "line") {
         lineButton(
           this.names[i],
-          x,
+          Math.round(x),
           this.y,
-          getTextWidth(this.names[i]) + 20,
+          Math.round(getTextWidth(this.names[i]) + 20),
           this.h,
           25,
           this.onClick[i]
@@ -684,9 +687,9 @@ export class ButtonBar {
       } else
         button(
           this.names[i],
-          x,
+          Math.round(x),
           this.y,
-          getTextWidth(this.names[i]) + 20,
+          Math.round(getTextWidth(this.names[i]) + 20),
           this.h,
           25,
           this.onClick[i]

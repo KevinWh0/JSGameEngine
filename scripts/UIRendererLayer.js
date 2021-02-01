@@ -113,6 +113,32 @@ export class ButtonWidget {
   }
 }
 
+export class ToggleWidget {
+  onClick;
+  looks = [];
+  w;
+  h;
+  toggle = false;
+  constructor(w, h, onClick, startingValue) {
+    this.w = w;
+    this.h = h;
+    this.onClick = onClick;
+    if (!!startingValue) this.toggle = startingValue;
+  }
+
+  run(x, y, w, h, parent) {
+    this.looks(x, y, this.w, this.h);
+    if (inArea(mouseX, mouseY, x, y, this.w, this.h) && mousePressed) {
+      this.toggle = !this.toggle;
+      this.onClick(this.toggle, parent);
+    }
+  }
+
+  addLooks(l) {
+    this.looks.push(l);
+  }
+}
+
 //Looks
 
 class rectangleLook {

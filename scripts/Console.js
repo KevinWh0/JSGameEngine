@@ -179,7 +179,7 @@ export function drawConsole() {
   //Console Handle
   fill(handleUI);
   rect(0, consoleHeight, width, 40);
-  consoleMenu.setY(consoleHeight);
+  consoleMenu.setY(Math.round(consoleHeight));
   consoleMenu.render();
 
   switch (consoleArea) {

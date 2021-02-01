@@ -4,6 +4,8 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
   mode: { name: "javascript", globalVars: true },
   gutters: ["CodeMirror-lint-markers"],
   lint: true,
+  autoCloseBrackets: true,
+
   //The theme for the code editor
   theme: "ayu-mirage",
 });

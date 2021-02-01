@@ -37,6 +37,9 @@ import {
   PopupPanel,
   Dropdown,
   returnCopy,
+  getTextWidth,
+  findTextFitSize,
+  setFontSize,
 } from "../toolbox.js";
 import { consoleHeight } from "../Console.js";
 import {
@@ -316,6 +319,8 @@ export function runUI() {
     if (selectedOBJ == i) rect(0, 100 + (i - 0.9) * 30, explorerTab.w, 30);
     fill(textUIColor);
     if (!obj.enabled) fill(greyTextUIColor);
+    //setFontSize(findTextFitSize(obj.name, explorerTab.w - 30), "Ubuntu");
+
     textWraped(obj.name, 30, 100 + i * 30, explorerTab.w - 30, height - 80);
   }
 }
