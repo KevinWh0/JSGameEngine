@@ -61,6 +61,8 @@ import {
   addToUILayer,
   ButtonWidget,
   rectangleLook,
+  roundRectangleGradientLook,
+  roundRectangleLook,
   textLook,
   UIPopupPanel,
 } from "../UIRendererLayer.js";
@@ -239,7 +241,13 @@ function addBaseComponents() {
                 new ButtonWidget(200, 50, () => {
                   alert("Added Component");
                 })
-                  .addLooks(new rectangleLook(secondaryUIColor))
+                  .overidePosition("CENTERX", "BOTTOM")
+                  .addLooks(
+                    new roundRectangleGradientLook(
+                      secondaryUIColor,
+                      primaryUIColor
+                    )
+                  )
                   .addLooks(new textLook("Add Component", "white"))
               )
             );

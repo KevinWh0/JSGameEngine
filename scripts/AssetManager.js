@@ -44,6 +44,8 @@ export const textUIColor = "rgb(255,255,255)";
 export const greyTextUIColor = "rgb(150,150,150)";
 export const hightlightsColor = "rgb(39, 232, 167)";
 
+export const mainFont = "Ubuntu";
+
 export let specialChars = {
   return: "⏎",
   tab: "↹",

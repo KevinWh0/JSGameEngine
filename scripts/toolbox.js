@@ -149,6 +149,14 @@ export function fill(col) {
   currentContext.fillStyle = col;
 }
 
+export function fillGradient(col1, col2, startx, starty, stopx, stopy) {
+  var grd = currentContext.createLinearGradient(startx, starty, stopx, stopy);
+  grd.addColorStop(0, col1);
+  grd.addColorStop(1, col2);
+
+  currentContext.fillStyle = grd;
+}
+
 export function transitionRGB(color, color1, speed) {
   let col = color.replace("rgb(", "").replace(")", "").split(",");
   let col1 = color1.replace("rgb(", "").replace(")", "").split(",");

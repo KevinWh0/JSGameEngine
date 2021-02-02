@@ -9,6 +9,7 @@ import {
   textUIColor,
   secondaryUIColor,
   jsIcon,
+  mainFont,
 } from "./scripts/AssetManager.js";
 import { compileGame } from "./scripts/CodeCompiler.js";
 import {
@@ -197,7 +198,7 @@ export function updateGameArea() {
     }
   }
 
-  setFontSize(20, "Ubuntu");
+  setFontSize(20, mainFont);
 
   try {
     stateCode.get(state)(game.frameNo);
