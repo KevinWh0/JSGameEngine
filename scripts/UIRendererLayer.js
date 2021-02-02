@@ -206,18 +206,73 @@ export class ToggleWidget {
 }
 
 //Looks
+/*export let looksOffset = [
+  "TOP",
+  "BOTTOM",
+  "CENTERY",
+  "CENTERX",
+  "LEFT",
+  "RIGHT",
+];*/
+export let looksOffsetMap = {
+  TOP: (parent, UIWindow) => {
+    parent.yOveride = 0;
+  },
+  BOTTOM: (parent, UIWindow) => {
+    parent.yOveride = 0;
+  },
+  CENTERY: (parent, UIWindow) => {},
+  CENTERX: (parent, UIWindow) => {},
+  LEFT: (parent, UIWindow) => {},
+  RIGHT: (parent, UIWindow) => {},
+};
 
-export class lookLogic {
+export let looksOffset = Object.keys(looksOffsetMap);
+
+class looks {
+  xOveride;
+  yOveride;
+
+  overideSettings;
+  constructor() {}
+
+  overidePosition(x, y) {
+    overideSettings = {
+      x: x,
+      y: y,
+    };
+    if (!!looksOffsetMap[x]) {
+      looksOffsetMap[x](this);
+    } else this.xOveride = x;
+
+    if (!!looksOffsetMap[y]) {
+      looksOffsetMap[y](this);
+    } else this.yOveride = y;
+
+    //this.xOveride = x;
+    //this.yOveride = y;
+    return this;
+  }
+}
+
+export class lookLogic extends looks {
   looks = [];
   condition;
   constructor(condition) {
+    super();
     this.condition = condition;
   }
 
   run(x, y, w, h, parent) {
     if (this.condition()) {
       for (let i = 0; i < this.looks.length; i++) {
-        this.looks[i](x, y, this.w, this.h, this);
+        this.looks[i](
+          !this.xOveride ? x : this.xOveride,
+          !this.yOveride ? y : this.yOveride,
+          this.w,
+          this.h,
+          this
+        );
       }
     }
   }
@@ -227,19 +282,27 @@ export class lookLogic {
   }
 }
 
-export class rectangleLook {
+export class rectangleLook extends looks {
   color = "blue";
   constructor(color) {
+    super();
     this.color = color;
   }
   run(x, y, w, h) {
     fill(this.color);
-    rect(x, y, w, h);
+    rect(
+      !this.xOveride ? x : this.xOveride,
+      !this.yOveride ? y : this.yOveride,
+      w,
+      h
+    );
   }
 }
 export class textLook {
   color = "white";
   text = "Sample Text";
+  xOffset;
+  yOffset;
   constructor(text, color) {
     this.text = text;
     this.color = color;
@@ -247,6 +310,11 @@ export class textLook {
 
   run(x, y, w, h) {
     fill(this.color);
-    text(this.text, x + 3, y + getFontSize());
+    //text(this.text, x + 3, y + getFontSize());
+    text(
+      this.text,
+      !this.xOveride ? x : this.xOveride,
+      (!this.yOveride ? y : this.yOveride) + getFontSize()
+    );
   }
 }
