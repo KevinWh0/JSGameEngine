@@ -57,6 +57,13 @@ import {
   selectedComponent,
   setSelectedComponent,
 } from "../GameAssets/AssetHandler.js";
+import {
+  addToUILayer,
+  ButtonWidget,
+  rectangleLook,
+  textLook,
+  UIPopupPanel,
+} from "../UIRendererLayer.js";
 
 export let explorerTab = new UIStrechableTabLeft(
   0,
@@ -221,6 +228,22 @@ function addBaseComponents() {
           50,
           30,
           () => {
+            addToUILayer(
+              new UIPopupPanel(
+                100,
+                100,
+                300,
+                400,
+                "Add Component"
+              ).addComponent(
+                new ButtonWidget(200, 50, () => {
+                  alert("Added Component");
+                })
+                  .addLooks(new rectangleLook(secondaryUIColor))
+                  .addLooks(new textLook("Add Component", "white"))
+              )
+            );
+            /*
             addComponentPopup.removeAllComponents();
             addComponentPopup.setShowing(true);
             addComponentPopup.setPos(tab.x + 25, tab.y + tab.h - 200);
@@ -233,6 +256,7 @@ function addBaseComponents() {
             dropdown.setText("Select Component");
             addComponentPopup.addComponent(dropdown);
 
+            */
             /*
                 addObject(
       new GameObject(10, 10, 200, 200)

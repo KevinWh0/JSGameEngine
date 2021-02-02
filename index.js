@@ -54,7 +54,7 @@ import {
   saveKey,
   findTextFitSize,
 } from "./scripts/toolbox.js";
-import { UILayer } from "./scripts/UIRendererLayer.js";
+import { runUILayer, UILayer } from "./scripts/UIRendererLayer.js";
 
 game.start();
 var lastRender = Date.now();
@@ -204,6 +204,7 @@ export function updateGameArea() {
   } catch (err) {
     console.error("State Does not exist.  " + err);
   }
+  runUILayer();
 
   drawConsole();
 

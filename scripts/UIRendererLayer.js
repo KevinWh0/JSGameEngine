@@ -1,14 +1,26 @@
 import {
+  hightlightsColor,
+  primaryUIColor,
+  secondaryUIColor,
+  textUIColor,
+} from "./AssetManager.js";
+import {
   fill,
+  findTextFitSize,
   getContext,
+  getFontSize,
+  getTextWidth,
   height,
   inArea,
   mousePressed,
   mouseX,
   mouseY,
   rect,
+  removeItem,
   setContext,
+  setFontSize,
   text,
+  transitionRGB,
   width,
 } from "./toolbox.js";
 
@@ -28,7 +40,17 @@ export let UILayer = {
 
 let UI = [];
 
-export function runUILayer() {}
+export function runUILayer() {
+  UILayer.clear();
+
+  UI.forEach((ui) => {
+    ui.run();
+  });
+
+  for (let i = 0; i < UI.length; i++) {
+    if (UI[i].garbage) UI = removeItem(UI, i);
+  }
+}
 
 export function addToUILayer(u) {
   UI.push(u);
@@ -39,23 +61,61 @@ export class UIPopupPanel {
   y;
   w;
   h;
+  title;
   scrollY;
   components = [];
+  XCol;
   //If the components leave the bounds of the box it counts as overflowing
   overflowing = false;
-  constructor(x, y, w, h) {
+
+  //tells the program if this is no longer needed, if its true the object will be destroyed
+  garbage = false;
+  constructor(x, y, w, h, title) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
+    this.title = title;
     this.scrollY = 0;
+    this.XCol = textUIColor;
   }
 
   run() {
     let c = getContext();
     setContext(UILayer.context);
-    let xPos = 10;
-    let yPos = 10 - this.scrollY;
+    fill(hightlightsColor);
+    rect(this.x - 1, this.y - 1, this.w + 2, this.h + 2);
+    fill(primaryUIColor);
+    rect(this.x, this.y, this.w, this.h);
+
+    fill(secondaryUIColor);
+    rect(this.x, this.y, this.w, 20);
+    if (
+      inArea(
+        mouseX,
+        mouseY,
+        this.x + this.w - getTextWidth("X") - 5,
+        this.y,
+        getTextWidth("X"),
+        20
+      )
+    ) {
+      this.XCol = transitionRGB(this.XCol, "rgb(255,0,0)", 10);
+      if (mousePressed) this.garbage = true;
+    } else {
+      this.XCol = transitionRGB(this.XCol, textUIColor, 10);
+    }
+
+    fill(this.XCol);
+    setFontSize(20, "Ubuntu");
+    text("X", this.x + this.w - getTextWidth("X") - 5, this.y + 17);
+    fill(textUIColor);
+    //let text = this.title;
+    //if(getTextWidth(text) > this.w - getTextWidth("X") - 5)text =
+    if (!!this.title) text(this.title, this.x + 5, this.y + 17);
+
+    let xPos = 5;
+    let yPos = 25 - this.scrollY;
     for (let i = 0; i < this.components.length; i++) {
       this.components[i].run(
         this.x + this.scrollY + xPos,
@@ -102,7 +162,9 @@ export class ButtonWidget {
     this.onClick = onClick;
   }
   run(x, y, w, h, parent) {
-    this.looks(x, y, this.w, this.h);
+    for (let i = 0; i < this.looks.length; i++) {
+      this.looks[i].run(x, y, this.w, this.h, this);
+    }
     if (inArea(mouseX, mouseY, x, y, this.w, this.h) && mousePressed) {
       this.onClick(parent);
     }
@@ -110,6 +172,7 @@ export class ButtonWidget {
 
   addLooks(l) {
     this.looks.push(l);
+    return this;
   }
 }
 
@@ -127,7 +190,9 @@ export class ToggleWidget {
   }
 
   run(x, y, w, h, parent) {
-    this.looks(x, y, this.w, this.h);
+    for (let i = 0; i < this.looks.length; i++) {
+      this.looks[i].run(x, y, this.w, this.h, this);
+    }
     if (inArea(mouseX, mouseY, x, y, this.w, this.h) && mousePressed) {
       this.toggle = !this.toggle;
       this.onClick(this.toggle, parent);
@@ -136,12 +201,33 @@ export class ToggleWidget {
 
   addLooks(l) {
     this.looks.push(l);
+    return this;
   }
 }
 
 //Looks
 
-class rectangleLook {
+export class lookLogic {
+  looks = [];
+  condition;
+  constructor(condition) {
+    this.condition = condition;
+  }
+
+  run(x, y, w, h, parent) {
+    if (this.condition()) {
+      for (let i = 0; i < this.looks.length; i++) {
+        this.looks[i](x, y, this.w, this.h, this);
+      }
+    }
+  }
+
+  addLooks(l) {
+    this.looks.push(l);
+  }
+}
+
+export class rectangleLook {
   color = "blue";
   constructor(color) {
     this.color = color;
@@ -151,7 +237,7 @@ class rectangleLook {
     rect(x, y, w, h);
   }
 }
-class textLook {
+export class textLook {
   color = "white";
   text = "Sample Text";
   constructor(text, color) {
@@ -161,6 +247,6 @@ class textLook {
 
   run(x, y, w, h) {
     fill(this.color);
-    text(this.text, x + 3, y);
+    text(this.text, x + 3, y + getFontSize());
   }
 }

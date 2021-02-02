@@ -149,6 +149,28 @@ export function fill(col) {
   currentContext.fillStyle = col;
 }
 
+export function transitionRGB(color, color1, speed) {
+  let col = color.replace("rgb(", "").replace(")", "").split(",");
+  let col1 = color1.replace("rgb(", "").replace(")", "").split(",");
+
+  let newCol = "rgb(";
+  for (let i = 0; i < col.length; i++) {
+    //console.log(parseInt(col1[i].trim()));
+
+    col[i] = parseInt(col[i].trim());
+    col1[i] = parseInt(col1[i].trim());
+
+    if (i < col.length - 1)
+      newCol =
+        newCol + `${col[i] > col1[i] ? col[i] - speed : col[i] + speed},`;
+    else
+      newCol = newCol + `${col[i] > col1[i] ? col[i] - speed : col[i] + speed}`;
+  }
+  newCol = newCol + ")";
+
+  return newCol;
+}
+
 export function rect(x, y, w, h) {
   currentContext.fillRect(x, y, w, h);
 }
@@ -164,6 +186,13 @@ export function rectOutline(x, y, w, h, lnWidth) {
   rect(x, y + h, w, lnW);
   rect(x + lnWidth, y, lnW, h);
   rect(x + w, y, lnW, h + lnW);
+}
+
+export function line(x, y, x1, y1) {
+  currentContext.beginPath();
+  currentContext.moveTo(x, y);
+  currentContext.lineTo(x1, y1);
+  currentContext.stroke();
 }
 
 export function roundedRect(x, y, width, height, radius) {
@@ -606,6 +635,10 @@ export function getKeyByValue(object, value) {
 
 export function randomNumber(min, max) {
   return Math.random() * (max - min) + min;
+}
+
+export function lerp(start, end, amt) {
+  return (1 - amt) * start + amt * end;
 }
 
 export const addNSecondsDelay = (n) => {
