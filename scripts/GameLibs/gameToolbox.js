@@ -89,7 +89,7 @@ let gameCanvas = {
       keyReleased = true;
       currentKeypress = -1;
       releasedKey = e.key;
-      textholdTimers.set(e.key, undefined);
+      //textholdTimers.set(e.key, undefined);
       keyHeldText = "";
     });
     window.addEventListener("resize", function (e) {

@@ -84,7 +84,7 @@ export let game = {
         keyCode == 9 ||
         (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)
       ) {
-        e.preventDefault();
+        if (keyCode == "s") e.preventDefault();
         if (keyCode == 9) currentKeyPressed = "Tab";
       }
 
