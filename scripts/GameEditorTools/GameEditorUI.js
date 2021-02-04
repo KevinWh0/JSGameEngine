@@ -2,6 +2,7 @@ import {
   componentsUIDictionary,
   greyTextUIColor,
   handleUI,
+  hightlightsColor,
   primaryUIColor,
   secondaryUIColor,
   textUIColor,
@@ -40,6 +41,7 @@ import {
   getTextWidth,
   findTextFitSize,
   setFontSize,
+  keyDown,
 } from "../toolbox.js";
 import { consoleHeight } from "../Console.js";
 import {
@@ -60,6 +62,7 @@ import {
 import {
   addToUILayer,
   ButtonWidget,
+  DropdownWidget,
   rectangleLook,
   roundRectangleGradientLook,
   roundRectangleLook,
@@ -231,25 +234,31 @@ function addBaseComponents() {
           30,
           () => {
             addToUILayer(
-              new UIPopupPanel(
-                100,
-                100,
-                300,
-                400,
-                "Add Component"
-              ).addComponent(
-                new ButtonWidget(200, 50, () => {
-                  alert("Added Component");
-                })
-                  .overidePosition("CENTERX", "BOTTOM")
-                  .addLooks(
-                    new roundRectangleGradientLook(
-                      secondaryUIColor,
-                      primaryUIColor
+              new UIPopupPanel(100, 100, 300, 400, "Add Component")
+                .addComponent(
+                  new ButtonWidget(200, 50, (widgetHolder) => {
+                    //alert("Added Component");
+                    let selectedcomponent = widgetHolder.components[1].selected;
+                    if (selectedcomponent != undefined)
+                      objects[selectedOBJ].addComponent(
+                        returnCopy(componentsMap.get(selectedcomponent))
+                      );
+                  })
+                    .overidePosition("CENTERX", "BOTTOM")
+                    .addLooks(
+                      new roundRectangleGradientLook(
+                        secondaryUIColor,
+                        primaryUIColor
+                      )
                     )
-                  )
-                  .addLooks(new textLook("Add Component", "white"))
-              )
+                    .addLooks(new textLook("Add Component", textUIColor))
+                )
+                .addComponent(
+                  new DropdownWidget(200, 50)
+                    .overidePosition("CENTERX", "TOP")
+                    .addLooks(new roundRectangleLook(secondaryUIColor))
+                    .setOptions(Array.from(componentsUIDictionary.keys()))
+                )
             );
             /*
             addComponentPopup.removeAllComponents();

@@ -157,6 +157,15 @@ export function fillGradient(col1, col2, startx, starty, stopx, stopy) {
   currentContext.fillStyle = grd;
 }
 
+export function fillLinearGradientCustom(cols, startx, starty, stopx, stopy) {
+  var grd = currentContext.createLinearGradient(startx, starty, stopx, stopy);
+  let ckeys = Object.keys(cols);
+  for (let i = 0; i < ckeys.length; i++) {
+    grd.addColorStop(ckeys[i], cols[ckeys[i]]);
+  }
+  currentContext.fillStyle = grd;
+}
+
 export function transitionRGB(color, color1, speed) {
   let col = color.replace("rgb(", "").replace(")", "").split(",");
   let col1 = color1.replace("rgb(", "").replace(")", "").split(",");

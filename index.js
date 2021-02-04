@@ -61,7 +61,7 @@ game.start();
 var lastRender = Date.now();
 export let fps;
 
-setTitle("Game Engine!");
+setTitle("Aether Engine");
 //setIcon("./icon.png");
 
 let buttonsBar = new ButtonBar(10, 15, width, 40, "line");

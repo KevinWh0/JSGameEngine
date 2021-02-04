@@ -1,4 +1,5 @@
 import {
+  greyTextUIColor,
   hightlightsColor,
   mainFont,
   primaryUIColor,
@@ -8,13 +9,15 @@ import {
 import {
   centerText,
   fill,
-  fillGradient,
-  findTextFitSize,
+  fillLinearGradientCustom,
   getContext,
   getFontSize,
   getTextWidth,
   height,
   inArea,
+  keyPressed,
+  keys,
+  keyPushed,
   mouseDown,
   mousePressed,
   mouseX,
@@ -27,6 +30,7 @@ import {
   text,
   transitionRGB,
   width,
+  scrollSpeed,
 } from "./toolbox.js";
 
 export let UILayer = {
@@ -82,6 +86,9 @@ export class UIPopupPanel {
   locked;
   pinXOffset;
   pinYOffset;
+
+  //This will be used for getting a specific window
+  id;
 
   constructor(x, y, w, h, title) {
     this.x = x;
@@ -166,7 +173,7 @@ export class UIPopupPanel {
       }
       if (yPos + this.components[i].h > this.h) {
         this.overflowing = true;
-        return;
+        //return;
       }
     }
     if (
@@ -180,6 +187,10 @@ export class UIPopupPanel {
 
   addComponent(component) {
     this.components.push(component);
+    return this;
+  }
+  setId(id) {
+    this.id = id;
     return this;
   }
 }
@@ -196,7 +207,7 @@ export let looksOffset = [
 ];
 export let looksOffsetMap = {
   TOP: (parent, UIWindow) => {
-    parent.yOveride = UIWindow.y;
+    parent.yOveride = UIWindow.y + 25;
   },
   BOTTOM: (parent, UIWindow) => {
     parent.yOveride = UIWindow.h - parent.h - 5 + UIWindow.y;
@@ -221,18 +232,25 @@ class Widget {
 
   overideSettings;
 
-  runInBackground(parent) {
-    if (!!looksOffsetMap[this.overideSettings.x]) {
-      looksOffsetMap[this.overideSettings.x](this, parent);
-    } // else this.x = this.overideSettings.x;
+  overideLooks = false;
+  looks = [];
+  runInBackground(parent, x, y) {
+    if (!!this.overideSettings) {
+      if (!!looksOffsetMap[this.overideSettings.x]) {
+        looksOffsetMap[this.overideSettings.x](this, parent);
+      } // else this.x = this.overideSettings.x;
 
-    if (!!looksOffsetMap[this.overideSettings.y]) {
-      looksOffsetMap[this.overideSettings.y](this, parent);
-    } // else this.yOveride = this.overideSettings.y;
-
-    for (let i = 0; i < this.looks.length; i++) {
-      this.looks[i].run(this.xOveride, this.yOveride, this.w, this.h, this);
+      if (!!looksOffsetMap[this.overideSettings.y]) {
+        looksOffsetMap[this.overideSettings.y](this, parent);
+      } // else this.yOveride = this.overideSettings.y;
+    } else {
+      this.xOveride = x;
+      this.yOveride = y;
     }
+    if (!this.overideLooks)
+      for (let i = 0; i < this.looks.length; i++) {
+        this.looks[i].run(this.xOveride, this.yOveride, this.w, this.h, this);
+      }
   }
   overidePosition(x, y) {
     this.overideSettings = {
@@ -244,11 +262,15 @@ class Widget {
     //this.yOveride = y;
     return this;
   }
+
+  addLooks(l) {
+    this.looks.push(l);
+    return this;
+  }
 }
 
 export class ButtonWidget extends Widget {
   onClick;
-  looks = [];
   w;
   h;
   constructor(w, h, onClick) {
@@ -269,16 +291,10 @@ export class ButtonWidget extends Widget {
       this.onClick(parent);
     }
   }
-
-  addLooks(l) {
-    this.looks.push(l);
-    return this;
-  }
 }
 
 export class ToggleWidget extends Widget {
   onClick;
-  looks = [];
   w;
   h;
   toggle = false;
@@ -303,9 +319,136 @@ export class ToggleWidget extends Widget {
       this.onClick(this.toggle, parent);
     }
   }
+}
 
-  addLooks(l) {
-    this.looks.push(l);
+export class TextboxWidget extends Widget {
+  w;
+  h;
+  value = "";
+  selected = false;
+  constructor(w, h) {
+    super();
+    this.w = w;
+    this.h = h;
+  }
+
+  run(x, y, w, h, parent) {
+    this.xOveride = x;
+    this.yOveride = y;
+    this.runInBackground(parent);
+
+    fill(textUIColor);
+    if (this.value == "") {
+      fill(greyTextUIColor);
+      text(
+        "Type Here",
+        centerText("Type Here", this.xOveride, this.w),
+        this.yOveride + 0.6 * this.h
+      );
+    } else
+      text(
+        this.value,
+        centerText(this.value, this.xOveride, this.w),
+        this.yOveride + 0.6 * this.h
+      );
+    if (inArea(mouseX, mouseY, this.xOveride, this.yOveride, this.w, this.h)) {
+      if (mousePressed) this.selected = true;
+    } else this.selected = false;
+
+    if (this.selected) {
+      if (keyPressed != -1 && keyPushed) {
+        //this.value = this.value; //+ keyP
+        let key = keyPressed.toString();
+        if (keys[16]) key = key.toUpperCase();
+        if (keyPressed.toString() == "Backspace") {
+          this.value = this.value.substr(0, this.value.length - 1);
+        } else if (
+          /*
+          keyPressed.toString() != "Alt" &&
+          key != "SHIFT" &&*/
+          keyPressed.toString().length < 2
+        )
+          this.value = this.value + key;
+      }
+    }
+  }
+}
+
+export class DropdownWidget extends Widget {
+  w;
+  h;
+  options = [];
+  open = false;
+  selected;
+  constructor(w, h) {
+    super();
+    this.w = w;
+    this.h = h;
+    this.overideLooks = true;
+  }
+
+  run(x, y, w, h, parent) {
+    this.xOveride = x;
+    this.yOveride = y;
+    this.runInBackground(parent, x, y);
+
+    if (
+      inArea(mouseX, mouseY, this.xOveride, this.yOveride, this.w, this.h) &&
+      mousePressed
+    ) {
+      this.open = !this.open;
+    }
+    for (let j = 0; j < this.looks.length; j++) {
+      this.looks[j].run(this.xOveride, this.yOveride, this.w, this.h, this);
+    }
+    if (this.open) {
+      for (let i = 0; i < this.options.length; i++) {
+        for (let j = 0; j < this.looks.length; j++) {
+          this.looks[j].run(
+            this.xOveride,
+            this.yOveride + (i + 1) * this.h,
+            this.w,
+            this.h,
+            this
+          );
+        }
+        if (
+          inArea(
+            mouseX,
+            mouseY,
+            this.xOveride,
+            this.yOveride + (i + 1) * this.h,
+            this.w,
+            this.h
+          )
+        ) {
+          fill(greyTextUIColor);
+          if (mousePressed) {
+            this.open = false;
+            this.selected = this.options[i];
+          }
+        } else fill(textUIColor);
+        text(
+          this.options[i],
+          centerText(this.options[i], this.xOveride, this.w),
+          this.yOveride + (i + 1.6) * this.h
+        );
+      }
+    }
+    fill(textUIColor);
+    text(
+      this.selected,
+      centerText(this.selected, this.xOveride, this.w),
+      this.yOveride + 0.6 * this.h
+    );
+  }
+
+  addOption(o) {
+    this.options.push(o);
+    return this;
+  }
+  setOptions(o) {
+    this.options = o;
     return this;
   }
 }
@@ -369,16 +512,20 @@ export class roundRectangleLook extends looks {
 }
 
 export class roundRectangleGradientLook extends looks {
-  color1 = "blue";
-  color2 = "red";
+  fillJSON = { 0: "red", 1: "blue" };
 
   constructor(color1, color2) {
     super();
-    this.color1 = color1;
-    this.color2 = color2;
+    if (typeof color1 == "object") {
+      this.fillJSON = color1;
+    } else {
+      this.fillJSON = { 0: color1, 1: color2 };
+      this.color1 = color1;
+      this.color2 = color2;
+    }
   }
   run(x, y, w, h, parent) {
-    fillGradient(this.color1, this.color2, x, y, x, y + h);
+    fillLinearGradientCustom(this.fillJSON, x, y, x, y + h);
     roundedRect(x, y, w, h, 4);
     this.runInBackground(parent);
   }

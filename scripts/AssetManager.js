@@ -144,13 +144,7 @@ componentsUIDictionary.set("Script Component", {
             if (assets.get(a).type == "Script") parent1.addItem(a);
           });
         })
-        //.setText(
-        //objects[selectedOBJ].components[selectedComponent].data.color
-        //)
       );
-      //console.log(objects[selectedOBJ].components[selectedComponent].data);
-      //parent.components[0].currentSelection =
-      //objects[selectedOBJ].components[selectedComponent].data.color;
     } catch (error) {
       console.log(error);
     }

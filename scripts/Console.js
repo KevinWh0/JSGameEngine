@@ -58,7 +58,14 @@ import { FileObject } from "./GameObject/FileTypes/File.js";
 import { AudioObject } from "./GameObject/FileTypes/Audio.js";
 import { TextBox } from "./UIStrechableTab.js";
 import { ScriptObject } from "./GameObject/FileTypes/ScriptObject.js";
-
+import {
+  addToUILayer,
+  UIPopupPanel,
+  ButtonWidget,
+  roundRectangleGradientLook,
+  textLook,
+  TextboxWidget,
+} from "./UIRendererLayer.js";
 export let running = false;
 export function setRunning(r) {
   //console.log("running set to " + r);
@@ -195,13 +202,57 @@ export function drawConsole() {
       ) {
         //newScriptPopup.setPos(width - 75, consoleHeight + 5);
         //newScriptPopup.setSize(100,100);
-        let name = prompt("Name your script");
+
+        addToUILayer(
+          new UIPopupPanel(100, 100, 300, 150, "Create Script")
+            .addComponent(
+              new ButtonWidget(200, 50, (widgetHolder) => {
+                //alert("Added Component");
+                let val = widgetHolder.components[1].value;
+                getDefaultStartFileCode((r) => {
+                  let prompt = true;
+
+                  if (!!assets.get(`${val.replace(".js", "")}.js`))
+                    prompt = confirm(
+                      "That file already exists, would you like to overwrite it?"
+                    );
+                  if (prompt) {
+                    assets.set(
+                      `${val.replace(".js", "")}.js`,
+                      new ScriptObject(r)
+                    );
+                    widgetHolder.garbage = true;
+                  }
+                });
+                //if (val != undefined)
+              })
+                .overidePosition("CENTERX", "BOTTOM")
+                .addLooks(
+                  new roundRectangleGradientLook(
+                    secondaryUIColor,
+                    primaryUIColor
+                  )
+                )
+                .addLooks(new textLook("Create", textUIColor))
+            )
+            .addComponent(
+              new TextboxWidget(250, 50)
+                .overidePosition("CENTERX", "TOP")
+                .addLooks(
+                  new roundRectangleGradientLook(
+                    secondaryUIColor,
+                    primaryUIColor
+                  )
+                )
+            )
+        );
+        /*let name = prompt("Name your script");
 
         //newScriptPopup.addComponent(new TextBox(10,10,80,20,"Name", ));
         if (name != null)
           getDefaultStartFileCode((r) => {
             assets.set(`${name}.js`, new ScriptObject(r));
-          });
+          });*/
       } else if (
         mousePressed &&
         inArea(mouseX, mouseY, width - 40, consoleHeight + 5, 30, 30)
