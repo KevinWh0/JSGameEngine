@@ -2,6 +2,7 @@ import {
   componentsUIDictionary,
   greyTextUIColor,
   handleUI,
+  hightlightsColor,
   primaryUIColor,
   secondaryUIColor,
   textUIColor,
@@ -40,6 +41,7 @@ import {
   getTextWidth,
   findTextFitSize,
   setFontSize,
+  keyDown,
 } from "../toolbox.js";
 import { consoleHeight } from "../Console.js";
 import {
@@ -57,6 +59,16 @@ import {
   selectedComponent,
   setSelectedComponent,
 } from "../GameAssets/AssetHandler.js";
+import {
+  addToUILayer,
+  ButtonWidget,
+  DropdownWidget,
+  rectangleLook,
+  roundRectangleGradientLook,
+  roundRectangleLook,
+  textLook,
+  UIPopupPanel,
+} from "../UIRendererLayer.js";
 
 export let explorerTab = new UIStrechableTabLeft(
   0,
@@ -221,6 +233,34 @@ function addBaseComponents() {
           50,
           30,
           () => {
+            addToUILayer(
+              new UIPopupPanel(100, 100, 300, 400, "Add Component")
+                .addComponent(
+                  new ButtonWidget(200, 50, (widgetHolder) => {
+                    //alert("Added Component");
+                    let selectedcomponent = widgetHolder.components[1].selected;
+                    if (selectedcomponent != undefined)
+                      objects[selectedOBJ].addComponent(
+                        returnCopy(componentsMap.get(selectedcomponent))
+                      );
+                  })
+                    .overidePosition("CENTERX", "BOTTOM")
+                    .addLooks(
+                      new roundRectangleGradientLook(
+                        secondaryUIColor,
+                        primaryUIColor
+                      )
+                    )
+                    .addLooks(new textLook("Add Component", textUIColor))
+                )
+                .addComponent(
+                  new DropdownWidget(200, 50)
+                    .overidePosition("CENTERX", "TOP")
+                    .addLooks(new roundRectangleLook(secondaryUIColor))
+                    .setOptions(Array.from(componentsUIDictionary.keys()))
+                )
+            );
+            /*
             addComponentPopup.removeAllComponents();
             addComponentPopup.setShowing(true);
             addComponentPopup.setPos(tab.x + 25, tab.y + tab.h - 200);
@@ -233,6 +273,7 @@ function addBaseComponents() {
             dropdown.setText("Select Component");
             addComponentPopup.addComponent(dropdown);
 
+            */
             /*
                 addObject(
       new GameObject(10, 10, 200, 200)

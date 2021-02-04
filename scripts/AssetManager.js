@@ -40,8 +40,11 @@ export function setState(s) {
 export const primaryUIColor = "rgb(59, 59, 59)";
 export const secondaryUIColor = "rgb(24, 24, 24)";
 export const handleUI = "rgb(51, 51, 51)";
-export const textUIColor = "white";
+export const textUIColor = "rgb(255,255,255)";
 export const greyTextUIColor = "rgb(150,150,150)";
+export const hightlightsColor = "rgb(39, 232, 167)";
+
+export const mainFont = "Ubuntu";
 
 export let specialChars = {
   return: "⏎",
@@ -141,13 +144,7 @@ componentsUIDictionary.set("Script Component", {
             if (assets.get(a).type == "Script") parent1.addItem(a);
           });
         })
-        //.setText(
-        //objects[selectedOBJ].components[selectedComponent].data.color
-        //)
       );
-      //console.log(objects[selectedOBJ].components[selectedComponent].data);
-      //parent.components[0].currentSelection =
-      //objects[selectedOBJ].components[selectedComponent].data.color;
     } catch (error) {
       console.log(error);
     }

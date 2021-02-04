@@ -63,7 +63,7 @@ export function selectObject() {
     }
   }
   if (!pressedInRectThisFrame && mousePressed) {
-    if (
+    /*if (
       inArea(
         mouseX,
         mouseY,
@@ -77,7 +77,7 @@ export function selectObject() {
         parseInt(document.getElementById("GameViewer").height)
       )
     )
-      setSelectedObj(null);
+      setSelectedObj(null);*/
   }
   if (selectedOBJ != null) {
     const selOBJ = objects[selectedOBJ];

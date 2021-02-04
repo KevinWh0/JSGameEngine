@@ -9,6 +9,7 @@ import {
   textUIColor,
   secondaryUIColor,
   jsIcon,
+  mainFont,
 } from "./scripts/AssetManager.js";
 import { compileGame } from "./scripts/CodeCompiler.js";
 import {
@@ -54,13 +55,13 @@ import {
   saveKey,
   findTextFitSize,
 } from "./scripts/toolbox.js";
-import { UILayer } from "./scripts/UIRendererLayer.js";
+import { runUILayer, UILayer } from "./scripts/UIRendererLayer.js";
 
 game.start();
 var lastRender = Date.now();
 export let fps;
 
-setTitle("Game Engine!");
+setTitle("Aether Engine");
 //setIcon("./icon.png");
 
 let buttonsBar = new ButtonBar(10, 15, width, 40, "line");
@@ -197,13 +198,14 @@ export function updateGameArea() {
     }
   }
 
-  setFontSize(20, "Ubuntu");
+  setFontSize(20, mainFont);
 
   try {
     stateCode.get(state)(game.frameNo);
   } catch (err) {
     console.error("State Does not exist.  " + err);
   }
+  runUILayer();
 
   drawConsole();
 
