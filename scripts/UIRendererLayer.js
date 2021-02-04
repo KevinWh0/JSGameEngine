@@ -61,6 +61,13 @@ export function runUILayer() {
   }
 }
 
+export function UIcontainsID(ID) {
+  for (let i = 0; i < UI.length; i++) {
+    if (UI[i].id == ID) return true;
+  }
+  return false;
+}
+
 export function addToUILayer(u) {
   UI.push(u);
 }
