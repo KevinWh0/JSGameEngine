@@ -116,11 +116,18 @@ buttonsBar.addButton("Save Project", function () {
       .addComponent(
         new ButtonWidget(250, 50, (widgetHolder) => {
           saveProject((saveFile) => {
-            //download(saveFile, "index.json", "txt");
-            let name = prompt("What would you like to save this as?");
-            project_name = name;
-            localStorage.setItem(name, saveFile);
-            alert(`Success Saving ${name}`);
+            if (!project_name)
+              project_name = prompt("What would you like to save this as?");
+            //Check that the user has not hit cancel
+            if (!!project_name) {
+              let script = assets.get(scriptOpen);
+              script.setScript(getCode());
+              assets.set(scriptOpen, script);
+              saveStar = "";
+              saveProject((saveFile) => {
+                localStorage.setItem(project_name, saveFile);
+              });
+            }
           });
         })
           .overidePosition("CENTERX", "TOP")
