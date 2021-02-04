@@ -204,7 +204,13 @@ export function drawConsole() {
         //newScriptPopup.setSize(100,100);
 
         addToUILayer(
-          new UIPopupPanel(100, 100, 300, 150, "Create Script")
+          new UIPopupPanel(
+            width / 2 - 150,
+            height / 2 - 75,
+            300,
+            150,
+            "Create Script"
+          )
             .addComponent(
               new ButtonWidget(200, 50, (widgetHolder) => {
                 //alert("Added Component");

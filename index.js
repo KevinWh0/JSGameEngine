@@ -21,6 +21,7 @@ import {
 import { assets, setAssets } from "./scripts/GameAssets/AssetHandler.js";
 import { runUI } from "./scripts/GameEditorTools/GameEditorUI.js";
 import { clearGameCanvas } from "./scripts/GameLibs/gameCanvasRendering.js";
+import { readFile } from "./scripts/GameObject/FileTypes/FileUploader.js";
 import { objects, setObjects } from "./scripts/GameObject/ObjectHandler.js";
 import { loadProject, saveProject } from "./scripts/SaveSystem.js";
 
@@ -54,8 +55,17 @@ import {
   lineButton,
   saveKey,
   findTextFitSize,
+  UploadFile,
 } from "./scripts/toolbox.js";
-import { runUILayer, UILayer } from "./scripts/UIRendererLayer.js";
+import {
+  addToUILayer,
+  ButtonWidget,
+  roundRectangleGradientLook,
+  runUILayer,
+  textLook,
+  UILayer,
+  UIPopupPanel,
+} from "./scripts/UIRendererLayer.js";
 
 game.start();
 var lastRender = Date.now();
@@ -100,16 +110,52 @@ buttonsBar.addButton("Save Project", function () {
   //compileGame((code) => {
   //download(code, "index.html", "html");
   //});
-  saveProject((saveFile) => {
+
+  addToUILayer(
+    new UIPopupPanel(width / 2 - 150, height / 2 - 75, 300, 150, "Save Project")
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          saveProject((saveFile) => {
+            //download(saveFile, "index.json", "txt");
+            let name = prompt("What would you like to save this as?");
+            project_name = name;
+            localStorage.setItem(name, saveFile);
+            alert(`Success Saving ${name}`);
+          });
+        })
+          .overidePosition("CENTERX", "TOP")
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("Save to localStorage", textUIColor))
+      )
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          saveProject((saveFile) => {
+            let name = prompt("What would you like to save this as?");
+            project_name = name;
+            download(saveFile, `${name}.json`, "txt");
+          });
+        })
+          .overidePosition("CENTERX", "BOTTOM")
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("Dowload Physical Copy", textUIColor))
+      )
+  );
+
+  /*saveProject((saveFile) => {
     //download(saveFile, "index.json", "txt");
     let name = prompt("What would you like to save this as?");
     project_name = name;
     localStorage.setItem(name, saveFile);
     alert(`Success Saving ${name}`);
-  });
+  });*/
 });
 
 buttonsBar.addButton("Load Project", function () {
+  /*
   (async () => {
     let name = prompt("What project would you like to load?");
     project_name = name;
@@ -125,7 +171,52 @@ buttonsBar.addButton("Load Project", function () {
         `Error loading ${name}, please check the spelling.   Projects(${localStorage.length}) : ${choices}.`
       );
     }
-  })();
+  })();*/
+
+  addToUILayer(
+    new UIPopupPanel(width / 2 - 150, height / 2 - 75, 300, 150, "Load Project")
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          (async () => {
+            let name = prompt("What project would you like to load?");
+            if (!name) return;
+            project_name = name;
+            let project = localStorage.getItem(name);
+            if (!!project) loadProject(project);
+            else {
+              let choices = "";
+              for (let i = 0; i < localStorage.length; i++) {
+                choices = choices + ` ${localStorage.key(i)},`;
+              }
+              choices = choices.substr(0, choices.length - 1);
+              alert(
+                `Error loading ${name}, please check the spelling.   Projects(${localStorage.length}) : ${choices}.`
+              );
+            }
+          })();
+        })
+          .overidePosition("CENTERX", "TOP")
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("load from localStorage", textUIColor))
+      )
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          UploadFile((files) => {
+            let file = files[0];
+            readFile(file, (data) => {
+              loadProject(data);
+            });
+          });
+        })
+          .overidePosition("CENTERX", "BOTTOM")
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("Upload Project", textUIColor))
+      )
+  );
 });
 
 let saveStar = "";
