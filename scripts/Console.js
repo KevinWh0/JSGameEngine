@@ -267,26 +267,7 @@ export function drawConsole() {
         pinDrag = false;
         (async (func) => {
           UploadFile((files) => {
-            for (let i = 0; i < files.length; i++) {
-              console.log(files[i].type);
-              if (
-                /*imageTypes.includes(files[i].type)*/ files[i].type.startsWith(
-                  "image/"
-                )
-              )
-                readImage(files[i], (dataURL) => {
-                  assets.set(files[i].name, new ImageObject(dataURL));
-                });
-              else if (files[i].type.startsWith("audio/")) {
-                readImage(files[i], (dataURL) => {
-                  assets.set(files[i].name, new AudioObject(dataURL));
-                });
-              } else {
-                readFile(files[i], (data) => {
-                  assets.set(files[i].name, new FileObject(data));
-                });
-              }
-            }
+            uploadFiles(files);
           });
         })();
       }
@@ -427,4 +408,47 @@ export function drawConsole() {
   lastFrameY = mouseY;
 
   //testerGameWindow.canvas.width = width;
+}
+
+//!Add File Drop support below
+
+let dropArea = document.getElementById("PopupUICanvasHolder");
+//  .addEventListener("drop", dropHandler, false);
+
+["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+  dropArea.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+dropArea.addEventListener("drop", dropHandler, false);
+
+function dropHandler(e) {
+  let dt = e.dataTransfer;
+  let files = dt.files;
+  uploadFiles(files);
+}
+
+function uploadFiles(files) {
+  for (let i = 0; i < files.length; i++) {
+    console.log(files[i].type);
+    if (
+      /*imageTypes.includes(files[i].type)*/ files[i].type.startsWith("image/")
+    )
+      readImage(files[i], (dataURL) => {
+        assets.set(files[i].name, new ImageObject(dataURL));
+      });
+    else if (files[i].type.startsWith("audio/")) {
+      readImage(files[i], (dataURL) => {
+        assets.set(files[i].name, new AudioObject(dataURL));
+      });
+    } else {
+      readFile(files[i], (data) => {
+        assets.set(files[i].name, new FileObject(data));
+      });
+    }
+  }
 }

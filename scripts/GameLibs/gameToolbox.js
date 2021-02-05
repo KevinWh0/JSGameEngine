@@ -71,17 +71,12 @@ let gameCanvas = {
         currentKeyPressed = "Tab";
       }
 
-      if (!!textholdTimers.get(currentKeyPressed))
-        textholdTimers.set(
-          currentKeyPressed,
-          textholdTimers.get(currentKeyPressed) + 1
-        );
-      if (textholdTimers.get(currentKeyPressed) > 20) {
-        keyHeldText = currentKeyPressed;
-      } else {
-        textholdTimers.set(currentKeyPressed, 1);
-        keyHeldText = currentKeyPressed;
-      }
+      // Dispatch/Trigger/Fire the event
+      document.dispatchEvent(
+        new CustomEvent("keyDown", {
+          detail: e.key,
+        })
+      );
     });
     window.addEventListener("keyup", function (e) {
       keys[e.keyCode] = false;
