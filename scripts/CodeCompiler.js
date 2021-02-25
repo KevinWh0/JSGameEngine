@@ -1,6 +1,16 @@
 import { assets } from "./GameAssets/AssetHandler.js";
 import { objects } from "./GameObject/ObjectHandler.js";
-import { readTextFile, replaceAll } from "./toolbox.js";
+import {
+  findFunctionName,
+  insertFirst,
+  readTextFile,
+  replaceAll,
+  getWordsBetweenCurlBracket,
+  getWordsOutsideCurlBracket,
+  getFunc,
+  getVars,
+  getList,
+} from "./toolbox.js";
 
 export function compileGame(callback) {
   (async () => {
@@ -15,6 +25,75 @@ export function compileGame(callback) {
           `  assets.set("${AssetNames[i]}", new ${
             Assets[i].constructor.name
           }(${JSON.stringify(Assets[i].data.src)}));  `;
+      } else if (Assets[i].type == "Script") {
+        let finalScript = "";
+
+        let classVars = [];
+
+        let rawOutsideCurlBrackets = getWordsOutsideCurlBracket(Assets[i].data)
+          .join("\n")
+          .replace(/let|var/g, "")
+          .split(";");
+        console.log(getWordsOutsideCurlBracket(Assets[i].data));
+
+        let finalGlobalVars = "";
+        let finalVars = [];
+
+        //This part of the code generates the final string for all the global vars
+        //(The ones not declared in a function and will last longer than 1 frame)
+        rawOutsideCurlBrackets.forEach((vars) => {
+          if (vars.length == 0) return;
+          let v = vars.split("=");
+          let varName = v[0].trim().split(" ");
+          v[0] = varName[varName.length - 1];
+
+          if (v.length < 2) {
+            finalVars.push(/*"let " + */ v[0] + ";");
+          } else {
+            v[1] = v[1].trim();
+            finalVars.push(/*"let " + */ v[0] + " =  " + v[1] + ";");
+          }
+          classVars.push(v[0]);
+          finalGlobalVars = finalVars.join("\n");
+        });
+        finalGlobalVars = finalGlobalVars.replace(/};/, "");
+
+        finalScript = finalScript + finalGlobalVars;
+
+        //Now generate the functions and replace the global vars to start with this.var
+        let classFunctions = getFunc(Assets[i].data);
+
+        classFunctions.forEach((cf) => {
+          let newFunc = null;
+          if (newFunc == null) {
+            classVars.push(cf.split(" ")[1].split("(")[0]);
+            newFunc = cf.replace("function ", "");
+          }
+          classVars.forEach((cv) => {
+            //The use of VAR is depricated
+            let vars = newFunc.replace(
+              new RegExp(`(?<!let )${cv}(?=[^a-z])(?=[^.])`),
+              `this.${cv}`
+            );
+            newFunc = vars;
+            //console.log(newFunc);
+          });
+
+          //console.log(newFunc.substr(5, newFunc.length));
+          finalScript = finalScript + newFunc.substr(5, newFunc.length);
+
+          //classVars
+        });
+
+        console.log(
+          `class ${AssetNames[i].replace(/\./, "_")} {` + finalScript + `}`
+        );
+
+        exportedAssets =
+          exportedAssets +
+          `  assets.set("${AssetNames[i]}", new ${
+            Assets[i].constructor.name
+          }(${JSON.stringify(Assets[i].data)}));  `;
       } else {
         exportedAssets =
           exportedAssets +
