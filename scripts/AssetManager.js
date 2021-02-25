@@ -266,6 +266,6 @@ fileIcon.src =
 export let audioIcon = new Image();
 audioIcon.src = "./EngineAssets/AudioIcon.png";
 export let scriptIcon = new Image();
-scriptIcon.src = "./EngineAssets/scriptIcon.png";
+scriptIcon.src = "./EngineAssets/ScriptIcon.png";
 export let plusIcon = new Image();
 plusIcon.src = "./EngineAssets/PlusIcon.png";

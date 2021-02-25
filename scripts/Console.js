@@ -204,7 +204,13 @@ export function drawConsole() {
         //newScriptPopup.setSize(100,100);
 
         addToUILayer(
-          new UIPopupPanel(100, 100, 300, 150, "Create Script")
+          new UIPopupPanel(
+            width / 2 - 150,
+            height / 2 - 75,
+            300,
+            150,
+            "Create Script"
+          )
             .addComponent(
               new ButtonWidget(200, 50, (widgetHolder) => {
                 //alert("Added Component");
@@ -261,26 +267,7 @@ export function drawConsole() {
         pinDrag = false;
         (async (func) => {
           UploadFile((files) => {
-            for (let i = 0; i < files.length; i++) {
-              console.log(files[i].type);
-              if (
-                /*imageTypes.includes(files[i].type)*/ files[i].type.startsWith(
-                  "image/"
-                )
-              )
-                readImage(files[i], (dataURL) => {
-                  assets.set(files[i].name, new ImageObject(dataURL));
-                });
-              else if (files[i].type.startsWith("audio/")) {
-                readImage(files[i], (dataURL) => {
-                  assets.set(files[i].name, new AudioObject(dataURL));
-                });
-              } else {
-                readFile(files[i], (data) => {
-                  assets.set(files[i].name, new FileObject(data));
-                });
-              }
-            }
+            uploadFiles(files);
           });
         })();
       }
@@ -450,12 +437,12 @@ function uploadFiles(files) {
     console.log(files[i].type);
     if (
       /*imageTypes.includes(files[i].type)*/ files[i].type.startsWith("image/")
-    ) {
+    )
       readImage(files[i], (dataURL) => {
-        //console.log(dataURL);
         assets.set(files[i].name, new ImageObject(dataURL));
       });
-    } else if (files[i].type.startsWith("audio/")) {
+    else if (files[i].type.startsWith("audio/")) {
+
       readImage(files[i], (dataURL) => {
         assets.set(files[i].name, new AudioObject(dataURL));
       });

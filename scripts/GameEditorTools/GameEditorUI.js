@@ -67,6 +67,7 @@ import {
   roundRectangleGradientLook,
   roundRectangleLook,
   textLook,
+  UIcontainsID,
   UIPopupPanel,
 } from "../UIRendererLayer.js";
 
@@ -233,33 +234,37 @@ function addBaseComponents() {
           50,
           30,
           () => {
-            addToUILayer(
-              new UIPopupPanel(100, 100, 300, 400, "Add Component")
-                .addComponent(
-                  new ButtonWidget(200, 50, (widgetHolder) => {
-                    //alert("Added Component");
-                    let selectedcomponent = widgetHolder.components[1].selected;
-                    if (selectedcomponent != undefined)
-                      objects[selectedOBJ].addComponent(
-                        returnCopy(componentsMap.get(selectedcomponent))
-                      );
-                  })
-                    .overidePosition("CENTERX", "BOTTOM")
-                    .addLooks(
-                      new roundRectangleGradientLook(
-                        secondaryUIColor,
-                        primaryUIColor
+            if (!UIcontainsID("AddComponent"))
+              addToUILayer(
+                new UIPopupPanel(100, 100, 300, 400, "Add Component")
+                  .setId("AddComponent")
+                  .addComponent(
+                    new ButtonWidget(200, 50, (widgetHolder) => {
+                      //alert("Added Component");
+                      let selectedcomponent =
+                        widgetHolder.components[1].selected;
+                      if (selectedcomponent != undefined)
+                        objects[selectedOBJ].addComponent(
+                          returnCopy(componentsMap.get(selectedcomponent))
+                        );
+                      widgetHolder.garbage = true;
+                    })
+                      .overidePosition("CENTERX", "BOTTOM")
+                      .addLooks(
+                        new roundRectangleGradientLook(
+                          secondaryUIColor,
+                          primaryUIColor
+                        )
                       )
-                    )
-                    .addLooks(new textLook("Add Component", textUIColor))
-                )
-                .addComponent(
-                  new DropdownWidget(200, 50)
-                    .overidePosition("CENTERX", "TOP")
-                    .addLooks(new roundRectangleLook(secondaryUIColor))
-                    .setOptions(Array.from(componentsUIDictionary.keys()))
-                )
-            );
+                      .addLooks(new textLook("Add Component", textUIColor))
+                  )
+                  .addComponent(
+                    new DropdownWidget(200, 50)
+                      .overidePosition("CENTERX", "TOP")
+                      .addLooks(new roundRectangleLook(secondaryUIColor))
+                      .setOptions(Array.from(componentsUIDictionary.keys()))
+                  )
+              );
             /*
             addComponentPopup.removeAllComponents();
             addComponentPopup.setShowing(true);
