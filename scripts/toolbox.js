@@ -576,6 +576,77 @@ export function replaceAll(str, a, b) {
   return (str + a).split(a).join(b);
 }
 
+export function insertFirst(input, reg, insert) {
+  return (
+    input.substring(0, input.indexOf(reg) + 1) +
+    insert +
+    input.substring(input.indexOf(reg) + 1)
+  );
+}
+
+export function findFunctionName(string) {
+  return string
+    .substring(string.indexOf("function") + "function".length)
+    .split("(")[0]
+    .trim();
+}
+
+export function getWordsBetweenCurlBracket(str) {
+  var results = [],
+    re = /{([^}]+)}/g,
+    text;
+
+  while ((text = re.exec(str))) {
+    results.push(text[1]);
+  }
+  return results;
+}
+
+export function getFunc(str) {
+  var funcs = [],
+    re = /(?=func\s*).*?(?<=\s*})/gs,
+    text;
+
+  while ((text = re.exec(str))) {
+    funcs.push(text[0]);
+  }
+
+  return funcs;
+}
+
+export function getVars(str) {
+  var vars = [],
+    re = /(?=let\s*).*?(?<=\s*;)/gs,
+    text;
+
+  while ((text = re.exec(str))) {
+    vars.push(text[0]);
+  }
+  return vars;
+}
+
+export function getList(str, re) {
+  var vars = [],
+    re = new RegExp(`/${re}/gs`),
+    text;
+
+  while ((text = re.exec(str))) {
+    vars.push(text[0]);
+  }
+  return vars;
+}
+
+export function getWordsOutsideCurlBracket(str) {
+  var results = [],
+    re = /(?<=let\s+).*?(?=\s+func)/gs,
+    text;
+
+  while ((text = re.exec(str))) {
+    results.push(text[0]);
+  }
+  return results;
+}
+
 export function returnCopy(obj) {
   return $.extend(true, Object.create(Object.getPrototypeOf(obj)), obj);
 }

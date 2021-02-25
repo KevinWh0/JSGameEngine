@@ -442,6 +442,7 @@ function uploadFiles(files) {
         assets.set(files[i].name, new ImageObject(dataURL));
       });
     else if (files[i].type.startsWith("audio/")) {
+
       readImage(files[i], (dataURL) => {
         assets.set(files[i].name, new AudioObject(dataURL));
       });
