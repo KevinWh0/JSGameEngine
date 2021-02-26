@@ -1,3 +1,4 @@
+import { updateGameArea } from "../index.js";
 import { assets } from "./GameAssets/AssetHandler.js";
 import { objects } from "./GameObject/ObjectHandler.js";
 import {
@@ -84,16 +85,15 @@ export function compileGame(callback) {
 
           //classVars
         });
+        console.log(classVars);
+        finalScript =
+          `class ${AssetNames[i].replace(/\./, "_")} {` +
+          finalScript +
+          `run(parent){${
+            classVars.includes("update") ? "this.update(parent);" : ""
+          } }}`;
 
-        console.log(
-          `class ${AssetNames[i].replace(/\./, "_")} {` + finalScript + `}`
-        );
-
-        exportedAssets =
-          exportedAssets +
-          `  assets.set("${AssetNames[i]}", new ${
-            Assets[i].constructor.name
-          }(${JSON.stringify(Assets[i].data)}));  `;
+        exportedAssets = exportedAssets + finalScript;
       } else {
         exportedAssets =
           exportedAssets +
@@ -109,11 +109,22 @@ export function compileGame(callback) {
       let components = objects[i].components;
       try {
         components.forEach((component) => {
-          objBuilder =
-            objBuilder +
-            `.addComponent(new ${
-              component.constructor.name
-            }("${component.getData()}"))`;
+          console.log();
+
+          if (component.componentName == "Script Component") {
+            objBuilder =
+              objBuilder +
+              `.addComponent(new ${component.data.script.replace(
+                /\./,
+                "_"
+              )}())`;
+          } else {
+            objBuilder =
+              objBuilder +
+              `.addComponent(new ${
+                component.constructor.name
+              }("${component.getData()}"))`;
+          }
         });
         /*
             for (let j = 0; j < components.length; j++) {
