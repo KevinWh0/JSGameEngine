@@ -10,6 +10,7 @@ import {
   secondaryUIColor,
   jsIcon,
   mainFont,
+  setScriptOpen,
 } from "./scripts/AssetManager.js";
 import { compileGame } from "./scripts/CodeCompiler.js";
 import {
@@ -184,23 +185,32 @@ buttonsBar.addButton("Load Project", function () {
     new UIPopupPanel(width / 2 - 150, height / 2 - 75, 300, 150, "Load Project")
       .addComponent(
         new ButtonWidget(250, 50, (widgetHolder) => {
-          (async () => {
-            let name = prompt("What project would you like to load?");
-            if (!name) return;
-            project_name = name;
-            let project = localStorage.getItem(name);
-            if (!!project) loadProject(project);
-            else {
-              let choices = "";
-              for (let i = 0; i < localStorage.length; i++) {
-                choices = choices + ` ${localStorage.key(i)},`;
+          try {
+            (async () => {
+              let name = prompt("What project would you like to load?");
+              if (!name) return;
+              project_name = name;
+              let project = localStorage.getItem(name);
+              if (!!project) loadProject(project);
+              else {
+                let choices = "";
+                for (let i = 0; i < localStorage.length; i++) {
+                  choices = choices + ` ${localStorage.key(i)},`;
+                }
+                choices = choices.substr(0, choices.length - 1);
+                alert(
+                  `Error loading ${name}, please check the spelling.   Projects(${localStorage.length}) : ${choices}.`
+                );
               }
-              choices = choices.substr(0, choices.length - 1);
-              alert(
-                `Error loading ${name}, please check the spelling.   Projects(${localStorage.length}) : ${choices}.`
-              );
-            }
-          })();
+            })();
+
+            //if any script is open, close it and put the user on the game scene
+            setScriptOpen(null);
+            setState(states.gameViewer);
+            document.getElementById("codeWrapper").style.display = "none";
+          } catch (err) {
+            alert("Error loading project: Error code: " + err);
+          }
         })
           .overidePosition("CENTERX", "TOP")
           .addLooks(
@@ -210,12 +220,20 @@ buttonsBar.addButton("Load Project", function () {
       )
       .addComponent(
         new ButtonWidget(250, 50, (widgetHolder) => {
-          UploadFile((files) => {
-            let file = files[0];
-            readFile(file, (data) => {
-              loadProject(data);
+          try {
+            UploadFile((files) => {
+              let file = files[0];
+              readFile(file, (data) => {
+                loadProject(data);
+              });
             });
-          });
+            //if any script is open, close it and put the user on the game scene
+            setScriptOpen(null);
+            setState(states.gameViewer);
+            document.getElementById("codeWrapper").style.display = "none";
+          } catch (err) {
+            alert("Error loading project: Error code: " + err);
+          }
         })
           .overidePosition("CENTERX", "BOTTOM")
           .addLooks(
