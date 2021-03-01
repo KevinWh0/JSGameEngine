@@ -11,6 +11,8 @@ import {
   getFunc,
   getVars,
   getList,
+  addThisToLocalFunctions,
+  removeOutterLetsAndVars,
 } from "./toolbox.js";
 
 export function compileGame(callback) {
@@ -29,7 +31,7 @@ export function compileGame(callback) {
       } else if (Assets[i].type == "Script") {
         let finalScript = "";
 
-        let classVars = [];
+        /*let classVars = [];
 
         let rawOutsideCurlBrackets = getWordsOutsideCurlBracket(Assets[i].data)
           .join("\n")
@@ -47,18 +49,19 @@ export function compileGame(callback) {
           let v = vars.split("=");
           let varName = v[0].trim().split(" ");
           v[0] = varName[varName.length - 1];
-
-          if (v.length < 2) {
-            finalVars.push(/*"let " + */ v[0] + ";");
-          } else {
-            v[1] = v[1].trim();
-            finalVars.push(/*"let " + */ v[0] + " =  " + v[1] + ";");
+          if (!/[^a-zA-Z0-9|_|-]+/g.test(v[0])) {
+            if (v.length < 2) {
+              finalVars.push(/*"let " +  v[0] + ";");
+            } else {
+              v[1] = v[1].trim();
+              finalVars.push(/*"let " +  v[0] + " =  " + v[1] + ";");
+            }
+            classVars.push(v[0]);
+            finalGlobalVars = finalVars.join("\n");
           }
-          classVars.push(v[0]);
-          finalGlobalVars = finalVars.join("\n");
         });
         finalGlobalVars = finalGlobalVars.replace(/};/, "");
-
+        console.log(classVars);
         finalScript = finalScript + finalGlobalVars;
 
         //Now generate the functions and replace the global vars to start with this.var
@@ -67,31 +70,60 @@ export function compileGame(callback) {
         classFunctions.forEach((cf) => {
           let newFunc = null;
           if (newFunc == null) {
-            classVars.push(cf.split(" ")[1].split("(")[0]);
+            //classVars.push(cf.split(" ")[1].split("(")[0]);
             newFunc = cf.replace("function ", "");
           }
           classVars.forEach((cv) => {
             //The use of VAR is depricated
-            let vars = newFunc.replace(
-              new RegExp(`(?<!let )${cv}(?=[^a-z])(?=[^.])`),
+
+            //TODO make another way to extract and replace vars
+            /*
+            TODO (broken down):
+            replace all vars with this.var, dont replace vars 
+            that dont have "var break characters(any number or letter along with a few others)" infront and 
+            before the var.
+            break characters: `~|\?/.><,"':;[]{}=+-)(*&^%#@!
+
+            
+
+            /*let vars = newFunc.replace(
+              new RegExp(`(?<!let )\\${cv.split(")")[0]}(?=[^a-z])(?=[^.])`),
               `this.${cv}`
             );
-            newFunc = vars;
-            //console.log(newFunc);
+            console.log(cv);
+            //let vars = addThisToLocalFunctions(newFunc, cv);
+            //newFunc = vars;
+            //console.log(newFunc, cv);
           });
+          */
+        //console.log(newFunc.substr(5, newFunc.length));
+        // finalScript = finalScript + newFunc.substr(5, newFunc.length);
 
-          //console.log(newFunc.substr(5, newFunc.length));
-          finalScript = finalScript + newFunc.substr(5, newFunc.length);
-
-          //classVars
-        });
-        console.log(classVars);
-        finalScript =
+        //classVars
+        //});
+        //console.log(classVars);
+        /*finalScript =
           `class ${AssetNames[i].replace(/\./, "_")} {` +
           finalScript +
           `run(parent){${
-            classVars.includes("update") ? "this.update(parent);" : ""
-          } }}`;
+            classVars.includes("update") ? "this.update(parent);}" : ""
+          } }`;*/
+
+        //Assets[i].data
+        finalScript = removeOutterLetsAndVars(Assets[i].data);
+
+        finalScript = finalScript.replace(/function /g, "");
+        //finalScript = finalScript.replace(/var /g, "");
+        //finalScript = finalScript.replace(/let /g, "");
+        //console.log(finalScript);
+        finalScript =
+          `class ${AssetNames[i].replace(/\./, "_")} { type = "script";` +
+          finalScript +
+          `run(parent){${
+            Assets[i].data.includes("function update")
+              ? "this.update(parent);}"
+              : ""
+          } }`;
 
         exportedAssets = exportedAssets + finalScript;
       } else {

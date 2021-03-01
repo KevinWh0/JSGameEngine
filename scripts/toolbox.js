@@ -637,14 +637,87 @@ export function getList(str, re) {
 }
 
 export function getWordsOutsideCurlBracket(str) {
-  var results = [],
+  /*var results = [],
     re = /(?<=let\s+).*?(?=\s+func)/gs,
     text;
 
   while ((text = re.exec(str))) {
     results.push(text[0]);
   }
+  return results;*/
+
+  var results = [],
+    openBracket = 0,
+    closedBracket = 0,
+    startpos = 0,
+    counter = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    if (str.charAt(i) == "{") {
+      openBracket++;
+    } else if (str.charAt(i) == "}") {
+      closedBracket++;
+      if (openBracket == closedBracket) {
+        results.push(str.substr(startpos, counter + 1));
+        startpos = counter + 1;
+        counter = 0;
+      }
+    }
+    counter++;
+  }
+
   return results;
+}
+
+export function removeOutterLetsAndVars(str) {
+  let lines = str.split("\n"),
+    inFunc = false,
+    open = 0,
+    close = 0,
+    finalString = "";
+
+  lines.forEach((l) => {
+    if (l.includes("function")) {
+      inFunc = true;
+    }
+    if (l.includes("{")) {
+      open++;
+    }
+
+    if (l.includes("}")) {
+      close++;
+      if (close == open) {
+        inFunc = false;
+      }
+    }
+    if (inFunc) finalString += l + "\n";
+    else finalString += (l + "\n").replace(/var /g, "").replace(/let /g, "");
+  });
+
+  return finalString;
+}
+
+export function addThisToLocalFunctions(str, classvar) {
+  str = str.trim();
+  let finalString = "";
+  for (let i = 0; i < str.length; i++) {
+    try {
+      var char = str.charAt(i);
+
+      var remainingStr = str.substr(finalString.length, str.length);
+      if (remainingStr.startsWith(classvar)) {
+        i += classvar.length;
+        finalString += "this." + char;
+        return;
+      } else {
+        finalString += char;
+      }
+      //finalString +=  ? "%20" : char;
+    } catch (err) {}
+  }
+  console.log(finalString);
+
+  return finalString;
 }
 
 export function returnCopy(obj) {
