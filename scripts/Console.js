@@ -442,9 +442,12 @@ function uploadFiles(files) {
         assets.set(files[i].name, new ImageObject(dataURL));
       });
     else if (files[i].type.startsWith("audio/")) {
-
       readImage(files[i], (dataURL) => {
         assets.set(files[i].name, new AudioObject(dataURL));
+      });
+    } else if (files[i].type == "text/javascript") {
+      readFile(files[i], (data) => {
+        assets.set(files[i].name, new ScriptObject(data));
       });
     } else {
       readFile(files[i], (data) => {
