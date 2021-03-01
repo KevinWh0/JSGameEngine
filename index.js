@@ -121,10 +121,12 @@ buttonsBar.addButton("Save Project", function () {
               project_name = prompt("What would you like to save this as?");
             //Check that the user has not hit cancel
             if (!!project_name) {
-              let script = assets.get(scriptOpen);
-              script.setScript(getCode());
-              assets.set(scriptOpen, script);
-              saveStar = "";
+              if (scriptOpen != null) {
+                let script = assets.get(scriptOpen);
+                script.setScript(getCode());
+                assets.set(scriptOpen, script);
+                saveStar = "";
+              }
               saveProject((saveFile) => {
                 localStorage.setItem(project_name, saveFile);
               });
@@ -141,8 +143,17 @@ buttonsBar.addButton("Save Project", function () {
         new ButtonWidget(250, 50, (widgetHolder) => {
           saveProject((saveFile) => {
             let name = prompt("What would you like to save this as?");
-            project_name = name;
-            download(saveFile, `${name}.json`, "txt");
+            //Check that the user has not hit cancel
+
+            if (!!name) {
+              if (scriptOpen != null) {
+                let script = assets.get(scriptOpen);
+                script.setScript(getCode());
+                assets.set(scriptOpen, script);
+                saveStar = "";
+              }
+              download(saveFile, `${name}.json`, "txt");
+            }
           });
         })
           .overidePosition("CENTERX", "BOTTOM")
