@@ -403,6 +403,7 @@ class GameObject {
   enabled = true;
   components = [];
   data = new Map();
+  initDone = false;
 
   name;
   /* These are components that will only be active when the game is not exported */
@@ -416,6 +417,7 @@ class GameObject {
     this.name = name;
     this.type = type;
     this.enabled = enabled;
+
     //this.type = "Object";
   }
 
@@ -425,6 +427,14 @@ class GameObject {
   }
   update() {
     if (this.enabled) {
+      if (!this.initDone) {
+        this.components.forEach((component) => {
+          if (component.type == "script") {
+            component.onStart(this);
+          }
+        });
+        this.initDone = true;
+      }
       this.visualX = this.x - camera.x;
       this.visualY = this.y - camera.y;
       this.components.forEach((component) => {
