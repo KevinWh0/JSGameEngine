@@ -137,6 +137,10 @@ export let game = {
   },
 };
 
+window.onbeforeunload = function () {
+  return "Changes may not be saved.";
+};
+
 export function setContext(context) {
   currentContext = context;
 }
