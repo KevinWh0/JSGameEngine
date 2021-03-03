@@ -3,8 +3,10 @@ import {
   secondaryUIColor,
   textUIColor,
 } from "../AssetManager.js";
+import { consoleHeight } from "../Console.js";
 import {
   explorerTab,
+  propertiesTab,
   resetPropertiesWindow,
   setLastframeUnselected,
   showPropertiesBar,
@@ -54,6 +56,14 @@ export function selectObject() {
         parseInt(obj.y) + getOffset().y,
         parseInt(obj.w),
         parseInt(obj.h)
+      ) &&
+      inArea(
+        mouseX,
+        mouseY,
+        explorerTab.w,
+        65,
+        propertiesTab.x - explorerTab.w,
+        consoleHeight - 65
       ) &&
       obj.enabled
     ) {

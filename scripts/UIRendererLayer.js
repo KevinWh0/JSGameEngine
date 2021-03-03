@@ -245,11 +245,13 @@ class Widget {
     if (!!this.overideSettings) {
       if (!!looksOffsetMap[this.overideSettings.x]) {
         looksOffsetMap[this.overideSettings.x](this, parent);
-      } // else this.x = this.overideSettings.x;
+      } else if (typeof this.overideSettings.x == "number")
+        this.x += this.overideSettings.x;
 
       if (!!looksOffsetMap[this.overideSettings.y]) {
         looksOffsetMap[this.overideSettings.y](this, parent);
-      } // else this.yOveride = this.overideSettings.y;
+      } else if (typeof this.overideSettings.y == "number")
+        this.yOveride += this.overideSettings.y;
     } else {
       this.xOveride = x;
       this.yOveride = y;
