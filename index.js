@@ -168,7 +168,7 @@ buttonsBar.addButton("File", function () {
               width / 2 - 150,
               height / 2 - 75,
               300,
-              200,
+              150,
               "Load Project"
             )
               .addComponent(
