@@ -61,6 +61,15 @@ export function runUILayer() {
   }
 }
 
+export function mouseInUIPanel() {
+  for (let i = 0; i < UI.length; i++) {
+    if (inArea(mouseX, mouseY, UI[i].x, UI[i].y, UI[i].w, UI[i].h)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function UIcontainsID(ID) {
   for (let i = 0; i < UI.length; i++) {
     if (UI[i].id == ID) return true;

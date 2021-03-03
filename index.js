@@ -81,7 +81,7 @@ let buttonsBar = new ButtonBar(10, 15, width, 40, "line");
 
 buttonsBar.addButton("File", function () {
   addToUILayer(
-    new UIPopupPanel(width / 2 - 150, height / 2 - 75, 400, 250, "File")
+    new UIPopupPanel(width / 2 - 150, height / 2 - 75, 400, 300, "File")
       .addComponent(
         new ButtonWidget(250, 50, (widgetHolder) => {
           widgetHolder.garbage = true;
@@ -168,7 +168,7 @@ buttonsBar.addButton("File", function () {
               width / 2 - 150,
               height / 2 - 75,
               300,
-              150,
+              200,
               "Load Project"
             )
               .addComponent(
@@ -262,6 +262,26 @@ buttonsBar.addButton("File", function () {
             new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
           )
           .addLooks(new textLook("Export", textUIColor))
+      )
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          widgetHolder.garbage = true;
+
+          let choices = "";
+          for (let i = 0; i < localStorage.length; i++) {
+            choices = choices + ` ${localStorage.key(i)},`;
+          }
+          choices = choices.substr(0, choices.length - 1);
+          let name = prompt(
+            `What project would you like to delete? (${choices})`
+          );
+          if (!!name) localStorage.removeItem(name);
+        })
+          .overidePosition("CENTERX", 10)
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("Delete localstorage Save", textUIColor))
       )
   );
 });

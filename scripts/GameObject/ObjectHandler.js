@@ -26,6 +26,7 @@ import {
   rect,
   textWraped,
 } from "../toolbox.js";
+import { mouseInUIPanel } from "../UIRendererLayer.js";
 import { AudioObject } from "./FileTypes/Audio.js";
 import { FileObject } from "./FileTypes/File.js";
 import { ImageObject } from "./FileTypes/Image.js";
@@ -66,6 +67,7 @@ export function selectObject() {
         propertiesTab.x - explorerTab.w,
         consoleHeight - 65
       ) &&
+      !mouseInUIPanel() &&
       obj.enabled
     ) {
       pressedInRectThisFrame = true;
