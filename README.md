@@ -15,6 +15,10 @@ Roadmap:
   - [x] Components UI
   - [x] Script adding
   - [ ] Other special UI things
+  - [ ] Animated Image Component
+  - [ ] Directional Image Component
+  - [ ] TileMap Component
+  - [ ] Visual Scripting
 - [x] File Support
   - [x] Image Support with viewer
   - [x] Text doc Support
@@ -25,4 +29,4 @@ Roadmap:
 Known Bugs:
 
 - [ ] Setting width or height to a negative makes it so you cant select the object anymore
-- [ ] If the objects go offscreen you can select them even when under the panels
+- [x] If the objects go offscreen you can select them even when under the panels
