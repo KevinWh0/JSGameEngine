@@ -57,8 +57,10 @@ let gameCanvas = {
     window.addEventListener("keydown", function (e) {
       if (currentKeypress + "e" != (e.which || e.keyCode || e.charCode) + "e")
         keyPushed = true;
-      keys[e.keyCode] = true;
-      //console.log(e.keyCode);
+      //keys[e.keyCode] = true;
+      keys[e.key] = true;
+
+      console.log(e.keyCode);
       keyPressed = e.key;
       currentKeypress = e.key;
       keyDown = true;
@@ -79,7 +81,9 @@ let gameCanvas = {
       );
     });
     window.addEventListener("keyup", function (e) {
-      keys[e.keyCode] = false;
+      //keys[e.keyCode] = false;
+      keys[e.key] = false;
+
       keyDown = false;
       keyReleased = true;
       currentKeypress = -1;
