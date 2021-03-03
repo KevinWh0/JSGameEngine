@@ -57,6 +57,7 @@ export function selectObject() {
         parseInt(obj.w),
         parseInt(obj.h)
       ) &&
+      //This makes sure that we are not selecting the object when the user means to click on a panel
       inArea(
         mouseX,
         mouseY,

@@ -7,20 +7,20 @@
 Roadmap:
 
 - [x] Code Editor
-- [ ] Exporting
+- [x] Exporting
 - [ ] Deleting objects and components
-- [ ] Properties Panel Working
+- [x] Properties Panel Working
   - [x] Naming of Objects
   - [x] Positioning UI
-  - [ ] Components UI
-  - [ ] Script adding
+  - [x] Components UI
+  - [x] Script adding
   - [ ] Other special UI things
-- [ ] File Support
-  - [x] Image Support with viewer (WIP)
-  - [ ] Text doc Support with editor
-  - [ ] General other file support
-- [ ] Saves
-- [ ] Components for objects
+- [x] File Support
+  - [x] Image Support with viewer
+  - [x] Text doc Support
+  - [x] General other file support
+- [x] Saves
+- [x] Components for objects
 
 Known Bugs:
 

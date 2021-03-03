@@ -279,7 +279,12 @@ buttonsBar.addButton("Scripting", function () {
 });
 
 buttonsBar.addButton("Tools", function () {
-  alert("Coming Soon!");
+  ///alert("Coming Soon!");
+  window.open(
+    "./scripts/EngineTools/GamepadTest.html",
+    "Gamepad Tester",
+    "width=600,height=600"
+  );
 });
 
 let playtestWindow;

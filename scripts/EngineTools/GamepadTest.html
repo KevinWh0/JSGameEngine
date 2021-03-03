@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        /*overflow: hidden;*/
+        /* Hide scrollbars */
+      }
+
+      body {
+        background-color: black;
+      }
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        /* Older versions of FF          */
+        image-rendering: -moz-crisp-edges;
+        /* FF 6.0+                       */
+        image-rendering: -webkit-optimize-contrast;
+        /* Safari                        */
+        image-rendering: -o-crisp-edges;
+        /* OS X & Windows Opera (12.02+) */
+        image-rendering: pixelated;
+        /* Awesome future-browsers       */
+        -ms-interpolation-mode: nearest-neighbor;
+        /* IE                            */
+        image-rendering: optimizeSpeed;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="test"></canvas>
+  </body>
+  <script>
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    document.getElementById("test").width = window.innerWidth;
+    document.getElementById("test").height = window.innerHeight;
+
+    class GamePad {
+      gamepad;
+      id;
+      controllerButtonMap = new Map();
+      controllerJoysticks = new Map();
+      setGamePad(gp) {
+        this.gamepad = gp;
+      }
+
+      getButton(id) {
+        try {
+          return !this.controllerButtonMap.get(id)
+            ? 0
+            : this.controllerButtonMap.get(id);
+        } catch (error) {
+          console.error(error);
+          return 0;
+        }
+      }
+
+      getID() {
+        return this.id;
+      }
+
+      vibrate(intesity, duration) {
+        //Intensity 0 - 1
+        //Duration in ms
+        try {
+          this.gamepad.vibrationActuator.playEffect(
+            this.gamepad.vibrationActuator.type,
+            {
+              startDelay: 0,
+              duration: duration,
+              weakMagnitude: intesity,
+              strongMagnitude: intesity,
+            }
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      getJoystickPosition(id) {
+        try {
+          return {
+            x: !this.controllerJoysticks.get(id * 2)
+              ? 0
+              : this.controllerJoysticks.get(id * 2),
+            y: !this.controllerJoysticks.get(id * 2 + 1)
+              ? 0
+              : this.controllerJoysticks.get(id * 2 + 1),
+          };
+        } catch (error) {
+          return {
+            x: 0,
+            y: 0,
+          };
+        }
+      }
+    }
+
+    let driftGuard = 0;
+    function setDriftGuardBounds(d) {
+      driftGuard = d;
+    }
+
+    let _gamepads = navigator.getGamepads();
+    let controllerButtonMap = new Map();
+    let controllerJoysticks = new Map();
+
+    let gamepads = [];
+    let totalGamepads;
+
+    function updateGameController() {
+      _gamepads = navigator.getGamepads();
+
+      /*for(let i = 0; i < _gamepads.length; i++){
+      gamepads = [];
+      gamepads.push(new GamePad());
+    }*/
+      totalGamepads = 0;
+      for (let i = 0; i < _gamepads.length; i++) {
+        if (_gamepads[i] != null) totalGamepads++;
+      }
+
+      if (totalGamepads != gamepads.length) {
+        if (totalGamepads < gamepads.length) gamepads.pop();
+        else gamepads.push(new GamePad());
+      }
+
+      // For each controller, show all the button and axis information
+      for (let i = 0; i < totalGamepads; i++) {
+        let gp = _gamepads[i];
+        gamepads[i].setGamePad(gp);
+        gamepads[i].id = gp.id;
+        if (!gp || !gp.connected) {
+          continue;
+        }
+        for (let j = 0; j < gp.buttons.length; j++) {
+          gamepads[i].controllerButtonMap.set(j, gp.buttons[j].value);
+        }
+
+        let axesBoxCount = ((gp.axes.length + 1) / 2) | 0; // Round up (e.g. 3 axes is 2 boxes)
+        for (let j = 0; j < axesBoxCount; j++) {
+          let xAxis = gp.axes[j * 2];
+          gamepads[i].controllerJoysticks.set(
+            j * 2,
+            Math.abs(xAxis) > driftGuard ? xAxis : 0
+          );
+          if (!(j == axesBoxCount - 1 && gp.axes.length % 2 == 1)) {
+            let yAxis = gp.axes[j * 2 + 1];
+            gamepads[i].controllerJoysticks.set(
+              j * 2 + 1,
+              Math.abs(yAxis) > driftGuard ? yAxis : 0
+            );
+          }
+        }
+      }
+    }
+
+    function text(text, x, y) {
+      document.getElementById("test").getContext("2d").fillText(text, x, y);
+    }
+    function setFontSize(size, font) {
+      document.getElementById("test").getContext("2d").font =
+        size + "px " + font;
+    }
+    function roundedRect(x, y, width, height, radius) {
+      let ctx = document.getElementById("test").getContext("2d");
+      if (typeof radius === "undefined") {
+        radius = 5;
+      }
+      //ctx.fillRect(x, y, width, height);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(
+        x + width,
+        y + height,
+        x + width - radius,
+        y + height
+      );
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function fill(col) {
+      document.getElementById("test").getContext("2d").fillStyle = col;
+    }
+    function inArea(X, Y, x, y, w, h) {
+      if (X > x - 1 && Y > y - 1 && X < x + w && Y < y + h) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Avoid scrolling to bottom
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+        console.log("Fallback: Copying text command was " + msg);
+      } catch (err) {
+        console.error("Fallback: Oops, unable to copy", err);
+      }
+
+      document.body.removeChild(textArea);
+    }
+    function copyToClipboard(text) {
+      if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(
+        function () {
+          console.log("Async: Copying to clipboard was successful!");
+        },
+        function (err) {
+          console.error("Async: Could not copy text: ", err);
+        }
+      );
+    }
+
+    let mousePressed, mouseX, mouseY;
+    window.addEventListener("mousedown", function (e) {
+      mousePressed = true;
+    });
+    window.addEventListener("mouseup", function (e) {
+      mousePressed = false;
+    });
+    window.addEventListener("mousemove", function (e) {
+      mouseX = e.x;
+      mouseY = e.y;
+    });
+
+    setFontSize(20, "Ariel");
+    setInterval(() => {
+      fill("grey");
+      roundedRect(0, 0, w, h, 0);
+      fill("white");
+      if (gamepads.length > 0) {
+        gamepads[0].controllerJoysticks;
+        let xOffset = 0;
+        Array.from(gamepads[0].controllerJoysticks).forEach((key) => {
+          let joystick = gamepads[0].getJoystickPosition(key[0]);
+          roundedRect(50 - 1 + xOffset, 0, 2, 100);
+          roundedRect(xOffset, 50 - 1, 100, 2);
+          //console.log(mouseX, mouseY);
+          if (
+            inArea(mouseX, mouseY, 3 + xOffset, 3, 100, 100) &&
+            mousePressed
+          ) {
+            //fill("red");
+            copyToClipboard(`
+            gamepads[0].getJoystickPosition(${key[0]})
+            //make sure the gamepad exists with if(!!gamepads[0]){}
+
+            `);
+          }
+          roundedRect(mouseX, mouseY, 10, 10);
+          roundedRect(
+            50 - 3 + joystick.x * 50 + xOffset,
+            50 - 3 + joystick.y * 50,
+            6,
+            6,
+            2
+          );
+          text("Joystick #" + xOffset / 110, xOffset, 120);
+
+          xOffset += 110;
+        });
+        xOffset = 10;
+
+        Array.from(gamepads[0].controllerButtonMap).forEach((key) => {
+          let joystick = gamepads[0].getButton(key[0]);
+          fill(`rgb(${joystick * 255},${joystick * 255},${joystick * 255})`);
+
+          roundedRect(2 + xOffset, 150, 20, 20);
+          if (
+            inArea(mouseX, mouseY, 2 + xOffset, 150, 20, 20) &&
+            mousePressed
+          ) {
+            //fill("red");
+            copyToClipboard(`
+            gamepads[0].getButton(${key[0]})
+            //make sure the gamepad exists with if(!!gamepads[0]){}
+            `);
+          }
+          fill(
+            `rgb(${255 - joystick * 255},${255 - joystick * 255},${
+              255 - joystick * 255
+            })`
+          );
+          text(Math.round(xOffset / 22), 2 + xOffset, 150 + 18);
+          xOffset += 22;
+        });
+      } else {
+        text("No Gamepads Detected (press any button to connect)", 0, 100);
+      }
+      gamepads[0];
+      updateGameController();
+    }),
+      Math.round(1000 / 60);
+  </script>
+</html>
