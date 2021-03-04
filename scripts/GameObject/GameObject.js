@@ -4,7 +4,7 @@ export class GameObject {
   x;
   y;
   w;
-  y;
+  h;
   visualX;
   visualY;
   enabled = true;

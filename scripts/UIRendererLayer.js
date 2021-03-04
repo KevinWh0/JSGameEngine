@@ -61,6 +61,15 @@ export function runUILayer() {
   }
 }
 
+export function mouseInUIPanel() {
+  for (let i = 0; i < UI.length; i++) {
+    if (inArea(mouseX, mouseY, UI[i].x, UI[i].y, UI[i].w, UI[i].h)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function UIcontainsID(ID) {
   for (let i = 0; i < UI.length; i++) {
     if (UI[i].id == ID) return true;
@@ -245,11 +254,13 @@ class Widget {
     if (!!this.overideSettings) {
       if (!!looksOffsetMap[this.overideSettings.x]) {
         looksOffsetMap[this.overideSettings.x](this, parent);
-      } // else this.x = this.overideSettings.x;
+      } else if (typeof this.overideSettings.x == "number")
+        this.x += this.overideSettings.x;
 
       if (!!looksOffsetMap[this.overideSettings.y]) {
         looksOffsetMap[this.overideSettings.y](this, parent);
-      } // else this.yOveride = this.overideSettings.y;
+      } else if (typeof this.overideSettings.y == "number")
+        this.yOveride += this.overideSettings.y;
     } else {
       this.xOveride = x;
       this.yOveride = y;

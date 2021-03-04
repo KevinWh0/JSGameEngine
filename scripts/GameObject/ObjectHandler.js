@@ -3,8 +3,10 @@ import {
   secondaryUIColor,
   textUIColor,
 } from "../AssetManager.js";
+import { consoleHeight } from "../Console.js";
 import {
   explorerTab,
+  propertiesTab,
   resetPropertiesWindow,
   setLastframeUnselected,
   showPropertiesBar,
@@ -24,6 +26,7 @@ import {
   rect,
   textWraped,
 } from "../toolbox.js";
+import { mouseInUIPanel } from "../UIRendererLayer.js";
 import { AudioObject } from "./FileTypes/Audio.js";
 import { FileObject } from "./FileTypes/File.js";
 import { ImageObject } from "./FileTypes/Image.js";
@@ -55,6 +58,16 @@ export function selectObject() {
         parseInt(obj.w),
         parseInt(obj.h)
       ) &&
+      //This makes sure that we are not selecting the object when the user means to click on a panel
+      inArea(
+        mouseX,
+        mouseY,
+        explorerTab.w,
+        65,
+        propertiesTab.x - explorerTab.w,
+        consoleHeight - 65
+      ) &&
+      !mouseInUIPanel() &&
       obj.enabled
     ) {
       pressedInRectThisFrame = true;

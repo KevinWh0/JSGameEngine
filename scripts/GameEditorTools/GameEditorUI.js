@@ -13,6 +13,7 @@ import {
   renderObjects,
   selectObject,
   objects,
+  setObjects,
 } from "../GameObject/ObjectHandler.js";
 import {
   selectedOBJ,
@@ -42,6 +43,10 @@ import {
   findTextFitSize,
   setFontSize,
   keyDown,
+  fillGradient,
+  fillLinearGradientCustom,
+  roundedRect,
+  removeItem,
 } from "../toolbox.js";
 import { consoleHeight } from "../Console.js";
 import {
@@ -362,7 +367,25 @@ export function runUI() {
     const obj = objects[i];
     //Highlight the selected object in the explorer
     fill(secondaryUIColor);
-    if (selectedOBJ == i) rect(0, 100 + (i - 0.9) * 30, explorerTab.w, 30);
+    if (selectedOBJ == i) {
+      rect(0, 100 + (i - 0.9) * 30, explorerTab.w, 30);
+
+      //The X Button
+      fill(hightlightsColor);
+      rect(explorerTab.w - 30, 100 + (i - 0.9) * 30, 30, 30);
+      fill(secondaryUIColor);
+      rect(explorerTab.w - 30 + 1, 100 + (i - 0.9) * 30 + 1, 28, 28);
+      fill("red");
+      text("X", explorerTab.w - 30 + 9, 100 + (i - 0.9) * 30 + 21);
+      if (
+        mousePressed &&
+        inArea(mouseX, mouseY, explorerTab.w - 30, 100 + (i - 0.9) * 30, 30, 30)
+      ) {
+        setObjects(removeItem(objects, i));
+        //selectedOBJ = null;
+        setSelectedObj(null);
+      }
+    }
     fill(textUIColor);
     if (!obj.enabled) fill(greyTextUIColor);
     //setFontSize(findTextFitSize(obj.name, explorerTab.w - 30), "Ubuntu");

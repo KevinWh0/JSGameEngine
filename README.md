@@ -7,22 +7,26 @@
 Roadmap:
 
 - [x] Code Editor
-- [ ] Exporting
+- [x] Exporting
 - [ ] Deleting objects and components
-- [ ] Properties Panel Working
+- [x] Properties Panel Working
   - [x] Naming of Objects
   - [x] Positioning UI
-  - [ ] Components UI
-  - [ ] Script adding
+  - [x] Components UI
+  - [x] Script adding
   - [ ] Other special UI things
-- [ ] File Support
-  - [x] Image Support with viewer (WIP)
-  - [ ] Text doc Support with editor
-  - [ ] General other file support
-- [ ] Saves
-- [ ] Components for objects
+  - [ ] Animated Image Component
+  - [ ] Directional Image Component
+  - [ ] TileMap Component
+  - [ ] Visual Scripting
+- [x] File Support
+  - [x] Image Support with viewer
+  - [x] Text doc Support
+  - [x] General other file support
+- [x] Saves
+- [x] Components for objects
 
 Known Bugs:
 
 - [ ] Setting width or height to a negative makes it so you cant select the object anymore
-- [ ] If the objects go offscreen you can select them even when under the panels
+- [x] If the objects go offscreen you can select them even when under the panels

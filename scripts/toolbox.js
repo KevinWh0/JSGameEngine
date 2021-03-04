@@ -137,6 +137,11 @@ export let game = {
   },
 };
 
+//Confirm that the user wants to close the page because they might loose progress
+window.onbeforeunload = function () {
+  return "Changes may not be saved.";
+};
+
 export function setContext(context) {
   currentContext = context;
 }
