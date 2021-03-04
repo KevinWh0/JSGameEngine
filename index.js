@@ -300,10 +300,39 @@ buttonsBar.addButton("Scripting", function () {
 
 buttonsBar.addButton("Tools", function () {
   ///alert("Coming Soon!");
-  window.open(
-    "./scripts/EngineTools/GamepadTest.html",
-    "Gamepad Tester",
-    "width=600,height=600"
+
+  addToUILayer(
+    new UIPopupPanel(width / 2 - 150, height / 2 - 75, 400, 300, "Tools")
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          widgetHolder.garbage = true;
+          window.open(
+            "./documentation/index.html",
+            "Docs",
+            "width=600,height=600"
+          );
+        })
+          .overidePosition("CENTERX", 10)
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("Documentation", textUIColor))
+      )
+      .addComponent(
+        new ButtonWidget(250, 50, (widgetHolder) => {
+          widgetHolder.garbage = true;
+          window.open(
+            "./scripts/EngineTools/GamepadTest.html",
+            "Gamepad Tester",
+            "width=600,height=600"
+          );
+        })
+          .overidePosition("CENTERX", 10)
+          .addLooks(
+            new roundRectangleGradientLook(secondaryUIColor, primaryUIColor)
+          )
+          .addLooks(new textLook("Joycon Tool", textUIColor))
+      )
   );
 });
 
