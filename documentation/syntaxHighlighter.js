@@ -14,13 +14,11 @@ for (let i = 0; i < totalCodeFields; i++) {
 
 function convertCode(c) {
   let newCode = c;
-  console.log(
-    (newCode = getWordsBetweenReplace(
-      c,
-      `"`,
-      `<span style="color:#02d045;">"</span><span style="color:#00c4c4; ">`,
-      `<span style="color:#02d045;">"</span></span>`
-    ))
+  newCode = getWordsBetweenReplace(
+    c,
+    `"`,
+    `<span style="color:#02d045;">"</span><span style="color:#00c4c4; ">`,
+    `<span style="color:#02d045;">"</span></span>`
   );
 
   /*newCode = newCode.replace(
@@ -51,11 +49,13 @@ function convertCode(c) {
   let i = 0;
   newCode.split("\n").forEach((nc) => {
     if (nc.trim().startsWith("//")) {
-      code += `<span style="color:#155100;">${c.split("\n")[i]}</span>`;
-    } else code += nc;
+      code += `<span style="color:#155100;">${c.split("\n")[i]}</span>\n`;
+    } else code += nc + "\n";
     i++;
   });
-  console.log(code);
+  console.log(
+    `<pre style="color: #d1d1d1; background: #000000">` + code + `</pre>`
+  );
   return `<pre style="color: #d1d1d1; background: #000000">` + code + `</pre>`;
 }
 
