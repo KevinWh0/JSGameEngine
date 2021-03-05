@@ -5,6 +5,7 @@ export class GameObject {
   y;
   w;
   h;
+  rotation;
   visualX;
   visualY;
   enabled = true;
