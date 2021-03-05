@@ -3,5 +3,5 @@ function onStart(parent) {
 }
 
 function update(parent) {
-  console.log("this will print every frame so we will not be using alert");
+  console.log("This will print every frame so we will not be using alert.");
 }
