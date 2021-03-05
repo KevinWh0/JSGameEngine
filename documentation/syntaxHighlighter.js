@@ -51,11 +51,11 @@ function convertCode(c) {
   let i = 0;
   newCode.split("\n").forEach((nc) => {
     if (nc.trim().startsWith("//")) {
-      code += `<span style="color:#155100;">${c.split("\n")[i]}</span>` + "\n";
-    } else code += nc + "\n";
+      code += `<span style="color:#155100;">${c.split("\n")[i]}</span>`;
+    } else code += nc;
     i++;
   });
-  //
+  console.log(code);
   return `<pre style="color: #d1d1d1; background: #000000">` + code + `</pre>`;
 }
 
