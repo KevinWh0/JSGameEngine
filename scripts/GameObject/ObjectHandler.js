@@ -14,8 +14,8 @@ import {
 import {
   fillGameCanvas,
   rectGameCanvas,
-} from "../GameLibs/gameCanvasRendering.js";
-import { getOffset } from "../GameLibs/gameToolbox.js";
+} from "../CompilerLibs/gameCanvasRendering.js";
+import { getOffset } from "../CompilerLibs/gameToolbox.js";
 import {
   fill,
   height,

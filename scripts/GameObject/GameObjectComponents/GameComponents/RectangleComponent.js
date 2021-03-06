@@ -1,7 +1,7 @@
 import {
   fillGameCanvas,
   rectGameCanvas,
-} from "../../../GameLibs/gameCanvasRendering.js";
+} from "../../../CompilerLibs/gameCanvasRendering.js";
 
 export class RectangleObjectComponent {
   type = "visual";

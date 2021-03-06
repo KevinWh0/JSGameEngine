@@ -3,7 +3,7 @@ import {
   fillGameCanvas,
   rectGameCanvas,
   renderImageGameCanvas,
-} from "../../../GameLibs/gameCanvasRendering.js";
+} from "../../../CompilerLibs/gameCanvasRendering.js";
 import { noTextureSelected } from "../../../AssetManager.js";
 export class ScriptComponent {
   type = "code";

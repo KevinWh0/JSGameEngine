@@ -175,7 +175,7 @@ export function compileGame(callback) {
       exportedObjects = exportedObjects + `objects.push(${objBuilder});`;
     }
 
-    var data = await readTextFile("scripts/GameLibs/gameToolbox.js");
+    var data = await readTextFile("scripts/CompilerLibs/gameToolbox.js");
     data = replaceAll(data, "export", "");
     data = replaceAll(data, `//!!!`, "");
 

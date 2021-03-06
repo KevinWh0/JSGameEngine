@@ -21,7 +21,7 @@ import {
 } from "./scripts/Console.js";
 import { assets, setAssets } from "./scripts/GameAssets/AssetHandler.js";
 import { runUI } from "./scripts/GameEditorTools/GameEditorUI.js";
-import { clearGameCanvas } from "./scripts/GameLibs/gameCanvasRendering.js";
+import { clearGameCanvas } from "./scripts/CompilerLibs/gameCanvasRendering.js";
 import { readFile } from "./scripts/GameObject/FileTypes/FileUploader.js";
 import { objects, setObjects } from "./scripts/GameObject/ObjectHandler.js";
 import { loadProject, saveProject } from "./scripts/SaveSystem.js";

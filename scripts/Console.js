@@ -106,7 +106,7 @@ export function compileCode(code) {
     running = true;
 
     (async () => {
-      var data = await readTextFile("scripts/GameLibs/gameToolbox.js");
+      var data = await readTextFile("scripts/CompilerLibs/gameToolbox.js");
       data = replaceAll(data, "export", "");
 
       try {
