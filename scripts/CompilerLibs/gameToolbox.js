@@ -447,10 +447,10 @@ class GameObject {
     }
   }
 
-  getFirstComponent(type) {
-    let c;
+  getComponent(type) {
+    let c = [];
     this.components.forEach((component) => {
-      if (component.componentName == type) c = component;
+      if (component.componentName == type) c.push(component);
     });
     return c;
   }
@@ -513,7 +513,7 @@ class RectangleObjectComponent {
 
 class ScriptComponent {
   type = "code";
-  componentName = "Script Component";
+  componentName = "Script";
   data = {
     script: null,
   };

@@ -11,6 +11,10 @@
       href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&display=swap"
+      rel="stylesheet"
+    />
     <script>
       fetch("sidebar.html")
         .then((req) => req.text())
@@ -61,7 +65,8 @@
 
       <p class="desc">
         Variables that are a member of that script must be referenced using
-        this.variableName, just calling variableName will cause errors.
+        <codeSnippet>this.variableName</codeSnippet>, just calling variableName
+        will cause errors.
       </p>
       <div id="scriptHolder">
         <h3>
@@ -78,6 +83,27 @@
           <button class="copyCode" script="basics/funcDemo.js">Copy</button>
         </h3>
         <div class="codeField" script="basics/funcDemo.js"></div>
+      </div>
+      <h2>Getting Components:</h2>
+
+      <p class="desc">
+        You can get components of an object with the
+        <codeSnippet>getComponent(str)</codeSnippet> method. This will return an
+        array of components relevant to the type you asked for.
+        <codeSnippet>parent.getComponent("Script")</codeSnippet> would return an
+        array of all the scripts on the parent object. If you want to get all
+        the components you can just use
+        <codeSnippet>parent.components</codeSnippet>, this is an array of all
+        the object's components. An example of this can be seen below:
+      </p>
+      <div id="scriptHolder">
+        <h3>
+          script.js
+          <button class="copyCode" script="basics/getComponents.js">
+            Copy
+          </button>
+        </h3>
+        <div class="codeField" script="basics/getComponents.js"></div>
       </div>
     </div>
   </body>
