@@ -219,8 +219,15 @@ class GamePad {
   id;
   controllerButtonMap = new Map();
   controllerJoysticks = new Map();
+  totalButtons;
+  totalJoysticks;
+  mapping;
   setGamePad(gp) {
     this.gamepad = gp;
+    this.totalButtons = gp.buttons.length;
+    this.totalJoysticks = gp.axes.length / 2;
+    this.mapping = gp.mapping;
+    //console.log(this.totalJoysticks);
   }
 
   getButton(id) {
@@ -251,8 +258,10 @@ class GamePad {
           strongMagnitude: intesity,
         }
       );
+      return true;
     } catch (error) {
       console.error(error);
+      return false;
     }
   }
 
@@ -273,6 +282,10 @@ class GamePad {
       };
     }
   }
+}
+
+function supportsGamepads() {
+  return !!navigator.getGamepads;
 }
 
 let driftGuard = 0.2;
