@@ -12,7 +12,16 @@ for (let i = 0; i < totalCodeFields; i++) {
     });
 }
 
-function convertCode(c) {
+//Color the small code snippets
+totalCodeFields = document.getElementsByTagName("codeSnippet").length;
+
+for (let i = 0; i < totalCodeFields; i++) {
+  let currentCodeField = document.getElementsByTagName("codeSnippet")[i];
+  console.log(currentCodeField.innerHTML);
+  currentCodeField.innerHTML = convertCode(currentCodeField.innerHTML, false);
+}
+
+function convertCode(c, wrapper = true) {
   let newCode = c;
   newCode = getWordsBetweenReplace(
     c,
@@ -41,8 +50,14 @@ function convertCode(c) {
     /return/g,
     `<span style="color:#8126e1; ">return</span>`
   );
-  newCode = newCode.replace(/let/g, `<span style="color:#266de1; ">let</span>`);
-  newCode = newCode.replace(/var/g, `<span style="color:#266de1; ">var</span>`);
+  newCode = newCode.replace(
+    /let /g,
+    `<span style="color:#266de1; ">let </span>`
+  );
+  newCode = newCode.replace(
+    /var /g,
+    `<span style="color:#266de1; ">var </span>`
+  );
 
   //Handle comments
   let code = "";
@@ -53,10 +68,11 @@ function convertCode(c) {
     } else code += nc + "\n";
     i++;
   });
-  console.log(
-    `<pre style="color: #d1d1d1; background: #000000">` + code + `</pre>`
-  );
-  return `<pre style="color: #d1d1d1; background: #000000">` + code + `</pre>`;
+  if (wrapper)
+    return (
+      `<pre style="color: #d1d1d1; background: #000000">` + code + `</pre>`
+    );
+  return code.trim() + c.charAt(c.length - 1);
 }
 
 function getWordsBetween(str, char) {
@@ -91,7 +107,6 @@ function getWordsBetweenReplace(str, char, startrep, stoprep) {
       results.push(str.substring(lastMarker, i));
     }
   }
-  console.log(results);
   return results.join("");
 }
 
