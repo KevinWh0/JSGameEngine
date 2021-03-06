@@ -25,6 +25,13 @@ Roadmap:
   - [x] General other file support
 - [x] Saves
 - [x] Components for objects
+- [ ] Text Support
+- [ ] Rework Component UI system
+- [ ] Write the documentation
+  - [ ] basics of scripting
+  - [ ] Getting Objects
+  - [ ] Controller Support
+  - [ ] How to use the engine (not the scripting)
 
 Known Bugs:
 
