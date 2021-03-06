@@ -43,6 +43,7 @@ pre {
   border-radius: 6px;
   width: min-content;
   min-width: 70%;
+  position: relative;
 }
 
 .copyCode {
@@ -54,10 +55,9 @@ pre {
   text-decoration: none;
   display: inline-block;
   font-size: 12px;
-  position: relative;
-  top: 0px;
-  right: -90%;
-  transform: translate(-100%, 0); /*Find the correct way to position this*/
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .desc {
