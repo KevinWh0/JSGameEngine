@@ -447,6 +447,8 @@ class GameObject {
       if (!this.initDone) {
         this.components.forEach((component) => {
           if (component.type == "script") {
+            //console.log("Inited", component.constructor.name);
+
             component.onStart(this);
           }
         });
@@ -627,8 +629,15 @@ function getOverlappingObject(obj) {
   return arr;
 }
 
-let frame = 0;
+let frame = 0,
+  fps,
+  delta,
+  lastRender;
 function runGameArea() {
+  var delta = (Date.now() - lastRender) / 1000;
+  lastRender = Date.now();
+  fps = Math.round(1 / delta);
+
   clearGameCanvas();
 
   //console.log(mousePressed);
@@ -639,6 +648,8 @@ function runGameArea() {
   camera.setHeight(window.innerHeight);
   resetMousePressed();
   updateGameController();
+  var delta = (Date.now() - lastRender) / 1000;
+  lastRender = Date.now();
   frame++;
 }
 

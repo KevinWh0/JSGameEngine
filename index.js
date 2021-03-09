@@ -338,15 +338,14 @@ buttonsBar.addButton("Tools", function () {
 
 let playtestWindow;
 buttonsBar.addButton("Run", function () {
-  playtestWindow = window.open(
-    "about:blank",
-    "Game Preview",
-    "width=600,height=600"
-  );
-
-  playtestWindow.focus();
   compileGame((code) => {
-    playtestWindow.document.write(code);
+    playtestWindow = window
+      .open(
+        "about:blank" /*, "Game Preview", "width=600,height=600,toolbar=1"*/
+      )
+      .document.write(code);
+
+    playtestWindow.focus();
   });
 });
 /*buttonsBar.addButton("Export", function () {

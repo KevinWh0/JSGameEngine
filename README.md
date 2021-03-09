@@ -28,12 +28,17 @@ Roadmap:
 - [ ] Text Support
 - [ ] Rework Component UI system
 - [ ] Write the documentation
+
   - [ ] basics of scripting
   - [ ] Getting Objects
   - [ ] Controller Support
   - [ ] How to use the engine (not the scripting)
 
-Known Bugs:
+- [ ] Quality of life
 
+  - [ ] Enter key creates script
+        Known Bugs:
+
+- [ ] Deleting object while editing it causes crash
 - [ ] Setting width or height to a negative makes it so you cant select the object anymore
 - [x] If the objects go offscreen you can select them even when under the panels
