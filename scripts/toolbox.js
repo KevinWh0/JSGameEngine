@@ -1130,13 +1130,15 @@ export class Dropdown {
   expanded = false;
   onExpand = () => {};
   items = [];
-  currentSelection = "No Image";
+  currentSelection = null;
   pressedLastFrame = false; //For mousePress
-  constructor(x, y, w, h) {
+  id;
+  constructor(x, y, w, h, id) {
     this.w = w;
     this.h = h;
     this.x = x;
     this.y = y;
+    this.id = id;
   }
   setText(s) {
     this.currentSelection = s;

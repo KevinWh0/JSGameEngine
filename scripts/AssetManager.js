@@ -72,7 +72,7 @@ componentsUIDictionary.set("Textured Component", {
     parent.removeAllComponents();
 
     parent.addComponent(
-      new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
+      new Dropdown(10, 50, 100, 40, "image").setOnExpand((parent1) => {
         parent1.clearItems();
         Array.from(assets.keys()).forEach((a) => {
           if (assets.get(a).type == "Image") parent1.addItem(a);
@@ -104,7 +104,7 @@ componentsUIDictionary.set("Rectangle Component", {
     parent.removeAllComponents();
     try {
       parent.addComponent(
-        new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
+        new Dropdown(10, 50, 100, 40, "color").setOnExpand((parent1) => {
           parent1.clearItems();
           parent1.addItem("red");
           parent1.addItem("orange");
@@ -138,7 +138,7 @@ componentsUIDictionary.set("Script Component", {
     parent.removeAllComponents();
     try {
       parent.addComponent(
-        new Dropdown(10, 50, 100, 40).setOnExpand((parent1) => {
+        new Dropdown(10, 50, 100, 40, "script").setOnExpand((parent1) => {
           parent1.clearItems();
           Array.from(assets.keys()).forEach((a) => {
             if (assets.get(a).type == "Script") parent1.addItem(a);

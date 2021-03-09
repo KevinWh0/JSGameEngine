@@ -40,6 +40,10 @@ export let objects = [];
 export function setObjects(objArr) {
   objects = objArr;
 }
+
+export function setObject(index, obj) {
+  objects[index] = obj;
+}
 addObject(new GameObject(0, 0, 0, 0).setName("Camera").setType("Camera"));
 
 export function selectObject() {

@@ -14,6 +14,7 @@ import {
   selectObject,
   objects,
   setObjects,
+  setObject,
 } from "../GameObject/ObjectHandler.js";
 import {
   selectedOBJ,
@@ -324,12 +325,17 @@ function addBaseComponents() {
       }
       //setup the popup panel with required components
       try {
-        componentEditorPopup.runAsPanel(
-          componentsUIDictionary.get(
-            objects[selectedOBJ].components[selectedComponent].componentName
-          ).Update,
-          objects
-        );
+        componentEditorPopup.runAsPanel((parent) => {
+          parent.components.forEach((component) => {
+            if (component.currentSelection != null) {
+              let dat = objects[selectedOBJ].components[selectedComponent].data;
+              dat[component.id] = component.currentSelection;
+              let obj = objects[selectedOBJ];
+              obj.components[selectedComponent].data = dat;
+              setObject(selectedOBJ, obj);
+            }
+          });
+        }, objects);
       } catch (error) {}
       //rect(30 + tab.x, 250 + tab.y + yOffset + objects[selectedOBJ].components.length * 20, 100,50);
     })
