@@ -214,6 +214,54 @@ function loadImg(url) {
   return img;
 }
 
+export function setFontSize(size, font) {
+  ctx.font = size + "px " + font;
+}
+
+export function getFontSize() {
+  return parseInt(ctx.font.split("px ")[0]);
+}
+
+function textWraped(text, x, y, fitWidth, lineHeight) {
+  if (!text) return;
+  var context = ctx;
+  fitWidth = fitWidth || 0;
+
+  if (fitWidth <= 0) {
+    context.fillText(text, x, y);
+    return;
+  }
+  let pos = null;
+  for (var idx = 1; idx <= text.length; idx++) {
+    var str = text.substr(0, idx);
+    if (text.substr(0, idx + 4).endsWith("<TAB>")) {
+      let txt = text.replace("<TAB>", "    ");
+      textWraped(
+        txt,
+        x,
+        y + (context.measureText(txt).width > fitWidth ? lineHeight : 0),
+        fitWidth,
+        lineHeight
+      );
+      return;
+    }
+    if (text.substr(0, idx + 2).substr(idx - 2, idx + 2) == "<NL>") {
+      context.fillText(text.substr(0, idx - 2), x, y);
+
+      textWraped(text.substr(idx + 2), x, y + lineHeight, fitWidth, lineHeight);
+      return;
+    }
+
+    if (context.measureText(str).width > fitWidth) {
+      context.fillText(text.substr(0, idx - 1), x, y);
+      textWraped(text.substr(idx - 1), x, y + lineHeight, fitWidth, lineHeight);
+      return;
+    }
+  }
+
+  context.fillText(text, x, y);
+}
+
 class GamePad {
   gamepad;
   id;
@@ -405,6 +453,29 @@ class ScriptObject extends FileObject {
   }
 }
 
+class FontObject extends FileObject {
+  fontName;
+  constructor(data, name) {
+    super(data);
+    this.type = "Font" /*File type Goes here*/;
+    if (!!this.fontName)
+      this.fontName = name.replace(/ /g, "_").replace(/./g, "-");
+    var font = new FontFace(this.fontName, `url(${this.data})`);
+    document.fonts.add(font);
+  }
+
+  get() {
+    return this.data;
+  }
+
+  //This function is used when loading the serialised JSON
+  setData(d) {
+    this.data = d;
+    var font = new FontFace(this.fontName, `url(${this.data})`);
+    document.fonts.add(font);
+  }
+}
+
 //Objects
 
 let inEditor = false;
@@ -578,23 +649,45 @@ class TexturedObjectComponent {
 
 export class TextComponent {
   type = "visual";
-  componentName = "Text";
+  componentName = "Text Component";
   data = {
     text: undefined,
   };
 
-  constructor(text) {
+  constructor(text, font) {
     if (text != undefined) this.data.text = text;
-  }
-  run(parentObject) {}
+    this.data.font = font;
+    try {
+      this.data.font = font.replace(/ /g, "_").replace(/./g, "-");
+      console.log(assets.get(this.data.font), this.data.font);
+      if (!!font)
+        document.fonts.add(
+          new FontFace(this.data.font, assets.get(this.data.font).data)
+        );
+    } catch (error) {}
 
+    this.data.fontSize = 50;
+  }
+  run(parentObject) {
+    fill("white");
+    setFontSize(this.data.fontSize, this.data.font);
+    //console.log(assets, assets.get(this.data.font).data, this.data.font);
+    textWraped(
+      this.data.text,
+      parentObject.x,
+      parentObject.y,
+      parentObject.w,
+      20
+    );
+  }
   setText(s) {
     this.data.text = s;
     return this;
   }
 
   getData() {
-    return this.data.text;
+    //return this.data.text;
+    return this.data.text + '", "' + this.data.font;
   }
 }
 

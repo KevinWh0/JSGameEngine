@@ -15,7 +15,7 @@ import {
   fillGameCanvas,
   rectGameCanvas,
 } from "../CompilerLibs/gameCanvasRendering.js";
-import { getOffset } from "../CompilerLibs/gameToolbox.js";
+import { getOffset, TextComponent } from "../CompilerLibs/gameToolbox.js";
 import {
   fill,
   height,
@@ -36,6 +36,7 @@ import { RectangleObjectComponent } from "./GameObjectComponents/GameComponents/
 import { ScriptComponent } from "./GameObjectComponents/GameComponents/ScriptComponent.js";
 import { TexturedObjectComponent } from "./GameObjectComponents/GameComponents/TextureComponent.js";
 import { selectedOBJ, setSelectedObj } from "./selectedOBJHandler.js";
+import { FontObject } from "./FileTypes/Font.js";
 export let objects = [];
 export function setObjects(objArr) {
   objects = objArr;
@@ -144,6 +145,8 @@ obj = new TexturedObjectComponent();
 componentsMap.set(obj.componentName, obj);
 obj = new ScriptComponent();
 componentsMap.set(obj.componentName, obj);
+obj = new TextComponent();
+componentsMap.set(obj.componentName, obj);
 
 export let fileMap = new Map();
 obj = new FileObject(null);
@@ -151,6 +154,8 @@ fileMap.set(obj.type, obj);
 obj = new AudioObject(null);
 fileMap.set(obj.type, obj);
 obj = new ImageObject(null);
+fileMap.set(obj.type, obj);
+obj = new FontObject(null);
 fileMap.set(obj.type, obj);
 obj = new ScriptObject(null);
 fileMap.set(obj.type, obj);

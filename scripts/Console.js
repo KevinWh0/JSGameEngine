@@ -58,6 +58,8 @@ import { FileObject } from "./GameObject/FileTypes/File.js";
 import { AudioObject } from "./GameObject/FileTypes/Audio.js";
 import { TextBox } from "./UIStrechableTab.js";
 import { ScriptObject } from "./GameObject/FileTypes/ScriptObject.js";
+import { FontObject } from "./GameObject/FileTypes/Font.js";
+
 import {
   addToUILayer,
   UIPopupPanel,
@@ -448,6 +450,10 @@ function uploadFiles(files) {
     } else if (files[i].type == "text/javascript") {
       readFile(files[i], (data) => {
         assets.set(files[i].name, new ScriptObject(data));
+      });
+    } else if (files[i].name.endsWith(".ttf")) {
+      readFile(files[i], (data) => {
+        assets.set(files[i].name, new FontObject(data, files[i].name));
       });
     } else {
       readFile(files[i], (data) => {

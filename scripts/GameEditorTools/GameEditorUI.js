@@ -249,6 +249,7 @@ function addBaseComponents() {
                       //alert("Added Component");
                       let selectedcomponent =
                         widgetHolder.components[1].selected;
+                      console.log(componentsMap, selectedcomponent);
                       if (selectedcomponent != undefined)
                         objects[selectedOBJ].addComponent(
                           returnCopy(componentsMap.get(selectedcomponent))

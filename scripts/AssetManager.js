@@ -85,17 +85,6 @@ componentsUIDictionary.set("Textured Component", {
       parent.components[0].currentSelection =
         objects[selectedOBJ].components[selectedComponent].data.image;
   },
-  Update: (parent, objects) => {
-    //console.log(objects[selectedOBJ].components[selectedComponent]);
-    //This is used for the actual setting of the values
-    if (parent.components[0].currentSelection == "No Image") {
-      objects[selectedOBJ].components[selectedComponent].data.image = null;
-    } else {
-      //console.log(objects[selectedOBJ]);
-      objects[selectedOBJ].components[selectedComponent].data.image =
-        parent.components[0].currentSelection;
-    }
-  },
 });
 
 componentsUIDictionary.set("Rectangle Component", {
@@ -115,20 +104,44 @@ componentsUIDictionary.set("Rectangle Component", {
           parent1.addItem("black");
           parent1.addItem("white");
         })
-        //.setText(
-        //objects[selectedOBJ].components[selectedComponent].data.color
-        //)
       );
-      //console.log(objects[selectedOBJ].components[selectedComponent].data);
-      //parent.components[0].currentSelection =
-      //objects[selectedOBJ].components[selectedComponent].data.color;
     } catch (error) {
       console.log(error);
     }
   },
-  Update: (parent, objects) => {
-    objects[selectedOBJ].components[selectedComponent].data.color =
-      parent.components[0].currentSelection;
+});
+
+componentsUIDictionary.set("Text Component", {
+  OnSelect: (parent, objects) => {
+    //The parent is the popup pannel
+    parent.removeAllComponents();
+    try {
+      parent
+        .addComponent(
+          new Dropdown(10, 50, 100, 40, "text").setOnExpand((parent1) => {
+            parent1.clearItems();
+            parent1.addItem("red");
+            parent1.addItem("orange");
+            parent1.addItem("yellow");
+            parent1.addItem("green");
+            parent1.addItem("blue");
+            parent1.addItem("purple");
+            parent1.addItem("black");
+            parent1.addItem("white");
+          })
+        )
+        .addComponent(
+          new Dropdown(10, 100, 100, 40, "font").setOnExpand((parent1) => {
+            parent1.clearItems();
+
+            Array.from(assets.keys()).forEach((a) => {
+              if (assets.get(a).type == "Font") parent1.addItem(a);
+            });
+          })
+        );
+    } catch (error) {
+      console.log(error);
+    }
   },
 });
 
@@ -149,11 +162,10 @@ componentsUIDictionary.set("Script Component", {
       console.log(error);
     }
   },
-  Update: (parent, objects) => {
-    objects[selectedOBJ].components[selectedComponent].data.script =
-      parent.components[0].currentSelection;
-  },
 });
+
+//Note: To add a components you must do it here and then add it to the game toolbox and also the object
+//Handler.
 
 /* Script Data */
 //When a script is made use the name as the key and the code as the item.
