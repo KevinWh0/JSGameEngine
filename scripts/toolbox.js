@@ -7,6 +7,8 @@ import {
   textUIColor,
 } from "./AssetManager.js";
 
+let publicVersion = false;
+
 export let width = window.innerWidth;
 export let height = window.innerHeight;
 
@@ -139,7 +141,7 @@ export let game = {
 
 //Confirm that the user wants to close the page because they might loose progress
 window.onbeforeunload = function () {
-  return "Changes may not be saved.";
+  if (publicVersion) return "Changes may not be saved.";
 };
 
 export function setContext(context) {

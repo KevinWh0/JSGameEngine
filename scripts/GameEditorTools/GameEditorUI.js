@@ -215,7 +215,7 @@ function addBaseComponents() {
           ) {
             //setup the popup panel with required components
             //Runs once when first clicked.
-            componentEditorPopup.components = [];
+            /*componentEditorPopup.components = [];
             try {
               componentEditorPopup.runAsPanel(
                 componentsUIDictionary.get(
@@ -227,7 +227,58 @@ function addBaseComponents() {
             componentEditorPopup.setPos(tab.x + 25, tab.y + tab.h - 200);
             componentEditorPopup.setSize(tab.w - 30, 200);
             componentEditorPopup.setShowing();
-            setSelectedComponent(i);
+            setSelectedComponent(i);*/
+            if (!UIcontainsID("EditComponent")) {
+              var uiPopup = new UIPopupPanel(
+                100,
+                100,
+                300,
+                400,
+                "Edit Component"
+              )
+                .setId("EditComponent")
+                .setOnClose(() => {
+                  setSelectedObj(null);
+                })
+                .addComponent(
+                  new ButtonWidget(200, 50, (widgetHolder) => {
+                    widgetHolder.garbage = true;
+                  })
+                    .overidePosition("CENTERX", "BOTTOM")
+                    .addLooks(
+                      new roundRectangleGradientLook(
+                        secondaryUIColor,
+                        primaryUIColor
+                      )
+                    )
+                    .addLooks(new textLook("Done", textUIColor))
+                )
+                .addComponent(
+                  new DropdownWidget(200, 50)
+                    .overidePosition("CENTERX", "TOP")
+                    .addLooks(new roundRectangleLook(secondaryUIColor))
+                    .setOptions(Array.from(componentsUIDictionary.keys()))
+                );
+              setSelectedComponent(i);
+
+              try {
+                /*
+                  componentEditorPopup.runAsPanel(
+                    componentsUIDictionary.get(
+                      objects[selectedOBJ].components[i].componentName
+                    ).OnSelect,
+                    objects
+                  );*/
+
+                uiPopup = componentsUIDictionary
+                  .get(objects[selectedOBJ].components[i].componentName)
+                  .OnSelect(uiPopup, objects);
+              } catch (error) {
+                console.error(error);
+              }
+
+              addToUILayer(uiPopup);
+            }
           }
       }
       //console.log(componentEditorPopup.components);

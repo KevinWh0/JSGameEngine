@@ -53,11 +53,11 @@ export function runUILayer() {
   UILayer.clear();
 
   UI.forEach((ui) => {
-    ui.run();
+    if (ui != undefined) ui.run();
   });
 
   for (let i = 0; i < UI.length; i++) {
-    if (UI[i].garbage) UI = removeItem(UI, i);
+    if (UI[i] != undefined && UI[i].garbage) UI = removeItem(UI, i);
   }
 }
 
@@ -72,6 +72,7 @@ export function mouseInUIPanel() {
 
 export function UIcontainsID(ID) {
   for (let i = 0; i < UI.length; i++) {
+    if (UI[i] == undefined) continue;
     if (UI[i].id == ID) return true;
   }
   return false;
@@ -90,6 +91,7 @@ export class UIPopupPanel {
   scrollY;
   components = [];
   XCol;
+  onClose;
   //If the components leave the bounds of the box it counts as overflowing
   overflowing = false;
 
@@ -104,7 +106,7 @@ export class UIPopupPanel {
   pinYOffset;
 
   //This will be used for getting a specific window
-  id;
+  id = "none";
 
   constructor(x, y, w, h, title) {
     this.x = x;
@@ -159,7 +161,10 @@ export class UIPopupPanel {
       )
     ) {
       this.XCol = transitionRGB(this.XCol, "rgb(255,0,0)", 10);
-      if (mousePressed) this.garbage = true;
+      if (mousePressed) {
+        if (this.onClose != undefined) this.onClose();
+        this.garbage = true;
+      }
     } else {
       this.XCol = transitionRGB(this.XCol, textUIColor, 10);
     }
@@ -205,8 +210,16 @@ export class UIPopupPanel {
     this.components.push(component);
     return this;
   }
+  removeAllComponents() {
+    this.components = [];
+  }
   setId(id) {
     this.id = id;
+    return this;
+  }
+
+  setOnClose(onClose) {
+    this.onClose = onClose;
     return this;
   }
 }
@@ -398,6 +411,7 @@ export class DropdownWidget extends Widget {
   options = [];
   open = false;
   selected;
+  onSelect;
   constructor(w, h) {
     super();
     this.w = w;
@@ -410,17 +424,23 @@ export class DropdownWidget extends Widget {
     this.yOveride = y;
     this.runInBackground(parent, x, y);
 
+    //open/close the dropdown when the main buttons is pressed
     if (
       inArea(mouseX, mouseY, this.xOveride, this.yOveride, this.w, this.h) &&
       mousePressed
     ) {
       this.open = !this.open;
     }
+    //Run all the looks on the main button
     for (let j = 0; j < this.looks.length; j++) {
       this.looks[j].run(this.xOveride, this.yOveride, this.w, this.h, this);
     }
+
+    //if the list is dropped down show all the options
     if (this.open) {
+      //loop through all the options
       for (let i = 0; i < this.options.length; i++) {
+        //apply the "looks" to each option on the list
         for (let j = 0; j < this.looks.length; j++) {
           this.looks[j].run(
             this.xOveride,
@@ -430,6 +450,7 @@ export class DropdownWidget extends Widget {
             this
           );
         }
+        //if an option is pressed close the dropdown and select it
         if (
           inArea(
             mouseX,
@@ -444,8 +465,10 @@ export class DropdownWidget extends Widget {
           if (mousePressed) {
             this.open = false;
             this.selected = this.options[i];
+            if (this.onSelect != undefined) this.onSelect(this.selected);
           }
         } else fill(textUIColor);
+        //Show the text for each option
         text(
           this.options[i],
           centerText(this.options[i], this.xOveride, this.w),
@@ -453,6 +476,8 @@ export class DropdownWidget extends Widget {
         );
       }
     }
+    //Show the current selected option
+
     fill(textUIColor);
     text(
       this.selected,
@@ -465,8 +490,21 @@ export class DropdownWidget extends Widget {
     this.options.push(o);
     return this;
   }
+
+  //Set the dropdown options
   setOptions(o) {
     this.options = o;
+    return this;
+  }
+
+  setSelected(str) {
+    this.selected = str;
+    return this;
+  }
+
+  //The passed in code will be ran when a item is choosen, the chosen string is then passed in
+  setOnselect(code) {
+    this.onSelect = code;
     return this;
   }
 }

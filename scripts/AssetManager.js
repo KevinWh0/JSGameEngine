@@ -22,6 +22,7 @@ import {
   readTextFile,
   Dropdown,
 } from "./toolbox.js";
+import { DropdownWidget, roundRectangleLook } from "./UIRendererLayer.js";
 import { TextBox } from "./UIStrechableTab.js";
 
 /*state Manager*/
@@ -71,19 +72,29 @@ componentsUIDictionary.set("Textured Component", {
     //The parent is the popup pannel
     parent.removeAllComponents();
 
-    parent.addComponent(
-      new Dropdown(10, 50, 100, 40, "image").setOnExpand((parent1) => {
-        parent1.clearItems();
-        Array.from(assets.keys()).forEach((a) => {
-          if (assets.get(a).type == "Image") parent1.addItem(a);
-        });
-      })
-    );
-    if (
-      objects[selectedOBJ].components[selectedComponent].data.image != undefined
-    )
-      parent.components[0].currentSelection =
-        objects[selectedOBJ].components[selectedComponent].data.image;
+    var dropdown = new DropdownWidget(200, 50)
+      .overidePosition("CENTERX", "TOP")
+      .addLooks(new roundRectangleLook(secondaryUIColor))
+      .setOptions(
+        Array.from(assets.keys()).filter(
+          (asset) => assets.get(asset).type == "Image"
+        )
+      )
+      .setOnselect((selected) => {
+        objects[selectedOBJ].components[
+          selectedComponent
+        ].data.image = selected;
+      });
+
+    var currentImage =
+      objects[selectedOBJ].components[selectedComponent].data.image;
+    if (currentImage != undefined) {
+      dropdown.setSelected(currentImage);
+    }
+
+    parent.addComponent(dropdown);
+
+    return parent;
   },
 });
 
@@ -91,23 +102,37 @@ componentsUIDictionary.set("Rectangle Component", {
   OnSelect: (parent, objects) => {
     //The parent is the popup pannel
     parent.removeAllComponents();
-    try {
-      parent.addComponent(
-        new Dropdown(10, 50, 100, 40, "color").setOnExpand((parent1) => {
-          parent1.clearItems();
-          parent1.addItem("red");
-          parent1.addItem("orange");
-          parent1.addItem("yellow");
-          parent1.addItem("green");
-          parent1.addItem("blue");
-          parent1.addItem("purple");
-          parent1.addItem("black");
-          parent1.addItem("white");
-        })
-      );
-    } catch (error) {
-      console.log(error);
+
+    var dropdown = new DropdownWidget(200, 50)
+      .overidePosition("CENTERX", "TOP")
+      .addLooks(new roundRectangleLook(secondaryUIColor))
+      .setOptions([
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple",
+        "white",
+        "black",
+        "grey",
+      ])
+      .setOnselect((selected) => {
+        objects[selectedOBJ].components[
+          selectedComponent
+        ].data.color = selected;
+      });
+
+    var currentCol =
+      objects[selectedOBJ].components[selectedComponent].data.color;
+    if (currentCol != undefined) {
+      dropdown.setSelected(currentCol);
     }
+
+    parent.addComponent(dropdown);
+    //setSelected
+
+    return parent;
   },
 });
 
@@ -149,18 +174,30 @@ componentsUIDictionary.set("Script Component", {
   OnSelect: (parent, objects) => {
     //The parent is the popup pannel
     parent.removeAllComponents();
-    try {
-      parent.addComponent(
-        new Dropdown(10, 50, 100, 40, "script").setOnExpand((parent1) => {
-          parent1.clearItems();
-          Array.from(assets.keys()).forEach((a) => {
-            if (assets.get(a).type == "Script") parent1.addItem(a);
-          });
-        })
-      );
-    } catch (error) {
-      console.log(error);
+
+    var dropdown = new DropdownWidget(200, 50)
+      .overidePosition("CENTERX", "TOP")
+      .addLooks(new roundRectangleLook(secondaryUIColor))
+      .setOptions(
+        Array.from(assets.keys()).filter(
+          (asset) => assets.get(asset).type == "Script"
+        )
+      )
+      .setOnselect((selected) => {
+        objects[selectedOBJ].components[
+          selectedComponent
+        ].data.script = selected;
+      });
+
+    var currentScript =
+      objects[selectedOBJ].components[selectedComponent].data.script;
+    if (currentScript != undefined) {
+      dropdown.setSelected(currentScript);
     }
+
+    parent.addComponent(dropdown);
+
+    return parent;
   },
 });
 
